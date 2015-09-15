@@ -7,19 +7,25 @@
 //
 
 import UIKit
+import Alamofire
 
 class ViewController: UIViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        Alamofire.request(.GET, "http://rezmis3k.bget.ru/demo/sql2.php")
+            .responseJSON { _, _, result in
+                let categories = JSON(result.value)?[key:"Category"] as? NSArray
+                let element = categories![0]
+        }
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
+    
+    
 }
 
