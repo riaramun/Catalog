@@ -53,7 +53,25 @@ code_sign_if_enabled() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework 'Pods-Catalog/Alamofire.framework'
+  install_framework 'Pods-Catalog/DATAFilter.framework'
+  install_framework 'Pods-Catalog/DATAObjectIDs.framework'
+  install_framework 'Pods-Catalog/DATAStack.framework'
+  install_framework 'Pods-Catalog/NSDictionary_ANDYSafeValue.framework'
+  install_framework 'Pods-Catalog/NSEntityDescription_SYNCPrimaryKey.framework'
+  install_framework 'Pods-Catalog/NSManagedObject_HYPPropertyMapper.framework'
+  install_framework 'Pods-Catalog/NSObject_HYPTesting.framework'
+  install_framework 'Pods-Catalog/NSString_HYPNetworking.framework'
+  install_framework 'Pods-Catalog/Sync.framework'
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework 'Pods-Catalog/Alamofire.framework'
+  install_framework 'Pods-Catalog/DATAFilter.framework'
+  install_framework 'Pods-Catalog/DATAObjectIDs.framework'
+  install_framework 'Pods-Catalog/DATAStack.framework'
+  install_framework 'Pods-Catalog/NSDictionary_ANDYSafeValue.framework'
+  install_framework 'Pods-Catalog/NSEntityDescription_SYNCPrimaryKey.framework'
+  install_framework 'Pods-Catalog/NSManagedObject_HYPPropertyMapper.framework'
+  install_framework 'Pods-Catalog/NSObject_HYPTesting.framework'
+  install_framework 'Pods-Catalog/NSString_HYPNetworking.framework'
+  install_framework 'Pods-Catalog/Sync.framework'
 fi

@@ -1,4 +1,67 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="Test1.xcdatamodel" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
-    <elements/>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9048" systemVersion="14F27" minimumToolsVersion="Automatic">
+    <entity name="Category" representedClassName="Category" syncable="YES">
+        <attribute name="category_id" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.isPrimaryKey" value="YES"/>
+                <entry key="hyper.remoteKey" value="category_id"/>
+            </userInfo>
+        </attribute>
+        <attribute name="height" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="height"/>
+            </userInfo>
+        </attribute>
+        <attribute name="last_edit_date" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="last_edit_date"/>
+            </userInfo>
+        </attribute>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="name"/>
+            </userInfo>
+        </attribute>
+        <attribute name="parent" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="last_edit_date" value="parent"/>
+            </userInfo>
+        </attribute>
+        <attribute name="photo" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="photo"/>
+            </userInfo>
+        </attribute>
+        <attribute name="photo_edit_date" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="photo_edit_date"/>
+            </userInfo>
+        </attribute>
+        <attribute name="position" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="position"/>
+            </userInfo>
+        </attribute>
+        <attribute name="type" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="type"/>
+            </userInfo>
+        </attribute>
+        <attribute name="visibility" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="visibility"/>
+            </userInfo>
+        </attribute>
+        <attribute name="width" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="width"/>
+            </userInfo>
+        </attribute>
+        <userInfo>
+            <entry key="hyper.remoteKey" value="height"/>
+        </userInfo>
+    </entity>
+    <elements>
+        <element name="Category" positionX="-63" positionY="-18" width="128" height="210"/>
+    </elements>
 </model>

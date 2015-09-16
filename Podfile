@@ -8,6 +8,7 @@ use_frameworks!
 
 target 'Catalog' do
 pod 'Alamofire', '~> 2.0'
+pod 'Sync'
 end
 
 
