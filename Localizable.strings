@@ -1,0 +1,13 @@
+/* 
+  Localizable.strings
+  Catalog
+
+  Created by Admin on 20/09/15.
+  Copyright © 2015 lebrom. All rights reserved.
+*/
+"Categories" = "Категории";
+"Favorites" = "Избранное";
+"Search" = "Поиск";
+"History" = "История заказов";
+"Settings" = "Настройки";
+"Contacts" = "Контакты";

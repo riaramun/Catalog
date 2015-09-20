@@ -7,17 +7,33 @@
 //
 
 import UIKit
-import CoreData
+import DATAStack
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    let dataStack = DATAStack(modelName: "Catalog")
     
     var window: UIWindow?
 
-
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        window = UIWindow(frame: UIScreen.mainScreen().bounds)
+        
+        let containerViewController = ContainerViewController()
+        containerViewController.context = self.dataStack.mainContext;
+        
+        window!.rootViewController = containerViewController
+        window!.makeKeyAndVisible()
+        
+        if let context = self.dataStack.mainContext {
+            let dataHelper = DataHelper(context: context)
+            dataHelper.seedDataStore()
+        }
+        
+        //let rootViewController = self.window!.rootViewController as! MainViewController
+        
+        
         return true
     }
 
@@ -42,12 +58,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         // Saves changes in the application's managed object context before the application terminates.
-        self.saveContext()
+        //self.saveContext()
     }
 
     // MARK: - Core Data stack
 
-    lazy var applicationDocumentsDirectory: NSURL = {
+/*    lazy var applicationDocumentsDirectory: NSURL = {
         // The directory the application uses to store the Core Data store file. This code uses a directory named "ru.lebrom.Catalog" in the application's documents Application Support directory.
         let urls = NSFileManager.defaultManager().URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
         return urls[urls.count-1]
@@ -90,11 +106,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         var managedObjectContext = NSManagedObjectContext(concurrencyType: .MainQueueConcurrencyType)
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
-    }()
+    }()*/
 
     // MARK: - Core Data Saving support
 
-    func saveContext () {
+    /*func saveContext () {
         if managedObjectContext.hasChanges {
             do {
                 try managedObjectContext.save()
@@ -106,7 +122,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 abort()
             }
         }
-    }
+    }*/
 
 }
 

@@ -12,16 +12,16 @@ import CoreData
 @objc(Category)
 class Category: NSManagedObject {
     
-    @NSManaged var category_id: String
+    @NSManaged var category_id: Int
     @NSManaged var name: String
-    @NSManaged var visibility: String
+    @NSManaged var visibility: Int
     @NSManaged var photo: String
     @NSManaged var photo_edit_date: String
     
     @NSManaged var last_edit_date: String
     @NSManaged var parent: String
-    @NSManaged var position: String
+    @NSManaged var position: Int
     @NSManaged var type: String
-    @NSManaged var width: String
-    @NSManaged var height: String
+    @NSManaged var width: Int
+    @NSManaged var height: Int
 }
