@@ -21,7 +21,7 @@ public class ContainerViewController: UIViewController {
     public var context: NSManagedObjectContext!
     
     var centerNavigationController: UINavigationController!
-    var centerViewController: CenterViewController!
+    var centerViewController: CategoryViewController!
     
     var currentState: SlideOutState = .BothCollapsed {
         didSet {
@@ -101,7 +101,7 @@ extension ContainerViewController: CenterViewControllerDelegate {
     }
     
     func addChildSidePanelController(sidePanelController: LeftPanelViewController) {
-       // sidePanelController.delegate = centerViewController
+        sidePanelController.delegate = centerViewController
         
         view.insertSubview(sidePanelController.view, atIndex: 0)
         
@@ -210,8 +210,8 @@ private extension UIStoryboard {
         return mainStoryboard().instantiateViewControllerWithIdentifier("RightViewController") as? SidePanelViewController
     }
     
-    class func centerViewController() -> CenterViewController? {
-        return mainStoryboard().instantiateViewControllerWithIdentifier("CenterViewController") as? CenterViewController
+    class func centerViewController() -> CategoryViewController? {
+        return mainStoryboard().instantiateViewControllerWithIdentifier("CategoryViewController") as? CategoryViewController
     }
     
 }

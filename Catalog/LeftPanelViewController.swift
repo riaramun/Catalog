@@ -9,7 +9,7 @@
 import UIKit
 
 protocol LeftPanelViewControllerDelegate {
-    func MenuItemSelected(MenuItem: MenuItem)
+    func menuItemSelected(menuItem: MenuItem)
 }
 extension String {
     var localized: String {
@@ -26,12 +26,12 @@ class LeftPanelViewController: UIViewController {
     
     
     func menuItems() -> Array<MenuItem> {
-        return [    MenuItem(name: "Categories".localized),
-            MenuItem(name: "Favorites".localized),
-            MenuItem(name: "Search".localized),
-            MenuItem(name: "Settings".localized),
-            MenuItem(name: "History".localized),
-            MenuItem(name: "Settings".localized)]
+        return [    MenuItem(type: MenuItemType.ECategories),
+            MenuItem(type: MenuItemType.EFavorites),
+            MenuItem(type: MenuItemType.ESearch),
+            MenuItem(type: MenuItemType.ESettings),
+            MenuItem(type: MenuItemType.EHistory),
+            MenuItem(type: MenuItemType.EContacts)]
     }
     
     struct TableView {
@@ -74,7 +74,7 @@ extension LeftPanelViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let selectedMenuItem = menuItems()[indexPath.row]
-        delegate?.MenuItemSelected(selectedMenuItem)
+        delegate?.menuItemSelected(selectedMenuItem)
     }
     
 }

@@ -25,14 +25,16 @@ class DataHelper {
         }
         
         Alamofire.request(.GET, "http://rezmis3k.bget.ru/demo/sql2.php")
-            .responseJSON { _, _, result in
+            .responseJSON { _, resp, result in
                 let categories = JSON(result.value)?[key:"Category"] as? NSArray
-                //let element  = categories![0]
+                if(categories != nil ) {
                 Sync.changes(
                     categories as! [AnyObject],
                     inEntityNamed: "Category",
                     dataStack: dataStack,
                     completion: errProcess)
+                }
+                
         }
     }
 }

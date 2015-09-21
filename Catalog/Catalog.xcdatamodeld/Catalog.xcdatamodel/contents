@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9048" systemVersion="14F27" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8195" systemVersion="14F27" minimumToolsVersion="Automatic">
     <entity name="Category" representedClassName="Category" syncable="YES">
-        <attribute name="category_id" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES">
+        <attribute name="category_id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
             <userInfo>
                 <entry key="hyper.isPrimaryKey" value="YES"/>
                 <entry key="hyper.remoteKey" value="category_id"/>
             </userInfo>
         </attribute>
-        <attribute name="height" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES">
+        <attribute name="height" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
             <userInfo>
                 <entry key="hyper.remoteKey" value="height"/>
             </userInfo>
@@ -22,7 +22,7 @@
                 <entry key="hyper.remoteKey" value="name"/>
             </userInfo>
         </attribute>
-        <attribute name="parent" optional="YES" attributeType="String" syncable="YES">
+        <attribute name="parent" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
             <userInfo>
                 <entry key="last_edit_date" value="parent"/>
             </userInfo>
@@ -37,7 +37,7 @@
                 <entry key="hyper.remoteKey" value="photo_edit_date"/>
             </userInfo>
         </attribute>
-        <attribute name="position" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES">
+        <attribute name="position" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
             <userInfo>
                 <entry key="hyper.remoteKey" value="position"/>
             </userInfo>
@@ -47,12 +47,12 @@
                 <entry key="hyper.remoteKey" value="type"/>
             </userInfo>
         </attribute>
-        <attribute name="visibility" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES">
+        <attribute name="visibility" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
             <userInfo>
                 <entry key="hyper.remoteKey" value="visibility"/>
             </userInfo>
         </attribute>
-        <attribute name="width" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES">
+        <attribute name="width" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
             <userInfo>
                 <entry key="hyper.remoteKey" value="width"/>
             </userInfo>

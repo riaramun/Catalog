@@ -19,7 +19,7 @@ class Category: NSManagedObject {
     @NSManaged var photo_edit_date: String
     
     @NSManaged var last_edit_date: String
-    @NSManaged var parent: String
+    @NSManaged var parent: Int
     @NSManaged var position: Int
     @NSManaged var type: String
     @NSManaged var width: Int
