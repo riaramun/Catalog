@@ -19,20 +19,33 @@ class DataHelper {
         self.context = context
     }
     func seedDataStore() {
-        func errProcess(err:NSError!){
-            
-            //let _ = fetchEntryByTitle("");
-        }
+        
+        
         
         Alamofire.request(.GET, "http://rezmis3k.bget.ru/demo/sql2.php")
             .responseJSON { _, resp, result in
+                
                 let categories = JSON(result.value)?[key:"Category"] as? NSArray
+                let items = JSON(result.value)?[key:"Item"] as? NSArray
+                
+                func categoriesAdded(err:NSError!) {
+                    if(items != nil ) {
+                        Sync.changes(
+                            items as! [AnyObject],
+                            inEntityNamed: "Item",
+                            dataStack: dataStack,
+                            completion: itemsAdded)
+                    }
+                }
+                func itemsAdded(err:NSError!) {
+                    
+                }
                 if(categories != nil ) {
                 Sync.changes(
                     categories as! [AnyObject],
                     inEntityNamed: "Category",
                     dataStack: dataStack,
-                    completion: errProcess)
+                    completion: categoriesAdded)
                 }
                 
         }

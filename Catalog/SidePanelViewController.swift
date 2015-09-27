@@ -9,14 +9,14 @@
 import UIKit
 import CoreData
 
-protocol SidePanelViewControllerDelegate {
-    func animalSelected(animal: Category)
-}
+/*protocol SidePanelViewControllerDelegate {
+    func categorySelected(animal: Category)
+}*/
 
 class SidePanelViewController: UIViewController, NSFetchedResultsControllerDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    var delegate: SidePanelViewControllerDelegate?
+  // var delegate: SidePanelViewControllerDelegate?
     
     var context: NSManagedObjectContext!
     

@@ -11,9 +11,7 @@ import CoreData
 import Alamofire
 
 
-
-
-class CategoryViewController: UIViewController, NSFetchedResultsControllerDelegate, LeftPanelViewControllerDelegate {
+class ItemViewController: UIViewController, NSFetchedResultsControllerDelegate, LeftPanelViewControllerDelegate {
     @IBOutlet weak var menuBarButton: UIBarButtonItem!
     
     @IBOutlet weak var viewNavigationItem: UINavigationItem!
@@ -36,7 +34,7 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
         
         delegate?.toggleLeftPanel?()
         
-        fetchResults(0, entityName:"Category", column: "parent")
+        fetchResults(0, entityName:"Item", column: "parent")
         
         performFetch()
     }
@@ -52,8 +50,8 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     
     func getFirstCategoryParent() -> Int {
         let indexPath = NSIndexPath(forRow: 0, inSection: 0)
-        let category = fetchedResultsController!.objectAtIndexPath(indexPath) as! Category
-        return category.parent
+        let item = fetchedResultsController!.objectAtIndexPath(indexPath) as! Item
+        return item.categoryId
     }
     
     @IBAction func mainMenuBtnTapped(sender: AnyObject) {
@@ -62,7 +60,7 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
             delegate?.toggleLeftPanel?()
         } else {
             let parentOfParent = parentStack.size == 0 ? 0 : parentStack.pop()
-            fetchResults(parentOfParent!, entityName:"Category", column: "parent")
+            fetchResults(parentOfParent!, entityName:"Item", column: "parent")
             performFetch()
             let parentId = getFirstCategoryParent();
             if parentId == 0 {
@@ -86,12 +84,12 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     var retId:Int?
     let parentId = getFirstCategoryParent();
     
-    let fetchRequest = NSFetchRequest(entityName: "Category")
+    let fetchRequest = NSFetchRequest(entityName: "Item")
     fetchRequest.predicate = NSPredicate(format: "%d == categoryId", parentId)
     
-    var results:[Category]
+    var results:[Item]
     do{
-    try results = self.context.executeFetchRequest(fetchRequest) as! [Category]
+    try results = self.context.executeFetchRequest(fetchRequest) as! [Item]
     if(results.count != 0) {
     let someCategory = results[0]
     retId = someCategory.parent
@@ -127,7 +125,7 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        fetchResults(0, entityName: "Category", column: "parent")
+        fetchResults(0, entityName: "Item", column: "parent")
         
         viewNavigationItem.title = menuItem.name
         do {
@@ -141,7 +139,7 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
 
 // MARK: Table View Data Source
 
-extension CategoryViewController: UITableViewDataSource {
+extension ItemViewController: UITableViewDataSource {
     
     /*func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     return self.menuItem.name
@@ -166,11 +164,11 @@ extension CategoryViewController: UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(TableView.CellIdentifiers.CategoryCell, forIndexPath: indexPath) as! CategoryCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(TableView.CellIdentifiers.CategoryCell, forIndexPath: indexPath) as! ItemCell
         
-        let category = fetchedResultsController!.objectAtIndexPath(indexPath) as! Category
+        let item = fetchedResultsController!.objectAtIndexPath(indexPath) as! Item
         
-        cell.configureForCategory(category)
+        cell.configureForCategory(item)
         
         return cell
     }
@@ -179,33 +177,33 @@ extension CategoryViewController: UITableViewDataSource {
 
 // Mark: Table View Delegate
 
-extension CategoryViewController: UITableViewDelegate {
+extension ItemViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         menuBarButton.image = UIImage(named: "back.png")
         
-        let category = fetchedResultsController!.objectAtIndexPath(indexPath) as! Category
+        let item = fetchedResultsController!.objectAtIndexPath(indexPath) as! Item
         
-        parentStack.push(category.parent)
+        parentStack.push(item.categoryId)
         
-        let fetchRequest = NSFetchRequest(entityName: "Category")
+        let fetchRequest = NSFetchRequest(entityName: "Item")
         
-        fetchRequest.predicate = NSPredicate(format: "name ='" + category.name + "'")
+        fetchRequest.predicate = NSPredicate(format: "name ='" + item.shortName + "'")
         
-        var res:Category?
+        var res:Item?
         
-        var results : [Category]
+        var results : [Item]
         
         do {
             
-            try results = self.context!.executeFetchRequest(fetchRequest) as! [Category]
+            try results = self.context!.executeFetchRequest(fetchRequest) as! [Item]
             
             res = results[0]
             
-            fetchResults(res!.categoryId, entityName: "Category", column: "parent")
+            fetchResults(res!.categoryId, entityName: "Item", column: "parent")
             
-            viewNavigationItem.title = res!.name
+            viewNavigationItem.title = res!.shortName
             
             try fetchedResultsController!.performFetch()
             
@@ -220,16 +218,16 @@ extension CategoryViewController: UITableViewDelegate {
     
 }
 
-class CategoryCell: UITableViewCell {
+class ItemCell: UITableViewCell {
     
     let URL_SITE = "http://rezmis3k.bget.ru/test3/catalog2/"
     let DIR_IMG_UPL = "img/upload/"
-    let DIR_IMG_CAMP = "category/"
+    let DIR_IMG_CAMP = "item/"
     let DENSITY = "1/"
     let ext = ".jpg"
     
-    func getUrl(category: Category)->String {
-        return URL_SITE + DIR_IMG_UPL + DIR_IMG_CAMP + DENSITY + category.photo + ext
+    func getUrl(item: Item)->String {
+        return ""//URL_SITE + DIR_IMG_UPL + DIR_IMG_CAMP + DENSITY + item.photo + ext
     }
     
     @IBOutlet weak var categoryImgSmall: UIImageView!
@@ -239,11 +237,11 @@ class CategoryCell: UITableViewCell {
     // @IBOutlet weak var imageNameLabel: UILabel!
     //@IBOutlet weak var imageCreatorLabel: UILabel!
     
-    func configureForCategory(category: Category) {
+    func configureForCategory(item: Item) {
         //  animalImageView.image = animal.image
-        categoryLabel.text = category.name
+        categoryLabel.text = item.shortName
         
-        let photoUrl = getUrl(category)
+        let photoUrl = getUrl(item)
         Alamofire.request(.GET, photoUrl).response { (request, response, data, error) in
             NSLog(photoUrl)
             self.categoryImgSmall.image = UIImage(data: data!, scale:1)
@@ -253,11 +251,10 @@ class CategoryCell: UITableViewCell {
     
 }
 
-
-/*extension CategoryViewController: SidePanelViewControllerDelegate {
-    func categorySelected(category: Category) {
+/*extension ItemViewController: SidePanelViewControllerDelegate {
+    func itemSelected(item: Item) {
         // imageView.image = animal.image
-        //  titleLabel.text = category.name
+        //  titleLabel.text = item.name
         // creatorLabel.text = animal.creator
         
         delegate?.collapseSidePanels?()

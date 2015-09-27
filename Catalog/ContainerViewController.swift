@@ -21,7 +21,7 @@ public class ContainerViewController: UIViewController {
     public var context: NSManagedObjectContext!
     
     var centerNavigationController: UINavigationController!
-    var centerViewController: CategoryViewController!
+    var categoryViewController: CategoryViewController!
     
     var currentState: SlideOutState = .BothCollapsed {
         didSet {
@@ -38,14 +38,17 @@ public class ContainerViewController: UIViewController {
     override public func viewDidLoad() {
         super.viewDidLoad()
         
-        centerViewController = UIStoryboard.centerViewController()
-        centerViewController.context = self.context
-        centerViewController.delegate = self
+        
+        categoryViewController = UIStoryboard.categoryViewController()
+        categoryViewController.context = self.context
+        categoryViewController.delegate = self
         
         // wrap the centerViewController in a navigation controller, so we can push views to it
         // and display bar button items in the navigation bar
-        centerNavigationController = UINavigationController(rootViewController: centerViewController)
+        centerNavigationController = UINavigationController(rootViewController: categoryViewController)
+        
         view.addSubview(centerNavigationController.view)
+        
         addChildViewController(centerNavigationController)
         
         centerNavigationController.didMoveToParentViewController(self)
@@ -101,11 +104,12 @@ extension ContainerViewController: CenterViewControllerDelegate {
     }
     
     func addChildSidePanelController(sidePanelController: LeftPanelViewController) {
-        sidePanelController.delegate = centerViewController
+        sidePanelController.delegate = categoryViewController
         
         view.insertSubview(sidePanelController.view, atIndex: 0)
         
         addChildViewController(sidePanelController)
+        
         sidePanelController.didMoveToParentViewController(self)
     }
     
@@ -114,7 +118,7 @@ extension ContainerViewController: CenterViewControllerDelegate {
             rightViewController = UIStoryboard.rightViewController()
             rightViewController?.context = self.context
             
-           // addChildSidePanelController(rightViewController!)
+            // addChildSidePanelController(rightViewController!)
         }
     }
     
@@ -178,7 +182,6 @@ extension ContainerViewController: UIGestureRecognizerDelegate {
                 } else {
                     addRightPanelViewController()
                 }
-                
                 showShadowForCenterViewController(true)
             }
         case .Changed:
@@ -210,8 +213,10 @@ private extension UIStoryboard {
         return mainStoryboard().instantiateViewControllerWithIdentifier("RightViewController") as? SidePanelViewController
     }
     
-    class func centerViewController() -> CategoryViewController? {
+    class func categoryViewController() -> CategoryViewController? {
         return mainStoryboard().instantiateViewControllerWithIdentifier("CategoryViewController") as? CategoryViewController
     }
-    
+    class func itemViewController() -> ItemViewController? {
+        return mainStoryboard().instantiateViewControllerWithIdentifier("ItemViewController") as? ItemViewController
+    }
 }
