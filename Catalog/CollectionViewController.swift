@@ -27,6 +27,16 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         }
     }
     
+    @IBAction func setView2(sender: AnyObject) {
+        cellHeightToSet = 600
+        cellWidthToSet = collectionView!.bounds.size.width
+        self.collectionView!.reloadData()
+    }
+    @IBAction func setView1(sender: AnyObject) {
+        cellWidthToSet = collectionView!.bounds.size.width/2-5
+        cellHeightToSet = 300
+        self.collectionView!.reloadData()
+    }
     func getPhotoFor(itemId:Int) -> String? {
         
         let fetchRequest = NSFetchRequest(entityName: "Item_Photo")
@@ -83,6 +93,10 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
 
         fetchResults(self.categoryId!, entityName: "Item", column: "categoryId")
         performFetch()
+        
+        cellHeightToSet = 300
+        cellWidthToSet = collectionView!.bounds.size.width/2-5
+        
         // Do any additional setup after loading the view.
     }
 
@@ -155,10 +169,14 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         
         return cell
     }
-    /*func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    
+    var cellWidthToSet:CGFloat = 0
+    var cellHeightToSet:CGFloat = 0
+    
+    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
-        return CGSizeMake(collectionView.bounds.size.width/2-5, 600)
-    }*/
+        return CGSizeMake(cellWidthToSet, cellHeightToSet)
+    }
 
     // MARK: UICollectionViewDelegate
 
