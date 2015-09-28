@@ -20,7 +20,7 @@ class ItemViewController: UIViewController, NSFetchedResultsControllerDelegate, 
     @IBOutlet weak var tableView: UITableView!
     var delegate: CenterViewControllerDelegate?
     
-    var context: NSManagedObjectContext!
+    var context: NSManagedObjectContext?
     
     
     // MARK: Button actions
@@ -29,8 +29,6 @@ class ItemViewController: UIViewController, NSFetchedResultsControllerDelegate, 
         self.menuItem = menuItem
         
         menuBarButton.image = UIImage(named: "menu.png")
-        
-        viewNavigationItem.title = menuItem.name
         
         delegate?.toggleLeftPanel?()
         
@@ -55,18 +53,7 @@ class ItemViewController: UIViewController, NSFetchedResultsControllerDelegate, 
     }
     
     @IBAction func mainMenuBtnTapped(sender: AnyObject) {
-        
-        if fetchedResultsController?.fetchedObjects?.count > 0 && getFirstCategoryParent() == 0 {
-            delegate?.toggleLeftPanel?()
-        } else {
-            let parentOfParent = parentStack.size == 0 ? 0 : parentStack.pop()
-            fetchResults(parentOfParent!, entityName:"Item", column: "parent")
-            performFetch()
-            let parentId = getFirstCategoryParent();
-            if parentId == 0 {
-                menuBarButton.image = UIImage(named: "menu.png")
-            }
-        }
+        navigationController?.popViewControllerAnimated(true)
         
     }
     
@@ -78,28 +65,6 @@ class ItemViewController: UIViewController, NSFetchedResultsControllerDelegate, 
     
     var parentStack = Stack<Int>()
     
-    
-    /*func getParentOfParent() -> Int? {
-    
-    var retId:Int?
-    let parentId = getFirstCategoryParent();
-    
-    let fetchRequest = NSFetchRequest(entityName: "Item")
-    fetchRequest.predicate = NSPredicate(format: "%d == categoryId", parentId)
-    
-    var results:[Item]
-    do{
-    try results = self.context.executeFetchRequest(fetchRequest) as! [Item]
-    if(results.count != 0) {
-    let someCategory = results[0]
-    retId = someCategory.parent
-    }
-    }
-    catch {
-    }
-    return retId
-    }*/
-    
     func fetchResults(id:Int, entityName:String, column:String) {
         
         let fetchRequest = NSFetchRequest(entityName: entityName)
@@ -109,7 +74,7 @@ class ItemViewController: UIViewController, NSFetchedResultsControllerDelegate, 
         
         let frc = NSFetchedResultsController(
             fetchRequest: fetchRequest,
-            managedObjectContext: self.context,
+            managedObjectContext: self.context!,
             sectionNameKeyPath: nil,
             cacheName: nil)
         frc.delegate = self
@@ -118,21 +83,25 @@ class ItemViewController: UIViewController, NSFetchedResultsControllerDelegate, 
     
     struct TableView {
         struct CellIdentifiers {
-            static let CategoryCell = "CategoryCell"
+            static let ItemCell = "ItemCell"
         }
     }
+    var categoryId:Int?
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         
-        fetchResults(0, entityName: "Item", column: "parent")
+        fetchResults(self.categoryId!, entityName: "Item", column: "categoryId")
         
-        viewNavigationItem.title = menuItem.name
         do {
             try fetchedResultsController!.performFetch()
+            
             tableView.reloadData()
             
-        } catch _ {
+        }
+        catch _ {
+            
         }
     }
 }
@@ -144,6 +113,26 @@ extension ItemViewController: UITableViewDataSource {
     /*func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     return self.menuItem.name
     }*/
+    func getPhotoFor(itemId:Int) -> String? {
+        
+        let fetchRequest = NSFetchRequest(entityName: "Item_Photo")
+        
+        fetchRequest.predicate = NSPredicate(format: "%d == itemId", itemId)
+        
+        var photo:String?
+        
+        do {
+            
+            var res:Item_Photo?
+            
+            try res = self.context!.executeFetchRequest(fetchRequest).first as? Item_Photo
+            
+            photo = res?.photo
+        }
+        catch {
+        }
+        return photo
+    }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         if let sections = fetchedResultsController!.sections {
@@ -164,11 +153,36 @@ extension ItemViewController: UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(TableView.CellIdentifiers.CategoryCell, forIndexPath: indexPath) as! ItemCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(TableView.CellIdentifiers.ItemCell, forIndexPath: indexPath) as! ItemCell
+    
+        
+       /* var imageView = UIImageView(frame: CGRectMake(10, 10, cell.frame.width - 10, cell.frame.height - 10))
+        //let image = UIImage(named: ImageNames[indexPath.row])
+        imageView.image = cell.categoryImgSmall.image
+        //cell.backgroundView = UIView()
+        cell.backgroundView.addSubview(imageView)*/
         
         let item = fetchedResultsController!.objectAtIndexPath(indexPath) as! Item
         
-        cell.configureForCategory(item)
+        cell.configureItem(item)
+        
+        var photoUrl = getPhotoFor(item.itemId)
+        if photoUrl != nil {
+            let URL_SITE = "http://rezmis3k.bget.ru/test3/catalog2/"
+            let DIR_IMG_UPL = "img/upload/"
+            let DIR_IMG_CAMP = "item/"
+            let DENSITY = "1/"
+            let ext = "_1.jpg"
+            
+            photoUrl = URL_SITE + DIR_IMG_UPL + DIR_IMG_CAMP + DENSITY + photoUrl! + ext
+            
+            if(photoUrl != nil) {
+                Alamofire.request(.GET, photoUrl!).response { (request, response, data, error) in
+                    NSLog(photoUrl!)
+                    cell.categoryImgSmall.image = UIImage(data: data!, scale:1)
+                }
+            }
+        }
         
         return cell
     }
@@ -187,76 +201,22 @@ extension ItemViewController: UITableViewDelegate {
         
         parentStack.push(item.categoryId)
         
-        let fetchRequest = NSFetchRequest(entityName: "Item")
         
-        fetchRequest.predicate = NSPredicate(format: "name ='" + item.shortName + "'")
-        
-        var res:Item?
-        
-        var results : [Item]
-        
-        do {
-            
-            try results = self.context!.executeFetchRequest(fetchRequest) as! [Item]
-            
-            res = results[0]
-            
-            fetchResults(res!.categoryId, entityName: "Item", column: "parent")
-            
-            viewNavigationItem.title = res!.shortName
-            
-            try fetchedResultsController!.performFetch()
-            
-            tableView.reloadData()
-            
-        }
-            
-        catch {
-            
-        }
     }
     
 }
 
 class ItemCell: UITableViewCell {
-    
-    let URL_SITE = "http://rezmis3k.bget.ru/test3/catalog2/"
-    let DIR_IMG_UPL = "img/upload/"
-    let DIR_IMG_CAMP = "item/"
-    let DENSITY = "1/"
-    let ext = ".jpg"
-    
-    func getUrl(item: Item)->String {
-        return ""//URL_SITE + DIR_IMG_UPL + DIR_IMG_CAMP + DENSITY + item.photo + ext
-    }
-    
+   
     @IBOutlet weak var categoryImgSmall: UIImageView!
     
     @IBOutlet weak var categoryLabel: UILabel!
-    //@IBOutlet weak var animalImageView: UIImageView!
-    // @IBOutlet weak var imageNameLabel: UILabel!
-    //@IBOutlet weak var imageCreatorLabel: UILabel!
-    
-    func configureForCategory(item: Item) {
+   
+    func configureItem(item: Item) {
         //  animalImageView.image = animal.image
         categoryLabel.text = item.shortName
         
-        let photoUrl = getUrl(item)
-        Alamofire.request(.GET, photoUrl).response { (request, response, data, error) in
-            NSLog(photoUrl)
-            self.categoryImgSmall.image = UIImage(data: data!, scale:1)
-        }
         //imageCreatorLabel.text = animal.creator
     }
     
 }
-
-/*extension ItemViewController: SidePanelViewControllerDelegate {
-    func itemSelected(item: Item) {
-        // imageView.image = animal.image
-        //  titleLabel.text = item.name
-        // creatorLabel.text = animal.creator
-        
-        delegate?.collapseSidePanels?()
-    }
-}*/

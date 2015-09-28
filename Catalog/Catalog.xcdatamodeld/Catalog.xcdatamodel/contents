@@ -61,7 +61,7 @@
             <entry key="hyper.remoteKey" value="height"/>
         </userInfo>
     </entity>
-    <entity name="Item" syncable="YES">
+    <entity name="Item" representedClassName="Item" syncable="YES">
         <attribute name="categoryId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
             <userInfo>
                 <entry key="hyper.remoteKey" value="category_id"/>
@@ -104,10 +104,37 @@
             </userInfo>
         </attribute>
     </entity>
-    <entity name="Item_Photo" syncable="YES"/>
+    <entity name="Item_Photo" representedClassName="Item_Photo" syncable="YES">
+        <attribute name="itemId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="hyper.isPrimaryKey" value="YES"/>
+                <entry key="hyper.remoteKey" value="item_id"/>
+            </userInfo>
+        </attribute>
+        <attribute name="photo" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="photo"/>
+            </userInfo>
+        </attribute>
+        <attribute name="photoId" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="photo_id"/>
+            </userInfo>
+        </attribute>
+        <attribute name="position" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="position"/>
+            </userInfo>
+        </attribute>
+        <attribute name="uploadDate" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="upload_date"/>
+            </userInfo>
+        </attribute>
+    </entity>
     <elements>
         <element name="Category" positionX="-63" positionY="-18" width="128" height="208"/>
         <element name="Item" positionX="151" positionY="-9" width="128" height="163"/>
-        <element name="Item_Photo" positionX="63" positionY="81" width="128" height="45"/>
+        <element name="Item_Photo" positionX="63" positionY="81" width="128" height="120"/>
     </elements>
 </model>

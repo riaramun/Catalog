@@ -11,8 +11,6 @@ import CoreData
 import Alamofire
 
 
-
-
 class CategoryViewController: UIViewController, NSFetchedResultsControllerDelegate, LeftPanelViewControllerDelegate {
     @IBOutlet weak var menuBarButton: UIBarButtonItem!
     
@@ -24,6 +22,18 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     
     var context: NSManagedObjectContext!
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let viewController = segue.destinationViewController as! CollectionViewController
+        
+        /*let nav = segue.destinationViewController as! UINavigationController
+        let viewController = nav.topViewController as! CollectionViewController*/
+
+        viewController.context = self.context
+        viewController.delegate = self.delegate
+        let category = sender as! Category
+        viewController.categoryId = category.categoryId
+        //viewController.viewNavigationItem.title = category.name
+    }
     
     // MARK: Button actions
     func menuItemSelected(menuItem: MenuItem) {
@@ -183,38 +193,47 @@ extension CategoryViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        menuBarButton.image = UIImage(named: "back.png")
-        
         let category = fetchedResultsController!.objectAtIndexPath(indexPath) as! Category
         
-        parentStack.push(category.parent)
+        menuBarButton.image = UIImage(named: "back.png")
         
-        let fetchRequest = NSFetchRequest(entityName: "Category")
+        if category.categoryType == "item" {
         
-        fetchRequest.predicate = NSPredicate(format: "name ='" + category.name + "'")
-        
-        var res:Category?
-        
-        var results : [Category]
-        
-        do {
+            self.performSegueWithIdentifier("ToItemView", sender: category)
+       
+        } else {
             
-            try results = self.context!.executeFetchRequest(fetchRequest) as! [Category]
             
-            res = results[0]
             
-            fetchResults(res!.categoryId, entityName: "Category", column: "parent")
+            parentStack.push(category.parent)
             
-            viewNavigationItem.title = res!.name
+            let fetchRequest = NSFetchRequest(entityName: "Category")
             
-            try fetchedResultsController!.performFetch()
+            fetchRequest.predicate = NSPredicate(format: "name ='" + category.name + "'")
             
-            tableView.reloadData()
+            var res:Category?
             
-        }
+            var results : [Category]
             
-        catch {
-            
+            do {
+                
+                try results = self.context!.executeFetchRequest(fetchRequest) as! [Category]
+                
+                res = results[0]
+                
+                fetchResults(res!.categoryId, entityName: "Category", column: "parent")
+                
+                viewNavigationItem.title = res!.name
+                
+                try fetchedResultsController!.performFetch()
+                
+                tableView.reloadData()
+                
+            }
+                
+            catch {
+                
+            }
         }
     }
     
@@ -233,7 +252,6 @@ class CategoryCell: UITableViewCell {
     }
     
     @IBOutlet weak var categoryImgSmall: UIImageView!
-    
     @IBOutlet weak var categoryLabel: UILabel!
     //@IBOutlet weak var animalImageView: UIImageView!
     // @IBOutlet weak var imageNameLabel: UILabel!
@@ -250,16 +268,15 @@ class CategoryCell: UITableViewCell {
         }
         //imageCreatorLabel.text = animal.creator
     }
-    
 }
 
 
 /*extension CategoryViewController: SidePanelViewControllerDelegate {
-    func categorySelected(category: Category) {
-        // imageView.image = animal.image
-        //  titleLabel.text = category.name
-        // creatorLabel.text = animal.creator
-        
-        delegate?.collapseSidePanels?()
-    }
+func categorySelected(category: Category) {
+// imageView.image = animal.image
+//  titleLabel.text = category.name
+// creatorLabel.text = animal.creator
+
+delegate?.collapseSidePanels?()
+}
 }*/

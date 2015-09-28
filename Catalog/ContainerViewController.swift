@@ -22,6 +22,7 @@ public class ContainerViewController: UIViewController {
     
     var centerNavigationController: UINavigationController!
     var categoryViewController: CategoryViewController!
+   
     
     var currentState: SlideOutState = .BothCollapsed {
         didSet {
