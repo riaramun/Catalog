@@ -132,8 +132,8 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(GridView.CellIdentifiers.ItemCell, forIndexPath: indexPath) as! GridCell
         
         let item = fetchedResultsController!.objectAtIndexPath(indexPath) as! Item
+        cell.categoryLabel.text = item.shortName
         
-        cell.configureItem(item)
         
         var photoUrl = getPhotoFor(item.itemId)
         if photoUrl != nil {
@@ -155,10 +155,10 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         
         return cell
     }
-    func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+    /*func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
         
-        return CGSizeMake(collectionView.bounds.size.width/2-5, 300)
-    }
+        return CGSizeMake(collectionView.bounds.size.width/2-5, 600)
+    }*/
 
     // MARK: UICollectionViewDelegate
 
@@ -196,16 +196,18 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
 class GridCell: UICollectionViewCell {
     
     @IBOutlet weak var categoryImgSmall: UIImageView!
-    @IBOutlet weak var categoryLabel: UILabel!
+   
+    @IBOutlet weak var categoryLabel: UITextView!
     //@IBOutlet weak var categoryImgSmall: UIImageView!
     
     //@IBOutlet weak var categoryLabel: UILabel!
     
-    func configureItem(item: Item) {
+  //  func configureItem(item: Item)
+    
         //  animalImageView.image = animal.image
-        categoryLabel.text = item.shortName
+        
         
         //imageCreatorLabel.text = animal.creator
-    }
+   
     
 }
