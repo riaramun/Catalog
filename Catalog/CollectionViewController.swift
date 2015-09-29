@@ -20,6 +20,8 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
     var context: NSManagedObjectContext?
     var fetchedResultsController: NSFetchedResultsController? = nil
     var cellColor = true
+    var dataHelper: DataHelper?
+    
     
     struct GridView {
         struct CellIdentifiers {
@@ -57,7 +59,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         }
         return photo
     }
-
+    
     func performFetch() {
         do {
             try fetchedResultsController!.performFetch()
@@ -84,13 +86,15 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-
+        
         // Register cell classes
+        self.dataHelper = DataHelper(context: self.context!)
+        
         self.collectionView!.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
-
+        
         fetchResults(self.categoryId!, entityName: "Item", column: "categoryId")
         performFetch()
         
@@ -99,29 +103,29 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         
         // Do any additional setup after loading the view.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     /*
     // MARK: - Navigation
-
+    
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
     }
     */
-
+    
     // MARK: UICollectionViewDataSource
-
+    
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }
-
-
+    
+    
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         var retVal = 0;
@@ -133,20 +137,32 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         
         return retVal
     }
-
+    
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
-        
-        /*let cell = collectionView.dequeueReusableCellWithReuseIdentifier(reuseIdentifier, forIndexPath: indexPath) as UICollectionViewCell
-    
-        // Configure the cell
-        cell.backgroundColor = cellColor ? UIColor.redColor() : UIColor.blueColor()
-        cellColor = !cellColor*/
-    
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(GridView.CellIdentifiers.ItemCell, forIndexPath: indexPath) as! GridCell
         
         let item = fetchedResultsController!.objectAtIndexPath(indexPath) as! Item
         cell.categoryLabel.text = item.shortName
+        
+        var attributes = self.dataHelper!.fetchGoodAttributesBy(item.itemId, categoryId:item.categoryId)
+        
+        let sortedKeys = Array(attributes.keys).sort(<)
+        if sortedKeys.count > 0 {
+            let key = sortedKeys[0]
+            cell.priceTextView.text  = (attributes[key]?.name)! + String (": ") + (attributes[key]?.value)! + (attributes[key]?.dimen)!
+        }
+        if sortedKeys.count > 1 {
+            let key = sortedKeys[1]
+            cell.oldPriceTextView.text  = (attributes[key]?.name)! + String (": ") + (attributes[key]?.value)! + (attributes[key]?.dimen)!
+        }
+        if sortedKeys.count > 2 {
+            let key = sortedKeys[2]
+            cell.sizeTextView.text  = (attributes[key]?.name)! + String (": ") + (attributes[key]?.value)! + (attributes[key]?.dimen)!
+        }
+        
+        
+        
         
         
         var photoUrl = getPhotoFor(item.itemId)
@@ -177,55 +193,61 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         
         return CGSizeMake(cellWidthToSet, cellHeightToSet)
     }
-
+    
     // MARK: UICollectionViewDelegate
-
+    
     
     // Uncomment this method to specify if the specified item should be highlighted during tracking
     override func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
     
-
+    
     /*
     // Uncomment this method to specify if the specified item should be selected
     override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
+    return true
     }
     */
-
+    
     /*
     // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
     override func collectionView(collectionView: UICollectionView, shouldShowMenuForItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return false
+    return false
     }
-
+    
     override func collectionView(collectionView: UICollectionView, canPerformAction action: Selector, forItemAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject?) -> Bool {
-        return false
+    return false
     }
-
+    
     override func collectionView(collectionView: UICollectionView, performAction action: Selector, forItemAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject?) {
     
     }
     */
-
+    
 }
 
 class GridCell: UICollectionViewCell {
     
     @IBOutlet weak var categoryImgSmall: UIImageView!
-   
+    
     @IBOutlet weak var categoryLabel: UITextView!
+    
+    @IBOutlet weak var priceTextView: UITextView!
+    
+    @IBOutlet weak var oldPriceTextView: UITextView!
+    
+    @IBOutlet weak var sizeTextView: UITextView!
     //@IBOutlet weak var categoryImgSmall: UIImageView!
     
     //@IBOutlet weak var categoryLabel: UILabel!
     
-  //  func configureItem(item: Item)
+    //  func configureItem(item: Item)
     
-        //  animalImageView.image = animal.image
-        
-        
-        //imageCreatorLabel.text = animal.creator
-   
+    //  animalImageView.image = animal.image
+    
+    
+    //imageCreatorLabel.text = animal.creator
+    
     
 }

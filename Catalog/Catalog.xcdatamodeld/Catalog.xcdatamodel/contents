@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8195" systemVersion="14F27" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9048" systemVersion="14F27" minimumToolsVersion="Automatic">
     <entity name="Category" representedClassName="Category" syncable="YES">
         <attribute name="categoryId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
             <userInfo>
@@ -132,7 +132,7 @@
             </userInfo>
         </attribute>
     </entity>
-    <entity name="Property" syncable="YES">
+    <entity name="Property" representedClassName="Property" syncable="YES">
         <attribute name="color" optional="YES" attributeType="String" syncable="YES">
             <userInfo>
                 <entry key="hyper.remoteKey" value="color"/>
@@ -165,7 +165,28 @@
             </userInfo>
         </attribute>
     </entity>
-    <entity name="Property_Item_Value" syncable="YES">
+    <entity name="Property_Item_List" representedClassName="Property_Item_List" syncable="YES">
+        <attribute name="categoryId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="category_id"/>
+            </userInfo>
+        </attribute>
+        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="hyper.isPrimaryKey" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="position" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="propertyId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="property_id"/>
+            </userInfo>
+        </attribute>
+        <userInfo>
+            <entry key="hyper.remoteKey" value="position"/>
+        </userInfo>
+    </entity>
+    <entity name="Property_Item_Value" representedClassName="Property_Item_Value" syncable="YES">
         <attribute name="id" optional="YES" attributeType="Integer 32" minValueString="0" defaultValueString="0" syncable="YES">
             <userInfo>
                 <entry key="hyper.isPrimaryKey" value="YES"/>
@@ -191,7 +212,8 @@
         <element name="Category" positionX="-63" positionY="-18" width="128" height="208"/>
         <element name="Item" positionX="90" positionY="-18" width="128" height="163"/>
         <element name="Item_Photo" positionX="241" positionY="-18" width="128" height="120"/>
-        <element name="Property_Item_Value" positionX="126" positionY="173" width="128" height="103"/>
         <element name="Property" positionX="90" positionY="108" width="128" height="135"/>
+        <element name="Property_Item_Value" positionX="126" positionY="173" width="128" height="105"/>
+        <element name="Property_Item_List" positionX="90" positionY="108" width="128" height="105"/>
     </elements>
 </model>
