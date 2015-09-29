@@ -18,6 +18,8 @@
 		84CF19091BAE23CC00C93739 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CF19081BAE23CC00C93739 /* MenuItem.swift */; settings = {ASSET_TAGS = (); }; };
 		84CF190B1BAEC6C600C93739 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 84CF190A1BAEC6C600C93739 /* Localizable.strings */; settings = {ASSET_TAGS = (); }; };
 		84DBC2701BB9462900620E18 /* CollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DBC26F1BB9462900620E18 /* CollectionViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		84DC95721BBA973C0001465B /* Property.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DC95711BBA973C0001465B /* Property.swift */; settings = {ASSET_TAGS = (); }; };
+		84DC95741BBA97640001465B /* Property_Item_Value.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DC95731BBA97640001465B /* Property_Item_Value.swift */; settings = {ASSET_TAGS = (); }; };
 		84DCBA8A1BA85A92009CA677 /* OptJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DCBA891BA85A92009CA677 /* OptJSON.swift */; };
 		84DCBA8D1BA862AA009CA677 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DCBA8C1BA862AA009CA677 /* Category.swift */; };
 		84DCBA931BA9B3AA009CA677 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DCBA921BA9B3AA009CA677 /* CategoryViewController.swift */; };
@@ -57,6 +59,8 @@
 		84CF19081BAE23CC00C93739 /* MenuItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
 		84CF190A1BAEC6C600C93739 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
 		84DBC26F1BB9462900620E18 /* CollectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CollectionViewController.swift; sourceTree = "<group>"; };
+		84DC95711BBA973C0001465B /* Property.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Property.swift; sourceTree = "<group>"; };
+		84DC95731BBA97640001465B /* Property_Item_Value.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Property_Item_Value.swift; sourceTree = "<group>"; };
 		84DCBA881BA85A92009CA677 /* OptJSON.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OptJSON.h; path = OptJSON/OptJSON.h; sourceTree = "<group>"; };
 		84DCBA891BA85A92009CA677 /* OptJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = OptJSON.swift; path = OptJSON/OptJSON.swift; sourceTree = "<group>"; };
 		84DCBA8C1BA862AA009CA677 /* Category.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
@@ -162,6 +166,8 @@
 		84DCBA8B1BA86262009CA677 /* models */ = {
 			isa = PBXGroup;
 			children = (
+				84DC95731BBA97640001465B /* Property_Item_Value.swift */,
+				84DC95711BBA973C0001465B /* Property.swift */,
 				84DFC5CE1BB8361400F39C73 /* Item_Photo.swift */,
 				84DFC5CA1BB80E8700F39C73 /* Item.swift */,
 				84CF19081BAE23CC00C93739 /* MenuItem.swift */,
@@ -351,6 +357,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84DC95721BBA973C0001465B /* Property.swift in Sources */,
 				84CF19071BAE218900C93739 /* LeftPanelViewController.swift in Sources */,
 				84E347121BABFF6B009CE455 /* DataHelper.swift in Sources */,
 				843786461BA8512F00244DBE /* ViewController.swift in Sources */,
@@ -358,6 +365,7 @@
 				84DFC5C91BB804B500F39C73 /* Stack.swift in Sources */,
 				84DCBA971BA9B5AE009CA677 /* ContainerViewController.swift in Sources */,
 				84DCBA8A1BA85A92009CA677 /* OptJSON.swift in Sources */,
+				84DC95741BBA97640001465B /* Property_Item_Value.swift in Sources */,
 				84DFC5CD1BB8326D00F39C73 /* ItemViewController.swift in Sources */,
 				84DFC5D11BB8383100F39C73 /* CenterViewControllerDelegate.swift in Sources */,
 				84DBC2701BB9462900620E18 /* CollectionViewController.swift in Sources */,

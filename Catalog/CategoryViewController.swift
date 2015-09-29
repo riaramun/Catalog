@@ -23,6 +23,9 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     var context: NSManagedObjectContext!
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "ToItemView" {
+        
         let viewController = segue.destinationViewController as! CollectionViewController
         
         /*let nav = segue.destinationViewController as! UINavigationController
@@ -32,6 +35,7 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
         viewController.delegate = self.delegate
         let category = sender as! Category
         viewController.categoryId = category.categoryId
+        }
         //viewController.viewNavigationItem.title = category.name
     }
     

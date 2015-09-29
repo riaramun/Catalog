@@ -132,9 +132,66 @@
             </userInfo>
         </attribute>
     </entity>
+    <entity name="Property" syncable="YES">
+        <attribute name="color" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="color"/>
+            </userInfo>
+        </attribute>
+        <attribute name="dimension" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="dimension"/>
+            </userInfo>
+        </attribute>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="name"/>
+            </userInfo>
+        </attribute>
+        <attribute name="propertyId" optional="YES" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES">
+            <userInfo>
+                <entry key="hyper.isPrimaryKey" value="YES"/>
+                <entry key="hyper.remoteKey" value="property_id"/>
+            </userInfo>
+        </attribute>
+        <attribute name="style" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="style"/>
+            </userInfo>
+        </attribute>
+        <attribute name="typeId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="type_id"/>
+            </userInfo>
+        </attribute>
+    </entity>
+    <entity name="Property_Item_Value" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 32" minValueString="0" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="hyper.isPrimaryKey" value="YES"/>
+            </userInfo>
+        </attribute>
+        <attribute name="itemId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="item_id"/>
+            </userInfo>
+        </attribute>
+        <attribute name="propertyId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="property_id"/>
+            </userInfo>
+        </attribute>
+        <attribute name="value" optional="YES" attributeType="String" syncable="YES">
+            <userInfo>
+                <entry key="hyper.remoteKey" value="value"/>
+            </userInfo>
+        </attribute>
+    </entity>
     <elements>
         <element name="Category" positionX="-63" positionY="-18" width="128" height="208"/>
-        <element name="Item" positionX="151" positionY="-9" width="128" height="163"/>
-        <element name="Item_Photo" positionX="63" positionY="81" width="128" height="120"/>
+        <element name="Item" positionX="90" positionY="-18" width="128" height="163"/>
+        <element name="Item_Photo" positionX="241" positionY="-18" width="128" height="120"/>
+        <element name="Property_Item_Value" positionX="126" positionY="173" width="128" height="103"/>
+        <element name="Property" positionX="90" positionY="108" width="128" height="135"/>
     </elements>
 </model>

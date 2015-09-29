@@ -42,8 +42,8 @@ public func JSON(object: AnyObject?) -> JSONValue? {
     if let some: AnyObject = object {
         switch some {
         case let null as NSNull:        return null
-        case let number as NSNumber:    return number
         case let string as NSString:    return string
+        case let number as NSNumber:    return number
         case let array as NSArray:      return array
         case let dict as NSDictionary:  return dict
         default:                        return nil
