@@ -25,16 +25,16 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "ToItemView" {
-        
-        let viewController = segue.destinationViewController as! CollectionViewController
-        
-        /*let nav = segue.destinationViewController as! UINavigationController
-        let viewController = nav.topViewController as! CollectionViewController*/
-
-        viewController.context = self.context
-        viewController.delegate = self.delegate
-        let category = sender as! Category
-        viewController.categoryId = category.categoryId
+            
+            let viewController = segue.destinationViewController as! CollectionViewController
+            
+            /*let nav = segue.destinationViewController as! UINavigationController
+            let viewController = nav.topViewController as! CollectionViewController*/
+            
+            viewController.context = self.context
+            viewController.delegate = self.delegate
+            let category = sender as! Category
+            viewController.categoryId = category.categoryId
         }
         //viewController.viewNavigationItem.title = category.name
     }
@@ -76,11 +76,13 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
             delegate?.toggleLeftPanel?()
         } else {
             let parentOfParent = parentStack.size == 0 ? 0 : parentStack.pop()
-            fetchResults(parentOfParent!, entityName:"Category", column: "parent")
-            performFetch()
-            let parentId = getFirstCategoryParent();
-            if parentId == 0 {
-                menuBarButton.image = UIImage(named: "menu.png")
+            if parentOfParent != nil {
+                fetchResults(parentOfParent!, entityName:"Category", column: "parent")
+                performFetch()
+                let parentId = getFirstCategoryParent();
+                if parentId == 0 {
+                    menuBarButton.image = UIImage(named: "menu.png")
+                }
             }
         }
         
@@ -202,9 +204,9 @@ extension CategoryViewController: UITableViewDelegate {
         menuBarButton.image = UIImage(named: "back.png")
         
         if category.categoryType == "item" {
-        
+            
             self.performSegueWithIdentifier("ToItemView", sender: category)
-       
+            
         } else {
             
             

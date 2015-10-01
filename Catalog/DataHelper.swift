@@ -15,14 +15,18 @@ import Sync
 class DataHelper {
     
     class GoodAtribute {
-        init(name:String , value:String, dimen:String) {
+        init(name:String , value:String, dimen:String, style:String, color:String) {
             self.name = name
             self.dimen = dimen
             self.value = value
+            self.style = style
+            self.color = color
         }
         var name:String
         var value:String
         var dimen:String
+        var style:String
+        var color:String
     }
     let context: NSManagedObjectContext
     
@@ -33,24 +37,42 @@ class DataHelper {
     func fetchGoodAttributesBy(itemId: Int, categoryId: Int) -> [Int: GoodAtribute] {
         
         
-        
         var goodAttributes = [Int: GoodAtribute]()
         
         let propertiesValues = fetchPropertyItemValuesBy(itemId)
         
         for  var i = 0 ; i < propertiesValues.count;  i++ {
             
-            
             let propertiesValue  = propertiesValues[i] as Property_Item_Value
             
             let property = fetchPropertyBy(propertiesValue.propertyId)
             
+            var properVal: String = ""
+            
+            if property?.typeId == 1 {
+                properVal = propertiesValue.value
+            } else if property?.typeId == 2 || property?.typeId == 3 {
+                let propList = fetchPropertyListValuesBy((property?.propertyId)!)
+                for prop in propList! {
+                    properVal += prop.value
+                    if propList?.last != prop {
+                        properVal += ","
+                    }
+                }
+            } else if property?.typeId == 3 {
+                
+            } else if property?.typeId == 4 {
+                let properListVal = fetchPropertyListValueBy(propertiesValue.value)
+                properVal = (properListVal?.value)!
+            }
             let propertyItemList = fetchPropertyItemListBy(propertiesValue.propertyId, categoryId: categoryId)
             
             if propertyItemList != nil {
                 let goodAtribute = GoodAtribute(name: (property?.name)!,
-                    value: propertiesValue.value,
-                    dimen: (property?.dimension)!)
+                    value: properVal,
+                    dimen: (property?.dimension)!,
+                    style: (property?.style)!,
+                    color: (property?.color)!)
                 goodAttributes[propertyItemList!.position] = goodAtribute
             }
             
@@ -105,6 +127,34 @@ class DataHelper {
         }
         return property
     }
+    func fetchPropertyListValuesBy(propId: Int) -> [Property_List_Value]?
+    {
+        let fReq = NSFetchRequest(entityName: "Property_List_Value")
+        fReq.predicate = NSPredicate(format: "propertyId == %d", propId )
+        
+        var fetchResults : [Property_List_Value]?
+        do {
+            try fetchResults = self.context.executeFetchRequest(fReq) as? [Property_List_Value]
+        }
+        catch {
+        }
+        return fetchResults!
+    }
+    func fetchPropertyListValueBy(propValue: String) -> Property_List_Value?
+    {
+        let fReq = NSFetchRequest(entityName: "Property_List_Value")
+        fReq.predicate = NSPredicate(format: "listId == '" + propValue + "'")
+        
+        var fetchResults : [Property_List_Value]
+        var res: Property_List_Value?
+        do {
+            try fetchResults = self.context.executeFetchRequest(fReq) as! [Property_List_Value]
+            res = fetchResults.count > 0 ? fetchResults[0] : nil
+        }
+        catch {
+        }
+        return res!
+    }
     
     func seedDataStore() {
         
@@ -117,9 +167,22 @@ class DataHelper {
                 let property_item_values = JSON(result.value)?[key:"Property_Item_Value"] as? NSArray
                 let properties = JSON(result.value)?[key:"Property"] as? NSArray
                 let propertyItemList = JSON(result.value)?[key:"Property_Item_List"] as? NSArray
+                let propertyListValue = JSON(result.value)?[key:"Property_List_Value"] as? NSArray
+                
+                
+                func propertyListValueAdded(err:NSError!) {
+                    
+                }
                 
                 func propertyItemListAdded(err:NSError!) {
                     
+                    if(propertyListValue != nil ) {
+                        Sync.changes(
+                            propertyListValue as! [AnyObject],
+                            inEntityNamed: "Property_List_Value",
+                            dataStack: dataStack,
+                            completion: propertyListValueAdded)
+                    }
                 }
                 
                 func propertiesAdded(err:NSError!) {

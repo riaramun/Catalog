@@ -13,8 +13,17 @@ import Alamofire
 
 let reuseIdentifier = "Cell"
 
-class CollectionViewController: UICollectionViewController, NSFetchedResultsControllerDelegate {
+class CollectionViewController: UICollectionViewController, NSFetchedResultsControllerDelegate, AlertPickerViewDelegate,UIPickerViewDelegate {
     
+    var pickerView: AlertPickerView!
+    let sort_menu_array = [   "Цена (по возрастанию)",
+        "Цена (по убыванию)",
+        "Старая цена (по возрастанию)",
+        "Старая цена (по убыванию)"]
+    
+    @IBAction func showSortDialog(sender: AnyObject) {
+        self.pickerView.showPicker()
+    }
     var categoryId:Int?
     var delegate: CenterViewControllerDelegate?
     var context: NSManagedObjectContext?
@@ -87,10 +96,11 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+        self.pickerView = AlertPickerView()
+        self.pickerView.items = sort_menu_array
+        self.pickerView.delegate = self
+        self.view.addSubview(pickerView)
         
-        // Register cell classes
         self.dataHelper = DataHelper(context: self.context!)
         
         self.collectionView!.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
@@ -99,6 +109,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         performFetch()
         
         cellHeightToSet = 300
+        
         cellWidthToSet = collectionView!.bounds.size.width/2-5
         
         // Do any additional setup after loading the view.
@@ -109,15 +120,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         // Dispose of any resources that can be recreated.
     }
     
-    /*
-    // MARK: - Navigation
     
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    }
-    */
     
     // MARK: UICollectionViewDataSource
     
@@ -143,27 +146,54 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(GridView.CellIdentifiers.ItemCell, forIndexPath: indexPath) as! GridCell
         
         let item = fetchedResultsController!.objectAtIndexPath(indexPath) as! Item
-        cell.categoryLabel.text = item.shortName
         
         var attributes = self.dataHelper!.fetchGoodAttributesBy(item.itemId, categoryId:item.categoryId)
         
+        let strToSet = NSMutableAttributedString(string: item.shortName)
+        strToSet.appendAttributedString(NSMutableAttributedString(string:"\r"))
         let sortedKeys = Array(attributes.keys).sort(<)
-        if sortedKeys.count > 0 {
+        for key in sortedKeys {
+            
+            strToSet.appendAttributedString(NSMutableAttributedString(string: (attributes[key]?.name)! + String (": ")))
+            
+            let styledStr = styleString( (attributes[key]?.value)! + (attributes[key]?.dimen)!, style: (attributes[key]?.style)!,color: (attributes[key]?.color)!)
+            
+            strToSet.appendAttributedString(styledStr)
+            
+            strToSet.appendAttributedString(NSMutableAttributedString(string:"\r"))
+        }
+        
+        
+        cell.categoryLabel.attributedText = strToSet
+        
+        /*if sortedKeys.count > 0 {
+            
             let key = sortedKeys[0]
             cell.priceTextView.text  = (attributes[key]?.name)! + String (": ") + (attributes[key]?.value)! + (attributes[key]?.dimen)!
         }
         if sortedKeys.count > 1 {
+            
+            
             let key = sortedKeys[1]
-            cell.oldPriceTextView.text  = (attributes[key]?.name)! + String (": ") + (attributes[key]?.value)! + (attributes[key]?.dimen)!
+            
+            let strToSet = NSMutableAttributedString(string: (attributes[key]?.name)! + String (": "))
+            
+            let styledStr = styleString( (attributes[key]?.value)! + (attributes[key]?.dimen)!, style: (attributes[key]?.style)!,color: (attributes[key]?.color)!)
+            
+            strToSet.appendAttributedString(styledStr)
+            
+            
+            
+            
+            //let strRes = (attributes[key]?.name)! + String (": ") + (attributes[key]?.value)! + (attributes[key]?.dimen)!
+            
+            cell.oldPriceTextView.attributedText  = strToSet
+            
         }
         if sortedKeys.count > 2 {
             let key = sortedKeys[2]
             cell.sizeTextView.text  = (attributes[key]?.name)! + String (": ") + (attributes[key]?.value)! + (attributes[key]?.dimen)!
-        }
-        
-        
-        
-        
+        }*/
         
         var photoUrl = getPhotoFor(item.itemId)
         if photoUrl != nil {
@@ -186,6 +216,26 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         return cell
     }
     
+    func styleString(str:String, style:String, color:String) -> NSMutableAttributedString
+    {
+        var uiColor = UIColor.blackColor()
+        if(!color.isEmpty) {
+            uiColor = color.hexColor!
+        }
+        var strokeVal = 0
+        if(style == "bs") {
+            strokeVal = 1
+        }
+        let attributes: [String : AnyObject] = [NSStrikethroughStyleAttributeName : strokeVal, NSForegroundColorAttributeName : uiColor, NSStrikethroughColorAttributeName : UIColor.blackColor()]
+        
+        
+        return NSMutableAttributedString(string: str, attributes: attributes) //1
+        
+    }
+    /*
+    
+    
+    */
     var cellWidthToSet:CGFloat = 0
     var cellHeightToSet:CGFloat = 0
     
@@ -202,6 +252,23 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         return true
     }
     
+    // for delegate
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return self.pickerView.items.count
+    }
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return self.pickerView.items[row]
+    }
+    func pickerView(pickerView: UIPickerView, didSelect numbers: [Int]) {
+        print("selected \(numbers)")
+    }
+    
+    func pickerViewDidHide(pickerView: UIPickerView) {
+        print("hided pickerview")
+    }
     
     /*
     // Uncomment this method to specify if the specified item should be selected
@@ -233,21 +300,32 @@ class GridCell: UICollectionViewCell {
     
     @IBOutlet weak var categoryLabel: UITextView!
     
-    @IBOutlet weak var priceTextView: UITextView!
+   /* @IBOutlet weak var priceTextView: UITextView!
     
     @IBOutlet weak var oldPriceTextView: UITextView!
     
-    @IBOutlet weak var sizeTextView: UITextView!
-    //@IBOutlet weak var categoryImgSmall: UIImageView!
+    @IBOutlet weak var sizeTextView: UITextView!*/
     
-    //@IBOutlet weak var categoryLabel: UILabel!
-    
-    //  func configureItem(item: Item)
-    
-    //  animalImageView.image = animal.image
-    
-    
-    //imageCreatorLabel.text = animal.creator
-    
-    
+}
+
+extension String {
+    var hexColor: UIColor? {
+        let hex = self.stringByTrimmingCharactersInSet(NSCharacterSet.alphanumericCharacterSet().invertedSet)
+        var int = UInt32()
+        guard NSScanner(string: hex).scanHexInt(&int) else {
+            return nil
+        }
+        let a, r, g, b: UInt32
+        switch hex.characters.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            return nil
+        }
+        return UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
+    }
 }

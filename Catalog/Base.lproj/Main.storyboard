@@ -285,15 +285,15 @@
                                             <rect key="frame" x="8" y="0.0" width="285" height="392"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="forceLeftToRight" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="вид 1" translatesAutoresizingMaskIntoConstraints="NO" id="zny-Hb-MNB">
-                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="280"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="292"/>
                                                 </imageView>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" semanticContentAttribute="forceLeftToRight" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQc-Ue-Ejv">
-                                                    <rect key="frame" x="0.0" y="280" width="285" height="28"/>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQc-Ue-Ejv">
+                                                    <rect key="frame" x="0.0" y="292" width="285" height="100"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="28" id="nPY-sA-I0j" userLabel="height = 14"/>
+                                                        <constraint firstAttribute="height" constant="100" id="TXU-B9-sZc"/>
                                                     </constraints>
                                                     <attributedString key="attributedText">
-                                                        <fragment content="item name">
+                                                        <fragment content="sdfsdfsdf">
                                                             <attributes>
                                                                 <font key="NSFont" size="14" name="HelveticaNeue"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
@@ -302,55 +302,11 @@
                                                     </attributedString>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" semanticContentAttribute="forceLeftToRight" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JyT-d8-Xc2" userLabel="Price Label">
-                                                    <rect key="frame" x="0.0" y="308" width="285" height="28"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="28" id="ajp-bw-iHo" userLabel="height = 14"/>
-                                                    </constraints>
-                                                    <attributedString key="attributedText">
-                                                        <fragment content="item name">
-                                                            <attributes>
-                                                                <font key="NSFont" size="14" name="HelveticaNeue"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                    </attributedString>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
-                                                </textView>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" semanticContentAttribute="forceLeftToRight" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UTi-PW-ZSn" userLabel="Old Label">
-                                                    <rect key="frame" x="0.0" y="336" width="285" height="28"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="28" id="Wn1-6G-11h" userLabel="height = 14"/>
-                                                    </constraints>
-                                                    <attributedString key="attributedText">
-                                                        <fragment content="item name">
-                                                            <attributes>
-                                                                <font key="NSFont" size="14" name="HelveticaNeue"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                    </attributedString>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
-                                                </textView>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" semanticContentAttribute="forceLeftToRight" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BqN-Aq-FPl" userLabel="Size Label">
-                                                    <rect key="frame" x="0.0" y="364" width="285" height="28"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="28" id="3j6-Mf-grC" userLabel="height = 14"/>
-                                                    </constraints>
-                                                    <attributedString key="attributedText">
-                                                        <fragment content="item name">
-                                                            <attributes>
-                                                                <font key="NSFont" size="14" name="HelveticaNeue"/>
-                                                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
-                                                            </attributes>
-                                                        </fragment>
-                                                    </attributedString>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="words"/>
-                                                </textView>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="DQc-Ue-Ejv" firstAttribute="top" secondItem="zny-Hb-MNB" secondAttribute="bottom" id="SFS-3J-VBf"/>
-                                                <constraint firstItem="JyT-d8-Xc2" firstAttribute="top" secondItem="DQc-Ue-Ejv" secondAttribute="bottom" id="sUq-dD-o6U"/>
+                                                <constraint firstItem="DQc-Ue-Ejv" firstAttribute="centerX" secondItem="Iy8-ZR-pDq" secondAttribute="centerX" constant="1" id="5uI-ZH-UjU"/>
+                                                <constraint firstItem="DQc-Ue-Ejv" firstAttribute="bottom" secondItem="Iy8-ZR-pDq" secondAttribute="bottomMargin" id="Pz9-JM-uhm"/>
+                                                <constraint firstItem="DQc-Ue-Ejv" firstAttribute="top" secondItem="zny-Hb-MNB" secondAttribute="bottom" id="tIa-c6-2TI"/>
                                             </constraints>
                                         </stackView>
                                     </subviews>
@@ -366,9 +322,6 @@
                                 <connections>
                                     <outlet property="categoryImgSmall" destination="zny-Hb-MNB" id="LbP-5o-59l"/>
                                     <outlet property="categoryLabel" destination="DQc-Ue-Ejv" id="OC3-gP-WzL"/>
-                                    <outlet property="oldPriceTextView" destination="UTi-PW-ZSn" id="OZd-Gn-Ccz"/>
-                                    <outlet property="priceTextView" destination="JyT-d8-Xc2" id="pI0-WH-4xA"/>
-                                    <outlet property="sizeTextView" destination="BqN-Aq-FPl" id="AAv-zD-xhk"/>
                                 </connections>
                             </collectionViewCell>
                         </cells>
@@ -399,6 +352,9 @@
                             </barButtonItem>
                             <barButtonItem title="Сортировка" id="3jc-a9-VpG">
                                 <color key="tintColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="showSortDialog:" destination="Ml8-Yw-1hJ" id="sAd-Xq-Tzr"/>
+                                </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
@@ -419,4 +375,5 @@
         <image name="menu.png" width="54" height="44"/>
         <image name="вид 1" width="540" height="540"/>
     </resources>
+    <color key="tintColor" red="0.83137254901960789" green="0.83137254901960789" blue="0.83137254901960789" alpha="1" colorSpace="calibratedRGB"/>
 </document>
