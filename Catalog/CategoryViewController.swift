@@ -48,7 +48,7 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
         
         viewNavigationItem.title = menuItem.name
         
-        delegate?.toggleLeftPanel?()
+        delegate?.toggleLeftPanel()
         
         fetchResults(0, entityName:"Category", column: "parent")
         
@@ -73,7 +73,7 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     @IBAction func mainMenuBtnTapped(sender: AnyObject) {
         
         if fetchedResultsController?.fetchedObjects?.count > 0 && getFirstCategoryParent() == 0 {
-            delegate?.toggleLeftPanel?()
+            delegate?.toggleLeftPanel()
         } else {
             let parentOfParent = parentStack.size == 0 ? 0 : parentStack.pop()
             if parentOfParent != nil {
@@ -89,7 +89,7 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     }
     
     @IBAction func puppiesTapped(sender: AnyObject) {
-        delegate?.toggleRightPanel?()
+        delegate?.toggleRightPanel()
     }
     
     var fetchedResultsController: NSFetchedResultsController? = nil
@@ -143,6 +143,7 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.delegate!.setDrawerLeftPanel(true)
         fetchResults(0, entityName: "Category", column: "parent")
         
         viewNavigationItem.title = menuItem.name
@@ -209,13 +210,11 @@ extension CategoryViewController: UITableViewDelegate {
             
         } else {
             
-            
-            
             parentStack.push(category.parent)
             
             let fetchRequest = NSFetchRequest(entityName: "Category")
             
-            fetchRequest.predicate = NSPredicate(format: "name ='" + category.name + "'")
+            fetchRequest.predicate = NSPredicate(format: "categoryId = %d",  category.categoryId )
             
             var res:Category?
             

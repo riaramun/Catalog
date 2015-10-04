@@ -56,11 +56,9 @@ class DataHelper {
                 for prop in propList! {
                     properVal += prop.value
                     if propList?.last != prop {
-                        properVal += ","
+                        properVal += ", "
                     }
                 }
-            } else if property?.typeId == 3 {
-                
             } else if property?.typeId == 4 {
                 let properListVal = fetchPropertyListValueBy(propertiesValue.value)
                 properVal = (properListVal?.value)!
@@ -158,6 +156,8 @@ class DataHelper {
     
     func seedDataStore() {
         
+        dataStack.drop()
+        
         Alamofire.request(.GET, "http://rezmis3k.bget.ru/demo/sql2.php")
             .responseJSON { _, resp, result in
                 
@@ -169,9 +169,33 @@ class DataHelper {
                 let propertyItemList = JSON(result.value)?[key:"Property_Item_List"] as? NSArray
                 let propertyListValue = JSON(result.value)?[key:"Property_List_Value"] as? NSArray
                 
+                /*for category in categories! {
+                
+                let entity = NSEntityDescription.entityForName("Category", inManagedObjectContext: self.context)
+                let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
+                let obj = JSON(val);
+                
+                item.setValue(obj?[key:"category_id"] as! Int, forKey: "categoryId")
+                item.setValue(obj?[key:"name"] as! Int, forKey: "name")
+                item.setValue(obj?[key:"visibility"] as! Int, forKey: "visibility")
+                item.setValue(obj?[key:"photo"] as! Int, forKey: "photo")
+                item.setValue(obj?[key:"photoEditDate"] as! Int, forKey: "photo_edit_date")
+                item.setValue(obj?[key:"lastEditDate"] as! Int, forKey: "last_edit_date")
+                item.setValue(obj?[key:"parent"] as! Int, forKey: "parent")
+                item.setValue(obj?[key:"position"] as! Int, forKey: "position")
+                item.setValue(obj?[key:"categoryType"] as! String, forKey: "categoryType")
+                item.setValue(obj?[key:"position"] as! Int, forKey: "position")
+                item.setValue(obj?[key:"categoryType"] as! Int, forKey: "category_type")
+                
+                }*/
+                
                 
                 func propertyListValueAdded(err:NSError!) {
-                    
+                    do {
+                        try self.context.save()
+                    } catch {
+                        
+                    }
                 }
                 
                 func propertyItemListAdded(err:NSError!) {
@@ -189,28 +213,16 @@ class DataHelper {
                     if(propertyItemList != nil ) {
                         var counter = 0
                         for val in propertyItemList! {
-                            
                             let entity = NSEntityDescription.entityForName("Property_Item_List", inManagedObjectContext: self.context)
-                            
                             let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
-                            
                             let obj = JSON(val);
-                            
-                            let categoryId = obj?[key:"category_id"] as! Int
-                            let propertyId = obj?[key:"property_id"] as! Int
-                            let position = obj?[key:"position"] as! Int
-                            
                             let id = ++counter
                             item.setValue(id, forKey: "id")
-                            item.setValue(categoryId, forKey: "categoryId")
-                            item.setValue(propertyId, forKey: "propertyId")
-                            item.setValue(position, forKey: "position")
+                            item.setValue(obj?[key:"category_id"] as! Int, forKey: "categoryId")
+                            item.setValue(obj?[key:"property_id"] as! Int, forKey: "propertyId")
+                            item.setValue(obj?[key:"position"] as! Int, forKey: "position")
                         }
-                        do {
-                            try self.context.save()
-                        } catch {
-                            
-                        }
+                        
                         propertyItemListAdded(nil)
                     }
                 }
@@ -247,11 +259,7 @@ class DataHelper {
                             item.setValue(propertyId, forKey: "propertyId")
                             item.setValue(value, forKey: "value")
                         }
-                        do {
-                            try self.context.save()
-                        } catch {
-                            
-                        }
+                        
                         propertyItemValuesAdded(nil)
                     }
                 }
@@ -275,6 +283,7 @@ class DataHelper {
                     }
                 }
                 if(categories != nil ) {
+                    
                     Sync.changes(
                         categories as! [AnyObject],
                         inEntityNamed: "Category",
@@ -283,5 +292,98 @@ class DataHelper {
                 }
                 
         }
+    }
+    
+    func fetchItemsBy(categoryId: Int) -> [Item]?
+    {
+        let fReq = NSFetchRequest(entityName: "Item")
+        fReq.predicate = NSPredicate(format: "categoryId == %d", categoryId)
+        
+        var fetchResults : [Item]?
+        do {
+            try fetchResults = self.context.executeFetchRequest(fReq) as? [Item]
+        }
+        catch {
+        }
+        return fetchResults
+    }
+    
+    func sortItemsByCurrentPrice(categoryId: Int, increase:Bool, currentPrice:Bool)
+    {
+        let items = fetchItemsBy(categoryId);
+        
+        var itemsDictanary = [Item:Int]()
+        
+        for item in items! {
+            
+            let propertiesValues = fetchPropertyItemValuesBy(item.itemId)
+            
+            var properVal: Int = 1
+            
+            for var i = 0 ; i < propertiesValues.count;  i++ {
+                
+                let propertiesValue  = propertiesValues[i] as Property_Item_Value
+                
+                let property = fetchPropertyBy(propertiesValue.propertyId)
+                
+                if(currentPrice) {
+                    if property?.name == "цена" || property?.name == "Цена"  {
+                        
+                        properVal = Int(propertiesValue.value)!
+                        
+                        break
+                    }
+                } else {
+                    if property?.name == "Старая цена" || property?.name == "старая цена"  {
+                        
+                        properVal = Int(propertiesValue.value)!
+                        
+                        break
+                    }
+                }
+            }
+            itemsDictanary[item] = properVal
+        }
+        //var sortedValues = Array(itemsDictanary.values).sort(<)
+        
+        
+        var sortedKeys = Array(itemsDictanary.keys).sort({itemsDictanary[$0] < itemsDictanary[$1]})
+        if !increase {
+            sortedKeys = Array(itemsDictanary.keys).sort({itemsDictanary[$0] > itemsDictanary[$1]})
+        }
+        var counter = 0
+        for key in sortedKeys {
+            key.position = counter
+            counter++
+        }
+        /*for value in sortedValues {
+        itemsDictanary[value]?.position = counter
+        counter++
+        updateItem((itemsDictanary[value])!)
+        }*/
+        do {
+            try self.context.save()
+        } catch {
+            
+        }
+    }
+    func updateItem (item:Item) {
+        
+        let entity = NSEntityDescription.entityForName("Item", inManagedObjectContext: self.context)
+        let itemManageObj = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
+        
+        itemManageObj.setValue(item.itemId, forKey: "itemId")
+        
+        itemManageObj.setValue(item.categoryId, forKey: "categoryId")
+        itemManageObj.setValue(item.position, forKey: "position")
+        
+        itemManageObj.setValue(item.shortName, forKey: "shortName")
+        itemManageObj.setValue(item.longName, forKey: "longName")
+        
+        itemManageObj.setValue(item.code, forKey: "code")
+        itemManageObj.setValue(item.shortDescr, forKey: "shortDescr")
+        
+        itemManageObj.setValue(item.longDescr, forKey: "longDescr")
+        
     }
 }

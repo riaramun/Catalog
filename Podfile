@@ -9,6 +9,7 @@ use_frameworks!
 target 'Catalog' do
 pod 'Alamofire', '~> 2.0'
 pod 'Sync'
+pod 'MMDrawerController', '~> 0.5.7'
 end
 
 

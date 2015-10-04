@@ -65,7 +65,6 @@ extension LeftPanelViewController: UITableViewDataSource {
         cell.configureForMenuItem(menuItems()[indexPath.row])
         return cell
     }
-    
 }
 
 // Mark: Table View Delegate

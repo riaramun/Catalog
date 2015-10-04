@@ -13,17 +13,32 @@ import Alamofire
 
 let reuseIdentifier = "Cell"
 
-class CollectionViewController: UICollectionViewController, NSFetchedResultsControllerDelegate, AlertPickerViewDelegate,UIPickerViewDelegate {
+class CollectionViewController: UICollectionViewController, NSFetchedResultsControllerDelegate {
     
     var pickerView: AlertPickerView!
-    let sort_menu_array = [   "Цена (по возрастанию)",
+    let sort_menu_array = [
+        "Цена (по возрастанию)",
         "Цена (по убыванию)",
         "Старая цена (по возрастанию)",
         "Старая цена (по убыванию)"]
     
+    @IBAction func FilterTapped(sender: AnyObject) {
+        self.delegate!.toggleRightPanel()
+    }
+    
+    
     @IBAction func showSortDialog(sender: AnyObject) {
         self.pickerView.showPicker()
     }
+    
+    override func didMoveToParentViewController(parent: UIViewController?) {
+        if (parent == nil) {
+            
+            self.delegate!.setDrawerRightPanel(nil)
+            self.delegate!.setDrawerLeftPanel(true)
+        }
+    }
+    
     var categoryId:Int?
     var delegate: CenterViewControllerDelegate?
     var context: NSManagedObjectContext?
@@ -43,25 +58,19 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         cellWidthToSet = collectionView!.bounds.size.width
         self.collectionView!.reloadData()
     }
+    
     @IBAction func setView1(sender: AnyObject) {
         cellWidthToSet = collectionView!.bounds.size.width/2-5
         cellHeightToSet = 300
         self.collectionView!.reloadData()
     }
     func getPhotoFor(itemId:Int) -> String? {
-        
         let fetchRequest = NSFetchRequest(entityName: "Item_Photo")
-        
         fetchRequest.predicate = NSPredicate(format: "%d == itemId", itemId)
-        
         var photo:String?
-        
         do {
-            
             var res:Item_Photo?
-            
             try res = self.context!.executeFetchRequest(fetchRequest).first as? Item_Photo
-            
             photo = res?.photo
         }
         catch {
@@ -80,7 +89,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
     func fetchResults(id:Int, entityName:String, column:String) {
         
         let fetchRequest = NSFetchRequest(entityName: entityName)
-        fetchRequest.predicate = NSPredicate(format: "%d == " + column, id)
+        fetchRequest.predicate = NSPredicate(format: "%d == " + column + " and position >= 0", id)
         let primarySortDescriptor = NSSortDescriptor(key: "position", ascending: true)
         fetchRequest.sortDescriptors = [primarySortDescriptor]
         
@@ -99,6 +108,10 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         self.pickerView = AlertPickerView()
         self.pickerView.items = sort_menu_array
         self.pickerView.delegate = self
+        
+        self.delegate!.setDrawerRightPanel(self)
+        self.delegate!.setDrawerLeftPanel(false)
+        
         self.view.addSubview(pickerView)
         
         self.dataHelper = DataHelper(context: self.context!)
@@ -106,6 +119,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         self.collectionView!.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
         fetchResults(self.categoryId!, entityName: "Item", column: "categoryId")
+        
         performFetch()
         
         cellHeightToSet = 300
@@ -152,6 +166,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         let strToSet = NSMutableAttributedString(string: item.shortName)
         strToSet.appendAttributedString(NSMutableAttributedString(string:"\r"))
         let sortedKeys = Array(attributes.keys).sort(<)
+        var counter = 0
         for key in sortedKeys {
             
             strToSet.appendAttributedString(NSMutableAttributedString(string: (attributes[key]?.name)! + String (": ")))
@@ -161,39 +176,11 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
             strToSet.appendAttributedString(styledStr)
             
             strToSet.appendAttributedString(NSMutableAttributedString(string:"\r"))
+            counter++
+            if counter == 3 {break }
         }
-        
         
         cell.categoryLabel.attributedText = strToSet
-        
-        /*if sortedKeys.count > 0 {
-            
-            let key = sortedKeys[0]
-            cell.priceTextView.text  = (attributes[key]?.name)! + String (": ") + (attributes[key]?.value)! + (attributes[key]?.dimen)!
-        }
-        if sortedKeys.count > 1 {
-            
-            
-            let key = sortedKeys[1]
-            
-            let strToSet = NSMutableAttributedString(string: (attributes[key]?.name)! + String (": "))
-            
-            let styledStr = styleString( (attributes[key]?.value)! + (attributes[key]?.dimen)!, style: (attributes[key]?.style)!,color: (attributes[key]?.color)!)
-            
-            strToSet.appendAttributedString(styledStr)
-            
-            
-            
-            
-            //let strRes = (attributes[key]?.name)! + String (": ") + (attributes[key]?.value)! + (attributes[key]?.dimen)!
-            
-            cell.oldPriceTextView.attributedText  = strToSet
-            
-        }
-        if sortedKeys.count > 2 {
-            let key = sortedKeys[2]
-            cell.sizeTextView.text  = (attributes[key]?.name)! + String (": ") + (attributes[key]?.value)! + (attributes[key]?.dimen)!
-        }*/
         
         var photoUrl = getPhotoFor(item.itemId)
         if photoUrl != nil {
@@ -232,10 +219,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         return NSMutableAttributedString(string: str, attributes: attributes) //1
         
     }
-    /*
     
-    
-    */
     var cellWidthToSet:CGFloat = 0
     var cellHeightToSet:CGFloat = 0
     
@@ -256,19 +240,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 1
     }
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return self.pickerView.items.count
-    }
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return self.pickerView.items[row]
-    }
-    func pickerView(pickerView: UIPickerView, didSelect numbers: [Int]) {
-        print("selected \(numbers)")
-    }
     
-    func pickerViewDidHide(pickerView: UIPickerView) {
-        print("hided pickerview")
-    }
     
     /*
     // Uncomment this method to specify if the specified item should be selected
@@ -300,12 +272,56 @@ class GridCell: UICollectionViewCell {
     
     @IBOutlet weak var categoryLabel: UITextView!
     
-   /* @IBOutlet weak var priceTextView: UITextView!
+    /* @IBOutlet weak var priceTextView: UITextView!
     
     @IBOutlet weak var oldPriceTextView: UITextView!
     
     @IBOutlet weak var sizeTextView: UITextView!*/
     
+}
+extension CollectionViewController: AlertPickerViewDelegate {
+    
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return self.pickerView.items.count
+    }
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return self.pickerView.items[row]
+    }
+    func pickerView(pickerView: UIPickerView, didSelect numbers: [Int]) {
+        
+        let selected = numbers[0]
+        switch(selected) {
+        case 0:
+            self.dataHelper?.sortItemsByCurrentPrice(self.categoryId!, increase: true, currentPrice:true)
+            performFetch()
+            break
+        case 1:
+            self.dataHelper?.sortItemsByCurrentPrice(self.categoryId!, increase: false, currentPrice:true)
+            performFetch()
+            break
+        case 2:
+            self.dataHelper?.sortItemsByCurrentPrice(self.categoryId!, increase: true, currentPrice:false)
+            performFetch()
+            break
+        case 3:
+            self.dataHelper?.sortItemsByCurrentPrice(self.categoryId!, increase: false, currentPrice:false)
+            performFetch()
+            break
+        default:
+            break
+        }
+        print("selected \(numbers)")
+        
+    }
+    
+    func pickerViewDidHide(pickerView: UIPickerView) {
+        print("hided pickerview")
+    }
+}
+extension CollectionViewController: RightPanelViewControllerDelegate {
+    func collapsePanel() {
+        self.delegate?.toggleRightPanel()
+    }
 }
 
 extension String {

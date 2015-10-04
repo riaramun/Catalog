@@ -8,10 +8,9 @@
 
 import Foundation
 
-@objc
 protocol CenterViewControllerDelegate {
-    optional func toggleLeftPanel()
-    optional func toggleRightPanel()
-    optional func collapseSidePanels()
-  //  optional func categorySelected(category: Category)
+    func setDrawerRightPanel(delegate:RightPanelViewControllerDelegate?)
+    func setDrawerLeftPanel(enabled:Bool)
+    func toggleLeftPanel()
+    func toggleRightPanel()
 }
