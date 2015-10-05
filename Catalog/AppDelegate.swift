@@ -42,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let centerNav = UINavigationController(rootViewController: categoryViewController!)
         // let rightNav = UINavigationController(rootViewController: rigthViewController!)
         
-        centerContainer = MMDrawerController(centerViewController: centerNav, leftDrawerViewController: leftSideNav,rightDrawerViewController:nil)
+        centerContainer = MyDrawerController(centerViewController: centerNav, leftDrawerViewController: leftSideNav,rightDrawerViewController:nil)
         
         
         centerContainer!.openDrawerGestureModeMask = MMOpenDrawerGestureMode.PanningCenterView;
@@ -114,7 +114,7 @@ extension AppDelegate: CenterViewControllerDelegate {
             let rightSideNav = UINavigationController(rootViewController: rightViewController)
             
             rightViewController.delegate = delegate!
-            
+            rightViewController.context = self.dataStack.mainContext
             (window!.rootViewController as! MMDrawerController).rightDrawerViewController = rightSideNav
             
         } else {
@@ -141,4 +141,8 @@ extension AppDelegate: LeftPanelViewControllerDelegate {
     func menuItemSelected(menuItem: MenuItem) {
         
     }
+}
+class MyDrawerController:MMDrawerController{
+    
+
 }

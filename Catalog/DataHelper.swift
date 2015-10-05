@@ -169,26 +169,6 @@ class DataHelper {
                 let propertyItemList = JSON(result.value)?[key:"Property_Item_List"] as? NSArray
                 let propertyListValue = JSON(result.value)?[key:"Property_List_Value"] as? NSArray
                 
-                /*for category in categories! {
-                
-                let entity = NSEntityDescription.entityForName("Category", inManagedObjectContext: self.context)
-                let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
-                let obj = JSON(val);
-                
-                item.setValue(obj?[key:"category_id"] as! Int, forKey: "categoryId")
-                item.setValue(obj?[key:"name"] as! Int, forKey: "name")
-                item.setValue(obj?[key:"visibility"] as! Int, forKey: "visibility")
-                item.setValue(obj?[key:"photo"] as! Int, forKey: "photo")
-                item.setValue(obj?[key:"photoEditDate"] as! Int, forKey: "photo_edit_date")
-                item.setValue(obj?[key:"lastEditDate"] as! Int, forKey: "last_edit_date")
-                item.setValue(obj?[key:"parent"] as! Int, forKey: "parent")
-                item.setValue(obj?[key:"position"] as! Int, forKey: "position")
-                item.setValue(obj?[key:"categoryType"] as! String, forKey: "categoryType")
-                item.setValue(obj?[key:"position"] as! Int, forKey: "position")
-                item.setValue(obj?[key:"categoryType"] as! Int, forKey: "category_type")
-                
-                }*/
-                
                 
                 func propertyListValueAdded(err:NSError!) {
                     do {
@@ -294,6 +274,18 @@ class DataHelper {
         }
     }
     
+    func fetchAllItems() -> [Item]?
+    {
+        let fReq = NSFetchRequest(entityName: "Item")
+        
+        var fetchResults : [Item]?
+        do {
+            try fetchResults = self.context.executeFetchRequest(fReq) as? [Item]
+        }
+        catch {
+        }
+        return fetchResults
+    }
     func fetchItemsBy(categoryId: Int) -> [Item]?
     {
         let fReq = NSFetchRequest(entityName: "Item")
@@ -308,6 +300,71 @@ class DataHelper {
         return fetchResults
     }
     
+    func resetfilter()
+    {
+        let items = fetchAllItems();
+        
+        var counter = 0
+        
+        for item in items! {
+            
+            item.position = counter++
+        }
+        
+        do {
+            try self.context.save()
+        } catch {
+            
+        }
+    }
+    func filterItemsByPrice(min:Int, max:Int, currentPrice:Bool)
+    {
+        let items = fetchAllItems();
+        var counter:Int = 0
+        for item in items! {
+            counter++
+            let propertiesValues = fetchPropertyItemValuesBy(item.itemId)
+            
+            var properVal: Int = 1
+            
+            for var i = 0 ; i < propertiesValues.count;  i++ {
+                
+                let propertiesValue  = propertiesValues[i] as Property_Item_Value
+                
+                let property = fetchPropertyBy(propertiesValue.propertyId)
+                
+                if(currentPrice) {
+                    if property?.name == "цена" || property?.name == "Цена"  {
+                        
+                        properVal = Int(propertiesValue.value)!
+                        
+                        break
+                    }
+                } else {
+                    if property?.name == "Старая цена" || property?.name == "старая цена"  {
+                        
+                        properVal = Int(propertiesValue.value)!
+                        
+                        break
+                    }
+                }
+                
+            }
+            
+            if(!( properVal >= min && properVal <= max )) {
+                item.position = -1
+            }
+            else {
+                item.position = counter
+            }
+        }
+        
+        do {
+            try self.context.save()
+        } catch {
+            
+        }
+    }
     func sortItemsByCurrentPrice(categoryId: Int, increase:Bool, currentPrice:Bool)
     {
         let items = fetchItemsBy(categoryId);
@@ -344,7 +401,6 @@ class DataHelper {
             }
             itemsDictanary[item] = properVal
         }
-        //var sortedValues = Array(itemsDictanary.values).sort(<)
         
         
         var sortedKeys = Array(itemsDictanary.keys).sort({itemsDictanary[$0] < itemsDictanary[$1]})
@@ -353,14 +409,13 @@ class DataHelper {
         }
         var counter = 0
         for key in sortedKeys {
-            key.position = counter
-            counter++
+            if(key.position != -1) {
+                key.position = counter
+                counter++
+            }
+            
         }
-        /*for value in sortedValues {
-        itemsDictanary[value]?.position = counter
-        counter++
-        updateItem((itemsDictanary[value])!)
-        }*/
+        
         do {
             try self.context.save()
         } catch {

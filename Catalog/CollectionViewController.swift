@@ -41,9 +41,11 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
     
     var categoryId:Int?
     var delegate: CenterViewControllerDelegate?
-    var context: NSManagedObjectContext?
+    
     var fetchedResultsController: NSFetchedResultsController? = nil
     var cellColor = true
+    
+    var context: NSManagedObjectContext?
     var dataHelper: DataHelper?
     
     
@@ -321,6 +323,7 @@ extension CollectionViewController: AlertPickerViewDelegate {
 extension CollectionViewController: RightPanelViewControllerDelegate {
     func collapsePanel() {
         self.delegate?.toggleRightPanel()
+        self.performFetch()
     }
 }
 

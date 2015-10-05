@@ -15,9 +15,25 @@ protocol RightPanelViewControllerDelegate {
 
 class RightPanelViewController: UIViewController  {
     
+    var context: NSManagedObjectContext?
+    var dataHelper: DataHelper?
+    
     @IBOutlet weak var maxPrice: UITextField!
     @IBOutlet weak var minPrice: UITextField!
    
+    @IBAction func applyFilter(sender: AnyObject) {
+         self.view.endEditing(true)
+        self.dataHelper?.filterItemsByPrice( Int(self.minPrice.text!)!, max: Int(self.maxPrice.text!)!, currentPrice: true)
+        delegate?.collapsePanel()
+    }
+    
+    @IBAction func resetFilter(sender: AnyObject) {
+         self.view.endEditing(true)
+        self.minPrice.text = "0"
+        self.maxPrice.text = "0"
+        self.dataHelper?.resetfilter()
+        delegate?.collapsePanel()
+    }
     var delegate: RightPanelViewControllerDelegate?
    
     @IBAction func onBackTapped(sender: AnyObject) {
@@ -27,6 +43,9 @@ class RightPanelViewController: UIViewController  {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.dataHelper = DataHelper(context: self.context!)
+        
         self.maxPrice.delegate = self
         self.minPrice.delegate = self
     }

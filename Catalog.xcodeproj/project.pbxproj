@@ -148,9 +148,9 @@
 				843786431BA8512F00244DBE /* AppDelegate.swift */,
 				843786451BA8512F00244DBE /* ViewController.swift */,
 				843786471BA8512F00244DBE /* Main.storyboard */,
-				8437864D1BA8512F00244DBE /* Assets.xcassets */,
 				8437864F1BA8512F00244DBE /* LaunchScreen.storyboard */,
 				843786521BA8512F00244DBE /* Info.plist */,
+				8437864D1BA8512F00244DBE /* Assets.xcassets */,
 				8437864A1BA8512F00244DBE /* Catalog.xcdatamodeld */,
 				84DFC5D01BB8383100F39C73 /* CenterViewControllerDelegate.swift */,
 			);
