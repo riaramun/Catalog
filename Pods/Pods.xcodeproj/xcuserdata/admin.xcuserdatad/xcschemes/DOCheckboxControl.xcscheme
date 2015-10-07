@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "30CE9B3ED7F869D138C386B2"
-               BuildableName = "MMDrawerController.framework"
-               BlueprintName = "MMDrawerController"
+               BlueprintIdentifier = "B52BEF1374EE7C5ED207F10A"
+               BuildableName = "DOCheckboxControl.framework"
+               BlueprintName = "DOCheckboxControl"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

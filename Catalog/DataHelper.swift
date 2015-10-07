@@ -60,7 +60,7 @@ class DataHelper {
                     }
                 }
             } else if property?.typeId == 4 {
-                let properListVal = fetchPropertyListValueBy(propertiesValue.value)
+                let properListVal = fetchPropertyListValueBy(Int(propertiesValue.value)!)
                 properVal = (properListVal?.value)!
             }
             let propertyItemList = fetchPropertyItemListBy(propertiesValue.propertyId, categoryId: categoryId)
@@ -125,6 +125,21 @@ class DataHelper {
         }
         return property
     }
+    func fetchPropertyIdBy(name: String) -> Int?
+    {
+        let fReq = NSFetchRequest(entityName: "Property")
+        fReq.predicate = NSPredicate(format: "name == '" + name + "'")
+        
+        var fetchResults : [Property]
+        var property: Property?
+        do {
+            try fetchResults = self.context.executeFetchRequest(fReq) as! [Property]
+            property = fetchResults.count > 0 ? fetchResults[0] : nil
+        }
+        catch {
+        }
+        return property?.propertyId
+    }
     func fetchPropertyListValuesBy(propId: Int) -> [Property_List_Value]?
     {
         let fReq = NSFetchRequest(entityName: "Property_List_Value")
@@ -138,10 +153,10 @@ class DataHelper {
         }
         return fetchResults!
     }
-    func fetchPropertyListValueBy(propValue: String) -> Property_List_Value?
+    func fetchPropertyListValueBy(listId: Int) -> Property_List_Value?
     {
         let fReq = NSFetchRequest(entityName: "Property_List_Value")
-        fReq.predicate = NSPredicate(format: "listId == '" + propValue + "'")
+        fReq.predicate = NSPredicate(format: "listId == %d", listId )
         
         var fetchResults : [Property_List_Value]
         var res: Property_List_Value?
@@ -440,5 +455,30 @@ class DataHelper {
         
         itemManageObj.setValue(item.longDescr, forKey: "longDescr")
         
+    }
+    func getProperitesByName(name:String) -> [Property_List_Value]? {
+        
+        let propertyId = fetchPropertyIdBy(name)
+        return fetchPropertyListValuesBy(propertyId!)
+    }
+    func fetchPropertiesByCategory(id:Int) -> [Property] {
+        
+        let fReq = NSFetchRequest(entityName: "Property_Item_List")
+        fReq.predicate = NSPredicate(format: "categoryId == %d", id)
+        
+        var fetchResults : [Property_Item_List]?
+        var properties = [Property]()
+
+        do {
+            try fetchResults = self.context.executeFetchRequest(fReq) as! [Property_Item_List]
+        }
+        catch {
+        }
+        for propItemList in fetchResults! {
+           let property = fetchPropertyBy(propItemList.propertyId)
+            properties.append(property!)
+        }
+        return properties
+
     }
 }

@@ -11,7 +11,7 @@ import CoreData
 import Alamofire
 
 
-class CategoryViewController: UIViewController, NSFetchedResultsControllerDelegate, LeftPanelViewControllerDelegate {
+class CategoryViewController: UIViewController, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var menuBarButton: UIBarButtonItem!
     
     @IBOutlet weak var viewNavigationItem: UINavigationItem!
@@ -39,21 +39,6 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
         //viewController.viewNavigationItem.title = category.name
     }
     
-    // MARK: Button actions
-    func menuItemSelected(menuItem: MenuItem) {
-        
-        self.menuItem = menuItem
-        
-        menuBarButton.image = UIImage(named: "menu.png")
-        
-        viewNavigationItem.title = menuItem.name
-        
-        delegate?.toggleLeftPanel()
-        
-        fetchResults(0, entityName:"Category", column: "parent")
-        
-        performFetch()
-    }
     
     func performFetch() {
         do {
@@ -96,27 +81,7 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     
     var parentStack = Stack<Int>()
     
-    
-    /*func getParentOfParent() -> Int? {
-    
-    var retId:Int?
-    let parentId = getFirstCategoryParent();
-    
-    let fetchRequest = NSFetchRequest(entityName: "Category")
-    fetchRequest.predicate = NSPredicate(format: "%d == categoryId", parentId)
-    
-    var results:[Category]
-    do{
-    try results = self.context.executeFetchRequest(fetchRequest) as! [Category]
-    if(results.count != 0) {
-    let someCategory = results[0]
-    retId = someCategory.parent
-    }
-    }
-    catch {
-    }
-    return retId
-    }*/
+   
     
     func fetchResults(id:Int, entityName:String, column:String) {
         
@@ -144,19 +109,31 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
         super.viewDidLoad()
         
         self.delegate!.setDrawerLeftPanel(true)
-        fetchResults(0, entityName: "Category", column: "parent")
         
+        fetchResults(0, entityName: "Category", column: "parent")
         viewNavigationItem.title = menuItem.name
-        do {
-            try fetchedResultsController!.performFetch()
-            tableView.reloadData()
-            
-        } catch _ {
-        }
+        performFetch()
     }
 }
 
-// MARK: Table View Data Source
+extension CategoryViewController: LeftPanelViewControllerDelegate {
+
+    // MARK: Button actions
+    func menuItemSelected(menuItem: MenuItem) {
+        
+        self.menuItem = menuItem
+        
+        menuBarButton.image = UIImage(named: "menu.png")
+        
+        viewNavigationItem.title = menuItem.name
+        
+        delegate?.toggleLeftPanel()
+        
+        fetchResults(0, entityName:"Category", column: "parent")
+        
+        performFetch()
+    }
+}
 
 extension CategoryViewController: UITableViewDataSource {
     
@@ -274,14 +251,3 @@ class CategoryCell: UITableViewCell {
         //imageCreatorLabel.text = animal.creator
     }
 }
-
-
-/*extension CategoryViewController: SidePanelViewControllerDelegate {
-func categorySelected(category: Category) {
-// imageView.image = animal.image
-//  titleLabel.text = category.name
-// creatorLabel.text = animal.creator
-
-delegate?.collapseSidePanels?()
-}
-}*/

@@ -5,6 +5,7 @@ PODS:
   - DATAObjectIDs (0.5.0)
   - DATAStack (3.1.0):
     - NSObject-HYPTesting (~> 1.2)
+  - DOCheckboxControl (1.1.0)
   - MMDrawerController (0.5.7):
     - MMDrawerController/Core (= 0.5.7)
     - MMDrawerController/MMDrawerBarButtonItem (= 0.5.7)
@@ -33,6 +34,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 2.0)
+  - DOCheckboxControl
   - MMDrawerController (~> 0.5.7)
   - Sync
 
@@ -41,6 +43,7 @@ SPEC CHECKSUMS:
   DATAFilter: 3f224f9ffde5c04de4748b65cc259c6481770edf
   DATAObjectIDs: 472eae6d8d6b57109b973c837ec3dd5e78016ab6
   DATAStack: 86cb614db684cf29d51fcc5de705e9d4b92cd90d
+  DOCheckboxControl: 1ee7e9ac4184d8b0e80502e3c2c2864cf59fc788
   MMDrawerController: 7a4cf8e25596bf2434e03ce50d22a8608ddee6a1
   NSDictionary-ANDYSafeValue: c15ff39a6b1b82a52ea277c64520c7b574715afc
   NSEntityDescription-SYNCPrimaryKey: 72f1f0d30a7e8eb9d93277b1ce623cbaa6e47a38
