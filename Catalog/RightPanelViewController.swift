@@ -57,27 +57,25 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
         fetchedResultsController = frc
     }
     
-    @IBOutlet weak var maxPrice: UITextField!
-    @IBOutlet weak var minPrice: UITextField!
-    @IBOutlet weak var colorsFilterButton: UIButton!
-    
     @IBAction func applyFilter(sender: AnyObject) {
         self.view.endEditing(true)
-        self.dataHelper?.filterItemsByPrice( Int(self.minPrice.text!)!, max: Int(self.maxPrice.text!)!, currentPrice: true)
+        /*self.dataHelper?.filterItemsByPrice( Int(self.minPrice.text!)!, max: Int(self.maxPrice.text!)!, currentPrice: true)*/
         delegate?.collapseFilterPanel()
     }
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        if segue.identifier == "ToFilterView" {
+        let propListVal = sender as! Property_Item_List
+        let property = dataHelper!.fetchPropertyBy(propListVal.propertyId)
+        
+        if segue.identifier == "ToPropertyEditor" {
             
-            let viewController = segue.destinationViewController as! ColorFilterViewController
-            
-            /*          let nav = segue.destinationViewController as! UINavigationController
-            let viewController = nav.topViewController as! ColorFilterViewController
-            */
-            let propListVal = sender as! Property_Item_List
-            
-            let property = dataHelper!.fetchPropertyBy(propListVal.propertyId)
+            let viewController = segue.destinationViewController as! PropertyEditorViewController
+            viewController.propertyName = (property?.name)!
+            viewController.context = self.context
+            viewController.delegate = self
+        }
+        else if segue.identifier == "ToPriceEditor" {
+            let viewController = segue.destinationViewController as! PriceEditorViewController
             viewController.propertyName = (property?.name)!
             viewController.context = self.context
             viewController.delegate = self
@@ -87,8 +85,7 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     
     @IBAction func resetFilter(sender: AnyObject) {
         self.view.endEditing(true)
-        self.minPrice.text = "0"
-        self.maxPrice.text = "0"
+        
         self.dataHelper?.resetfilter()
         delegate?.collapseFilterPanel()
     }
@@ -104,8 +101,6 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
         
         self.dataHelper = DataHelper(context: self.context!)
         
-        self.maxPrice.delegate = self
-        self.minPrice.delegate = self
         
         fetchResults()
         performFetch()
@@ -153,8 +148,16 @@ extension RightPanelViewController: UITableViewDelegate {
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         let propertyListValue = fetchedResultsController!.objectAtIndexPath(indexPath) as! Property_Item_List
+        let property = dataHelper!.fetchPropertyBy(propertyListValue.propertyId)
         
-        self.performSegueWithIdentifier("ToFilterView", sender: propertyListValue)
+        let name = property!.name
+        if name.containsString("цена") || name.containsString("Цена")
+        {
+            self.performSegueWithIdentifier("ToPriceEditor", sender: propertyListValue)
+        }
+        else {
+            self.performSegueWithIdentifier("ToPropertyEditor", sender: propertyListValue)
+        }
         
     }
     
@@ -166,7 +169,11 @@ class FilterTableViewCell: UITableViewCell {
     
 }
 
-
+extension RightPanelViewController: PriceEditorDelegate {
+    func setPrice(values:[String]) {
+        
+    }
+}
 extension RightPanelViewController: ColorsFilterDelegate {
     
     
@@ -178,17 +185,6 @@ extension RightPanelViewController: ColorsFilterDelegate {
             res += color
             res += String(", ")
         }
-        colorsFilterButton.titleLabel?.text = res
-        colorsFilterButton.setTitle( res, forState: .Normal)
-    }
-}
-extension RightPanelViewController: UITextFieldDelegate {
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool // called when 'return' key pressed. return NO to ignore.
-    {
-        maxPrice.resignFirstResponder()
-        minPrice.resignFirstResponder()
-        return true;
     }
 }
 

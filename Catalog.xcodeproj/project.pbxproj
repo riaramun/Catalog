@@ -14,7 +14,8 @@
 		8437864C1BA8512F00244DBE /* Catalog.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8437864A1BA8512F00244DBE /* Catalog.xcdatamodeld */; };
 		8437864E1BA8512F00244DBE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8437864D1BA8512F00244DBE /* Assets.xcassets */; };
 		843786511BA8512F00244DBE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8437864F1BA8512F00244DBE /* LaunchScreen.storyboard */; };
-		8445A0671BC336E2002C9CF7 /* ColorFilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445A0651BC336E2002C9CF7 /* ColorFilterViewController.swift */; };
+		8445A0671BC336E2002C9CF7 /* PropertyEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445A0651BC336E2002C9CF7 /* PropertyEditorViewController.swift */; };
+		8445A0691BC55C92002C9CF7 /* PriceEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445A0681BC55C92002C9CF7 /* PriceEditorViewController.swift */; };
 		845EAE671BBC377A000984A9 /* AlertPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845EAE661BBC377A000984A9 /* AlertPickerView.swift */; };
 		845EAE6A1BBC76C1000984A9 /* AlertFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845EAE691BBC76C1000984A9 /* AlertFilterView.swift */; };
 		84CF19071BAE218900C93739 /* LeftPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CF19061BAE218900C93739 /* LeftPanelViewController.swift */; };
@@ -58,7 +59,8 @@
 		8437864D1BA8512F00244DBE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		843786501BA8512F00244DBE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		843786521BA8512F00244DBE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8445A0651BC336E2002C9CF7 /* ColorFilterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorFilterViewController.swift; sourceTree = "<group>"; };
+		8445A0651BC336E2002C9CF7 /* PropertyEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PropertyEditorViewController.swift; sourceTree = "<group>"; };
+		8445A0681BC55C92002C9CF7 /* PriceEditorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PriceEditorViewController.swift; sourceTree = "<group>"; };
 		845EAE661BBC377A000984A9 /* AlertPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPickerView.swift; sourceTree = SOURCE_ROOT; };
 		845EAE691BBC76C1000984A9 /* AlertFilterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertFilterView.swift; sourceTree = SOURCE_ROOT; };
 		84CF19061BAE218900C93739 /* LeftPanelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftPanelViewController.swift; sourceTree = "<group>"; };
@@ -144,8 +146,9 @@
 				84E347131BAC4432009CE455 /* Resources */,
 				84DCBA8B1BA86262009CA677 /* models */,
 				84CF19061BAE218900C93739 /* LeftPanelViewController.swift */,
+				8445A0681BC55C92002C9CF7 /* PriceEditorViewController.swift */,
 				84DCBA941BA9B3D4009CA677 /* RightPanelViewController.swift */,
-				8445A0651BC336E2002C9CF7 /* ColorFilterViewController.swift */,
+				8445A0651BC336E2002C9CF7 /* PropertyEditorViewController.swift */,
 				84DBC26F1BB9462900620E18 /* CollectionViewController.swift */,
 				84DCBA921BA9B3AA009CA677 /* CategoryViewController.swift */,
 				843786431BA8512F00244DBE /* AppDelegate.swift */,
@@ -381,7 +384,7 @@
 				84CF19071BAE218900C93739 /* LeftPanelViewController.swift in Sources */,
 				84E347121BABFF6B009CE455 /* DataHelper.swift in Sources */,
 				843786461BA8512F00244DBE /* ViewController.swift in Sources */,
-				8445A0671BC336E2002C9CF7 /* ColorFilterViewController.swift in Sources */,
+				8445A0671BC336E2002C9CF7 /* PropertyEditorViewController.swift in Sources */,
 				845EAE6A1BBC76C1000984A9 /* AlertFilterView.swift in Sources */,
 				84DCBA8D1BA862AA009CA677 /* Category.swift in Sources */,
 				84F8BE9A1BBB2F1900542EB6 /* Property_Item_List.swift in Sources */,
@@ -399,6 +402,7 @@
 				843786441BA8512F00244DBE /* AppDelegate.swift in Sources */,
 				8437864C1BA8512F00244DBE /* Catalog.xcdatamodeld in Sources */,
 				84DFC5CF1BB8361400F39C73 /* Item_Photo.swift in Sources */,
+				8445A0691BC55C92002C9CF7 /* PriceEditorViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

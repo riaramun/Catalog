@@ -1,5 +1,5 @@
 //
-//  ColorFilterViewController.swift
+//  PropertyEditorViewController.swift
 //  DOCheckboxControl
 //
 //  Created by Dmytro Ovcharenko on 22.07.15.
@@ -11,7 +11,7 @@ import DOCheckboxControl
 import CoreData
 
 
-class ColorFilterViewController: UIViewController, NSFetchedResultsControllerDelegate  {
+class PropertyEditorViewController: UIViewController, NSFetchedResultsControllerDelegate  {
     
     @IBOutlet var tableView: UITableView!
     var fetchedResultsController: NSFetchedResultsController? = nil
@@ -84,7 +84,7 @@ class ColorFilterViewController: UIViewController, NSFetchedResultsControllerDel
         
     }
 }
-extension ColorFilterViewController: UITableViewDataSource {
+extension PropertyEditorViewController: UITableViewDataSource {
     
     /*func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     return self.menuItem.name
@@ -119,7 +119,7 @@ extension ColorFilterViewController: UITableViewDataSource {
     }
     
 }
-extension ColorFilterViewController: UITableViewDelegate {
+extension PropertyEditorViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
