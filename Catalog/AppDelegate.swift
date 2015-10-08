@@ -95,7 +95,7 @@ private extension UIStoryboard {
     }
     
     class func rightViewController() -> RightPanelViewController? {
-        return mainStoryboard().instantiateViewControllerWithIdentifier("RightViewController") as? RightPanelViewController
+        return mainStoryboard().instantiateViewControllerWithIdentifier("RightPanelViewController") as? RightPanelViewController
     }
     
     class func categoryViewController() -> CategoryViewController? {

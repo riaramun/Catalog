@@ -186,6 +186,9 @@ class DataHelper {
                 
                 
                 func propertyListValueAdded(err:NSError!) {
+                    
+                    self.seedFilterItems()
+                    
                     do {
                         try self.context.save()
                     } catch {
@@ -468,17 +471,37 @@ class DataHelper {
         
         var fetchResults : [Property_Item_List]?
         var properties = [Property]()
-
+        
         do {
-            try fetchResults = self.context.executeFetchRequest(fReq) as! [Property_Item_List]
+            try fetchResults = self.context.executeFetchRequest(fReq) as? [Property_Item_List]
         }
         catch {
         }
         for propItemList in fetchResults! {
-           let property = fetchPropertyBy(propItemList.propertyId)
+            let property = fetchPropertyBy(propItemList.propertyId)
             properties.append(property!)
         }
         return properties
-
+    }
+    func seedFilterItems() {
+        let fReq = NSFetchRequest(entityName: "Property")
+        
+        var properties: [Property]?
+        
+        do {
+            try properties = self.context.executeFetchRequest(fReq) as? [Property]
+        }
+        catch {
+        }
+        for property in properties! {
+            
+            
+            let entity = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
+            
+            entity.param = "добавить фильтр"
+            entity.property = property
+            entity.name = property.name
+            entity.propertyId = property.propertyId
+        }
     }
 }

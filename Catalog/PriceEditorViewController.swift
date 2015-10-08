@@ -16,8 +16,10 @@ protocol PriceEditorDelegate {
 }
 class PriceEditorViewController: UIViewController {
     
+    var dataHelper: DataHelper?
     var delegate: PriceEditorDelegate?
-    var propertyName: String = ""
+    var propertyId: Int?
+    
     var context: NSManagedObjectContext?
     @IBOutlet weak var maxPrice: UITextField!
     @IBOutlet weak var minPrice: UITextField!
@@ -28,7 +30,10 @@ class PriceEditorViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = propertyName
+        
+        self.dataHelper = DataHelper(context: self.context!)
+        let property = dataHelper?.fetchPropertyBy(propertyId!)
+        self.title = property?.name
         
         self.maxPrice.delegate = self
         self.minPrice.delegate = self

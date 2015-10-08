@@ -40,18 +40,49 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
         } catch _ {
         }
     }
+    var properties:[Property]?
+    
     func fetchResults() {
         
-        let fetchRequest = NSFetchRequest(entityName: "Property_Item_List")
-        fetchRequest.predicate = NSPredicate(format: "categoryId == %d", (delegate?.getCurrentCategoryId())!)
+        properties = dataHelper?.fetchPropertiesByCategory((delegate?.getCurrentCategoryId())!)
         
-        let primarySortDescriptor = NSSortDescriptor(key: "position", ascending: true)
-        fetchRequest.sortDescriptors = [primarySortDescriptor]
+        var reqStr = ""
+        var counter = 0
+        for property in properties! {
+            reqStr += "propertyId == " + String(property.propertyId)
+            if ++counter < properties?.count {
+                reqStr += " or "
+            }
+            
+        }
+        
+        let fetchRequest = NSFetchRequest(entityName: "FilterItem")
+        //fetchRequest.predicate = NSPredicate(format: reqStr)
+        
+        
+        /*var filterItems: [FilterItem]?
+        
+        do {
+            try filterItems = self.context!.executeFetchRequest(fetchRequest) as? [FilterItem]
+        }
+        catch {
+        }
+        
+        for item in filterItems! {
+            print(item.property.name)
+        }*/
+        
+        
+        let primarySortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        
+        let secondarySortDescriptor = NSSortDescriptor(key: "param", ascending: true)
+        
+        fetchRequest.sortDescriptors = [primarySortDescriptor,secondarySortDescriptor]
         
         let frc = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: self.context!,
-            sectionNameKeyPath: nil,
+            sectionNameKeyPath: "property.propertyId",
             cacheName: nil)
         frc.delegate = self
         fetchedResultsController = frc
@@ -64,19 +95,18 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     }
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        let propListVal = sender as! Property_Item_List
-        let property = dataHelper!.fetchPropertyBy(propListVal.propertyId)
+        let filterItem = sender as! FilterItem
         
         if segue.identifier == "ToPropertyEditor" {
             
             let viewController = segue.destinationViewController as! PropertyEditorViewController
-            viewController.propertyName = (property?.name)!
+            viewController.propertyId = filterItem.property.propertyId
             viewController.context = self.context
             viewController.delegate = self
         }
         else if segue.identifier == "ToPriceEditor" {
             let viewController = segue.destinationViewController as! PriceEditorViewController
-            viewController.propertyName = (property?.name)!
+            viewController.propertyId = filterItem.property.propertyId
             viewController.context = self.context
             viewController.delegate = self
         }
@@ -114,32 +144,42 @@ extension RightPanelViewController: UITableViewDataSource {
     return self.menuItem.name
     }*/
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        if let sections = fetchedResultsController!.sections {
-            return sections.count
-        }
+     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
-        return 0
+        return properties![section].name
+    }
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+       
+        return (self.properties?.count)!
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let sections = fetchedResultsController!.sections {
-            let currentSection = sections[section]
-            return currentSection.numberOfObjects
-        }
-        
-        return 0
+        return properties![section].filterItems.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier(TableView.CellIdentifiers.FilterCell, forIndexPath: indexPath) as! FilterTableViewCell
         
-        let propListVal = fetchedResultsController!.objectAtIndexPath(indexPath) as! Property_Item_List
-        let property = dataHelper!.fetchPropertyBy(propListVal.propertyId)
-        cell.titleLabel.text = property?.name
+        let filterItem = getFilterItemBy(indexPath)
+        
+        
+        
+       // let obj = fetchedResultsController!.objectAtIndexPath(indexPath);
+        
+       // let filterItem = fetchedResultsController!.objectAtIndexPath(indexPath) as! FilterItem
+        
+        cell.titleLabel.text = filterItem.param
         
         return cell
+    }
+    
+    func getFilterItemBy(indexPath: NSIndexPath) -> FilterItem {
+        
+        let property = self.properties![indexPath.section]
+        let filterItem = property.filterItems.allObjects[indexPath.row] as! FilterItem
+        return filterItem
     }
     
 }
@@ -147,16 +187,17 @@ extension RightPanelViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        let propertyListValue = fetchedResultsController!.objectAtIndexPath(indexPath) as! Property_Item_List
-        let property = dataHelper!.fetchPropertyBy(propertyListValue.propertyId)
+        //let propertyListValue = fetchedResultsController!.objectAtIndexPath(indexPath) as! Property_Item_List
+        //let property = dataHelper!.fetchPropertyBy(propertyListValue.propertyId)
+        let filterItem = getFilterItemBy(indexPath)
         
-        let name = property!.name
+        let name = filterItem.property.name
         if name.containsString("цена") || name.containsString("Цена")
         {
-            self.performSegueWithIdentifier("ToPriceEditor", sender: propertyListValue)
+            self.performSegueWithIdentifier("ToPriceEditor", sender: filterItem)
         }
         else {
-            self.performSegueWithIdentifier("ToPropertyEditor", sender: propertyListValue)
+            self.performSegueWithIdentifier("ToPropertyEditor", sender: filterItem)
         }
         
     }

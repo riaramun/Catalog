@@ -52,11 +52,11 @@ class PropertyEditorViewController: UIViewController, NSFetchedResultsController
         delegate!.setColors(colors)
     }
     
-    var propertyName: String = ""
+    var propertyId: Int?
     
     func fetchResults() {
         
-        let propertyId = self.dataHelper?.fetchPropertyIdBy(propertyName)
+        //let propertyId = self.dataHelper?.fetchPropertyIdBy(propertyName)
         
         let fetchRequest = NSFetchRequest(entityName: "Property_List_Value")
         fetchRequest.predicate = NSPredicate(format: "propertyId == %d", propertyId! )
@@ -76,7 +76,8 @@ class PropertyEditorViewController: UIViewController, NSFetchedResultsController
         super.viewDidLoad()
         
         self.dataHelper = DataHelper(context: self.context!)
-        self.title = propertyName
+        let property = dataHelper?.fetchPropertyBy(propertyId!)
+        self.title = property?.name
         fetchResults()
         performFetch()
         

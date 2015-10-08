@@ -179,7 +179,7 @@
         <!--Фильтр-->
         <scene sceneID="vs5-ef-NRf">
             <objects>
-                <viewController storyboardIdentifier="RightViewController" title="Фильтр" id="A6B-0N-wpz" userLabel="Фильтр" customClass="RightPanelViewController" customModule="Catalog" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="RightPanelViewController" title="Фильтр" id="A6B-0N-wpz" userLabel="Фильтр" customClass="RightPanelViewController" customModule="Catalog" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wHW-sY-md4"/>
                         <viewControllerLayoutGuide type="bottom" id="v4b-Ab-tvo"/>
@@ -476,13 +476,6 @@
                             <constraint firstItem="Rg1-cC-0Tb" firstAttribute="top" secondItem="Gn6-dW-Gkn" secondAttribute="bottom" id="x3N-hO-2ZM"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Property name" id="DgY-Th-Jhz">
-                        <barButtonItem key="leftBarButtonItem" image="back.png" id="5Yv-Bz-aJC">
-                            <connections>
-                                <action selector="onBackTapped:" destination="bI7-7q-HxS" id="TTK-Fw-3gm"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="Gn6-dW-Gkn" id="Jnz-qc-mko"/>
                     </connections>

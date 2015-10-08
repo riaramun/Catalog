@@ -8,13 +8,13 @@
 
 import Foundation
 import CoreData
-
 @objc(Property)
-class Property: NSManagedObject {
+public class Property: NSManagedObject {
     @NSManaged var typeId: Int
     @NSManaged var propertyId: Int
     @NSManaged var dimension: String
     @NSManaged var name: String
     @NSManaged var color: String
     @NSManaged var style: String
+    @NSManaged var filterItems: NSSet
 }
