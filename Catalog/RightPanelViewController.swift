@@ -12,16 +12,22 @@ import DOCheckboxControl
 
 
 protocol RightPanelViewControllerDelegate {
+    func updateView()
     func collapseFilterPanel()
     func getCurrentCategoryId() -> Int
 }
-protocol ColorsFilterDelegate {
-    func setColors(colors:[String])
+protocol PropertyFilterDelegate {
+    func updateView()
 }
 class RightPanelViewController: UIViewController, NSFetchedResultsControllerDelegate {
     
+    @IBAction func applyFilter(sender: AnyObject) {
+        self.view.endEditing(true)
+        delegate?.updateView()
+        delegate?.collapseFilterPanel()
+    }
     @IBOutlet var tableView: UITableView!
-    var fetchedResultsController: NSFetchedResultsController? = nil
+    //var fetchedResultsController: NSFetchedResultsController? = nil
     var colorsFilter = [String]()
     var context: NSManagedObjectContext?
     var dataHelper: DataHelper?
@@ -33,13 +39,16 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
             static let FilterCell = "FilterCell"
         }
     }
+    
     func performFetch() {
-        do {
-            try fetchedResultsController!.performFetch()
-            tableView.reloadData()
+        tableView.reloadData()
+        /*do {
+        try fetchedResultsController!.performFetch()
+        tableView.reloadData()
         } catch _ {
-        }
+        }*/
     }
+    
     var properties:[Property]?
     
     func fetchResults() {
@@ -56,23 +65,23 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
             
         }
         
-        let fetchRequest = NSFetchRequest(entityName: "FilterItem")
-        //fetchRequest.predicate = NSPredicate(format: reqStr)
+        //  let fetchRequest = NSFetchRequest(entityName: "FilterItem")
+        // fetchRequest.predicate = NSPredicate(format: reqStr)
         
         
         /*var filterItems: [FilterItem]?
         
         do {
-            try filterItems = self.context!.executeFetchRequest(fetchRequest) as? [FilterItem]
+        try filterItems = self.context!.executeFetchRequest(fetchRequest) as? [FilterItem]
         }
         catch {
         }
         
         for item in filterItems! {
-            print(item.property.name)
+        print(item.property.name)
         }*/
         
-        
+        /*
         let primarySortDescriptor = NSSortDescriptor(key: "name", ascending: true)
         
         let secondarySortDescriptor = NSSortDescriptor(key: "param", ascending: true)
@@ -80,19 +89,14 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
         fetchRequest.sortDescriptors = [primarySortDescriptor,secondarySortDescriptor]
         
         let frc = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: self.context!,
-            sectionNameKeyPath: "property.propertyId",
-            cacheName: nil)
+        fetchRequest: fetchRequest,
+        managedObjectContext: self.context!,
+        sectionNameKeyPath: "property.propertyId",
+        cacheName: nil)
         frc.delegate = self
-        fetchedResultsController = frc
+        fetchedResultsController = frc*/
     }
     
-    @IBAction func applyFilter(sender: AnyObject) {
-        self.view.endEditing(true)
-        /*self.dataHelper?.filterItemsByPrice( Int(self.minPrice.text!)!, max: Int(self.maxPrice.text!)!, currentPrice: true)*/
-        delegate?.collapseFilterPanel()
-    }
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         let filterItem = sender as! FilterItem
@@ -115,9 +119,9 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     
     @IBAction func resetFilter(sender: AnyObject) {
         self.view.endEditing(true)
-        
-        self.dataHelper?.resetfilter()
-        delegate?.collapseFilterPanel()
+        self.dataHelper?.clearPropertiesParams()
+        fetchResults()
+        performFetch()
     }
     
     
@@ -128,10 +132,7 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.dataHelper = DataHelper(context: self.context!)
-        
-        
         fetchResults()
         performFetch()
         
@@ -144,13 +145,13 @@ extension RightPanelViewController: UITableViewDataSource {
     return self.menuItem.name
     }*/
     
-     func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         
         return properties![section].name
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-       
+        
         return (self.properties?.count)!
     }
     
@@ -164,22 +165,49 @@ extension RightPanelViewController: UITableViewDataSource {
         
         let filterItem = getFilterItemBy(indexPath)
         
-        
-        
-       // let obj = fetchedResultsController!.objectAtIndexPath(indexPath);
-        
-       // let filterItem = fetchedResultsController!.objectAtIndexPath(indexPath) as! FilterItem
-        
-        cell.titleLabel.text = filterItem.param
-        
+        if filterItem.param != "+" && (filterItem.property.name.containsString("цена") || filterItem.property.name.containsString("Цена")) {
+            if indexPath.row == 0  {
+                cell.titleLabel.text = "от " + filterItem.param
+            } else {
+                cell.titleLabel.text = "до " + filterItem.param
+            }
+        }
+        else {
+            cell.titleLabel.text = filterItem.param
+        }
         return cell
     }
     
     func getFilterItemBy(indexPath: NSIndexPath) -> FilterItem {
-        
         let property = self.properties![indexPath.section]
-        let filterItem = property.filterItems.allObjects[indexPath.row] as! FilterItem
-        return filterItem
+        
+        if property.name.containsString("цена") || property.name.containsString("Цена") {
+            let items = property.filterItems.allObjects as! [FilterItem]
+            if(items.count == 2) {
+                if Int(items[0].param) > Int(items[1].param) {
+                    if indexPath.row == 0 {
+                        return items[1]
+                    } else {
+                        return items[0]
+                    }
+                    
+                } else {
+                    if indexPath.row == 0 {
+                        return items[0]
+                    } else {
+                        return items[1]
+                    }
+                }
+            } else {
+                let filterItem = property.filterItems.allObjects[indexPath.row] as! FilterItem
+                return filterItem
+            }
+        } else {
+            let filterItem = property.filterItems.allObjects[indexPath.row] as! FilterItem
+            return filterItem
+        }
+        
+        
     }
     
 }
@@ -210,22 +238,10 @@ class FilterTableViewCell: UITableViewCell {
     
 }
 
-extension RightPanelViewController: PriceEditorDelegate {
-    func setPrice(values:[String]) {
-        
-    }
-}
-extension RightPanelViewController: ColorsFilterDelegate {
+extension RightPanelViewController: PropertyFilterDelegate {
     
-    
-    func setColors(colors:[String]) {
-        
-        self.colorsFilter = colors
-        var res: String = ""
-        for color in colors {
-            res += color
-            res += String(", ")
-        }
+    func updateView() {
+        performFetch()
     }
 }
 

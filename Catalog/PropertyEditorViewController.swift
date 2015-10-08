@@ -17,7 +17,7 @@ class PropertyEditorViewController: UIViewController, NSFetchedResultsController
     var fetchedResultsController: NSFetchedResultsController? = nil
     var context: NSManagedObjectContext?
     var dataHelper: DataHelper?
-    var delegate: ColorsFilterDelegate?
+    var delegate: PropertyFilterDelegate?
     
     struct TableView {
         struct CellIdentifiers {
@@ -32,9 +32,11 @@ class PropertyEditorViewController: UIViewController, NSFetchedResultsController
         }
     }
     @IBAction func onBackTapped(sender: AnyObject) {
+        
         navigationController?.popViewControllerAnimated(true)
     }
     var itemsDictanary = [String:Bool]()
+    
     
     @IBAction func onCheckTapped(sender: AnyObject) {
         
@@ -42,21 +44,17 @@ class PropertyEditorViewController: UIViewController, NSFetchedResultsController
         
         let propertyListValue = self.dataHelper?.fetchPropertyListValueBy(listId)
         
-        itemsDictanary[(propertyListValue?.value)!] = (sender as! CheckboxControl).selected
-        var colors = [String]()
-        for key in itemsDictanary.keys {
-            if itemsDictanary[key]?.boolValue == true {
-                colors.append(key)
-            }
-        }
-        delegate!.setColors(colors)
+        let key = (propertyListValue?.value)!
+        
+        itemsDictanary[key] = (sender as! CheckboxControl).selected
+        
     }
     
+    
     var propertyId: Int?
+    var property: Property?
     
     func fetchResults() {
-        
-        //let propertyId = self.dataHelper?.fetchPropertyIdBy(propertyName)
         
         let fetchRequest = NSFetchRequest(entityName: "Property_List_Value")
         fetchRequest.predicate = NSPredicate(format: "propertyId == %d", propertyId! )
@@ -76,12 +74,10 @@ class PropertyEditorViewController: UIViewController, NSFetchedResultsController
         super.viewDidLoad()
         
         self.dataHelper = DataHelper(context: self.context!)
-        let property = dataHelper?.fetchPropertyBy(propertyId!)
+        property = dataHelper?.fetchPropertyBy(propertyId!)
         self.title = property?.name
         fetchResults()
         performFetch()
-        
-        //dataHelper?.getProperitesByName("")
         
     }
 }
@@ -116,15 +112,53 @@ extension PropertyEditorViewController: UITableViewDataSource {
         
         cell.titleLabel.text = propListVal.value
         cell.checkbox.tag = propListVal.listId
+        cell.checkbox.selected = false
+        for param in property!.filterItems {
+            if (param as! FilterItem).param == propListVal.value {
+                cell.checkbox.selected = true
+                itemsDictanary[propListVal.value] = true
+                break
+            }
+        }
         return cell
     }
     
+    override func viewWillDisappear(animated : Bool) {
+        super.viewWillDisappear(animated)
+        
+        if (self.isMovingFromParentViewController()){
+            
+            dataHelper!.clearParams(property!)
+            
+            var params = [String]()
+            
+            for key in itemsDictanary.keys {
+                
+                if itemsDictanary[key]?.boolValue == true {
+                    
+                    params.append(key)
+                }
+            }
+            
+            if params.count > 0 {
+                dataHelper!.updateFilterItem(params, property:property!)
+            } else {
+                dataHelper!.setEmptyFilterItem(property!)
+            }
+            do {
+                try self.context!.save()
+            } catch {
+                
+            }
+            delegate!.updateView()
+        }
+    }
 }
 extension PropertyEditorViewController: UITableViewDelegate {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-       
+        
     }
     
 }

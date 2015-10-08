@@ -321,9 +321,11 @@ extension CollectionViewController: AlertPickerViewDelegate {
     }
 }
 extension CollectionViewController: RightPanelViewControllerDelegate {
+    func updateView() {
+        self.performFetch()
+    }
     func collapseFilterPanel() {
         self.delegate?.toggleRightPanel()
-        self.performFetch()
     }
     func getCurrentCategoryId() -> Int {
         return self.categoryId!

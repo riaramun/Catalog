@@ -188,18 +188,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gAq-t5-NtU">
-                                <rect key="frame" x="29" y="550" width="89" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gAq-t5-NtU">
+                                <rect key="frame" x="31" y="550" width="87" height="30"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Применить">
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="applyFilter:" destination="A6B-0N-wpz" eventType="touchUpInside" id="de3-6I-GRP"/>
+                                    <action selector="applyFilter:" destination="A6B-0N-wpz" eventType="touchUpInside" id="6KP-2I-eUh"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pul-q8-zr0">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pul-q8-zr0">
                                 <rect key="frame" x="157" y="550" width="91" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="91" id="y4u-OH-fQH"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Сброс">
                                     <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -208,24 +211,38 @@
                                     <action selector="resetFilter:" destination="A6B-0N-wpz" eventType="touchUpInside" id="AvS-xg-2q8"/>
                                 </connections>
                             </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="M9H-AG-mTN">
-                                <rect key="frame" x="20" y="80" width="236" height="337"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="M9H-AG-mTN">
+                                <rect key="frame" x="20" y="80" width="260" height="462"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="260" id="eBh-H7-U5B"/>
+                                </constraints>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FilterCell" id="eRi-cZ-LFy" customClass="FilterTableViewCell" customModule="Catalog" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="236" height="44"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="FilterCell" id="eRi-cZ-LFy" customClass="FilterTableViewCell" customModule="Catalog" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="92" width="260" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="eRi-cZ-LFy" id="5C3-Aw-ecH">
-                                            <rect key="frame" x="0.0" y="0.0" width="236" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="260" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s9f-fS-NX5">
-                                                    <rect key="frame" x="8" y="11" width="228" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="s9f-fS-NX5">
+                                                    <rect key="frame" x="8" y="11" width="244" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="trailingMargin" secondItem="s9f-fS-NX5" secondAttribute="trailing" id="6Zi-8Q-dzs"/>
+                                                <constraint firstItem="s9f-fS-NX5" firstAttribute="centerY" secondItem="5C3-Aw-ecH" secondAttribute="centerY" id="A9d-ea-wTc"/>
+                                                <constraint firstItem="s9f-fS-NX5" firstAttribute="centerX" secondItem="5C3-Aw-ecH" secondAttribute="centerX" constant="1" id="FHL-zk-rb0"/>
+                                                <constraint firstItem="s9f-fS-NX5" firstAttribute="leading" secondItem="5C3-Aw-ecH" secondAttribute="leadingMargin" id="IvZ-BI-pTN"/>
+                                            </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="FHL-zk-rb0"/>
+                                                </mask>
+                                            </variation>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="titleLabel" destination="s9f-fS-NX5" id="b4L-Px-ihv"/>
@@ -239,6 +256,15 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="M9H-AG-mTN" firstAttribute="top" secondItem="wHW-sY-md4" secondAttribute="bottom" constant="16" id="49h-Pd-GQT"/>
+                            <constraint firstAttribute="bottom" secondItem="gAq-t5-NtU" secondAttribute="bottom" constant="20" symbolic="YES" id="7yG-mE-WDL"/>
+                            <constraint firstItem="Pul-q8-zr0" firstAttribute="leading" secondItem="gAq-t5-NtU" secondAttribute="trailing" constant="39" id="Oeh-bT-zab"/>
+                            <constraint firstItem="gAq-t5-NtU" firstAttribute="top" secondItem="M9H-AG-mTN" secondAttribute="bottom" constant="8" symbolic="YES" id="Qzo-2Y-YSR"/>
+                            <constraint firstItem="Pul-q8-zr0" firstAttribute="leading" secondItem="AR3-Pg-2VR" secondAttribute="leading" constant="157" id="lbY-JT-N2c"/>
+                            <constraint firstItem="Pul-q8-zr0" firstAttribute="top" secondItem="M9H-AG-mTN" secondAttribute="bottom" constant="8" id="m5e-BO-tgJ"/>
+                            <constraint firstItem="M9H-AG-mTN" firstAttribute="leading" secondItem="AR3-Pg-2VR" secondAttribute="leadingMargin" id="til-nz-jLd"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Фильтр" id="ay7-aT-N9K">
                         <barButtonItem key="leftBarButtonItem" image="back.png" id="XUc-ul-O3X" userLabel="Back Button Item">

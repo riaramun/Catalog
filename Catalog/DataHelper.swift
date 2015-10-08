@@ -335,6 +335,7 @@ class DataHelper {
             
         }
     }
+    
     func filterItemsByPrice(min:Int, max:Int, currentPrice:Bool)
     {
         let items = fetchAllItems();
@@ -468,6 +469,8 @@ class DataHelper {
         
         let fReq = NSFetchRequest(entityName: "Property_Item_List")
         fReq.predicate = NSPredicate(format: "categoryId == %d", id)
+        let primarySortDescriptor = NSSortDescriptor(key: "position", ascending: true)
+        fReq.sortDescriptors = [primarySortDescriptor]
         
         var fetchResults : [Property_Item_List]?
         var properties = [Property]()
@@ -483,7 +486,8 @@ class DataHelper {
         }
         return properties
     }
-    func seedFilterItems() {
+    func fetchAllProperties() -> [Property]? {
+        
         let fReq = NSFetchRequest(entityName: "Property")
         
         var properties: [Property]?
@@ -493,15 +497,49 @@ class DataHelper {
         }
         catch {
         }
+        return properties
+    }
+    func seedFilterItems() {
+        let properties = fetchAllProperties();
         for property in properties! {
-            
             
             let entity = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
             
-            entity.param = "добавить фильтр"
+            entity.param = "+"
             entity.property = property
-            entity.name = property.name
-            entity.propertyId = property.propertyId
+            //entity.name = property.name
+            //entity.propertyId = property.propertyId
         }
+    }
+    func clearParams(property:Property){
+        for entity in (property.filterItems) {
+            self.context.deleteObject(entity as! NSManagedObject)
+        }
+    }
+    func clearPropertiesParams(){
+        let properties = fetchAllProperties()
+        for property in properties! {
+            for entity in (property.filterItems) {
+                self.context.deleteObject(entity as! NSManagedObject)
+            }
+            setEmptyFilterItem(property)
+        }
+    }
+    func updateFilterItem(params:[String], property:Property)
+    {
+        for param in params {
+            let entity = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
+            entity.param = param
+            entity.property = property
+           // entity.name = property.name
+           // entity.propertyId = property.propertyId
+        }
+    }
+    func setEmptyFilterItem(property:Property) {
+        let entity = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
+        entity.param = "+"
+        entity.property = property
+       // entity.name = property.name
+       // entity.propertyId = property.propertyId
     }
 }

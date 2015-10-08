@@ -9,9 +9,9 @@
 import Foundation
 import CoreData
 @objc(FilterItem)
-public class FilterItem: NSManagedObject {
-    @NSManaged var name: String
+class FilterItem: NSManagedObject {
+   // @NSManaged var name: String
     @NSManaged var param: String
-    @NSManaged var propertyId: Int
+   // @NSManaged var propertyId: Int
     @NSManaged var property: Property
 }
