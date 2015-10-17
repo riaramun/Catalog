@@ -9,7 +9,7 @@
 import Foundation
 
 protocol CenterViewControllerDelegate {
-    func setDrawerRightPanel(delegate:RightPanelViewControllerDelegate?)
+   // func setDrawerRightPanel(delegate:RightPanelViewControllerDelegate?)
     func setDrawerLeftPanel(enabled:Bool)
     func toggleLeftPanel()
     func toggleRightPanel()

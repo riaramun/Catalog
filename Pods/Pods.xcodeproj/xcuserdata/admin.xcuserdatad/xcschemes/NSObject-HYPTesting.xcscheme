@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "A34604D3F4822FFDEE3A28F2"
+               BlueprintIdentifier = "51640D7054342B76D403B6E5"
                BuildableName = "NSObject_HYPTesting.framework"
                BlueprintName = "NSObject-HYPTesting"
                ReferencedContainer = "container:Pods.xcodeproj">

@@ -23,7 +23,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         "Старая цена (по убыванию)"]
     
     @IBAction func FilterTapped(sender: AnyObject) {
-        self.delegate!.toggleRightPanel()
+        //self.delegate!.toggleRightPanel()
     }
     
     
@@ -31,10 +31,49 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         self.pickerView.showPicker()
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "ToItemDetail" {
+            
+            var viewController:ItemDetailViewController
+            
+            if segue.destinationViewController is UINavigationController {
+                let nav = segue.destinationViewController as! UINavigationController
+                viewController = nav.topViewController as! ItemDetailViewController
+            } else {
+                viewController = segue.destinationViewController as! ItemDetailViewController
+            }
+            
+            // let viewController = segue.destinationViewController as! ItemDetailViewController
+            
+            //   let nav = segue.destinationViewController as! UINavigationController
+            // let viewController = nav.topViewController as! ItemDetailViewController
+            
+            viewController.context = self.context
+            let item = sender as! Item
+            viewController.item = item
+        }
+        else if segue.identifier == "ToFilterView" {
+            var viewController:RightPanelViewController
+            
+            if segue.destinationViewController is UINavigationController {
+                let nav = segue.destinationViewController as! UINavigationController
+                viewController = nav.topViewController as! RightPanelViewController
+            } else {
+                viewController = segue.destinationViewController as! RightPanelViewController
+            }
+            
+            viewController.context = self.context
+           //let item = sender as! Item
+            viewController.categoryId = categoryId!
+        }
+        //viewController.viewNavigationItem.title = category.name
+    }
+    
     override func didMoveToParentViewController(parent: UIViewController?) {
         if (parent == nil) {
             
-            self.delegate!.setDrawerRightPanel(nil)
+            // self.delegate!.setDrawerRightPanel(nil)
             self.delegate!.setDrawerLeftPanel(true)
         }
     }
@@ -66,19 +105,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         cellHeightToSet = 300
         self.collectionView!.reloadData()
     }
-    func getPhotoFor(itemId:Int) -> String? {
-        let fetchRequest = NSFetchRequest(entityName: "Item_Photo")
-        fetchRequest.predicate = NSPredicate(format: "%d == itemId", itemId)
-        var photo:String?
-        do {
-            var res:Item_Photo?
-            try res = self.context!.executeFetchRequest(fetchRequest).first as? Item_Photo
-            photo = res?.photo
-        }
-        catch {
-        }
-        return photo
-    }
+    
     
     func performFetch() {
         do {
@@ -111,7 +138,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         self.pickerView.items = sort_menu_array
         self.pickerView.delegate = self
         
-        self.delegate!.setDrawerRightPanel(self)
+        //self.delegate!.setDrawerRightPanel(self)
         self.delegate!.setDrawerLeftPanel(false)
         
         self.view.addSubview(pickerView)
@@ -173,27 +200,21 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
             
             strToSet.appendAttributedString(NSMutableAttributedString(string: (attributes[key]?.name)! + String (": ")))
             
-            let styledStr = styleString( (attributes[key]?.value)! + (attributes[key]?.dimen)!, style: (attributes[key]?.style)!,color: (attributes[key]?.color)!)
+            let styledStr = StrUtils.styleString( (attributes[key]?.value)! + (attributes[key]?.dimen)!, style: (attributes[key]?.style)!,color: (attributes[key]?.color)!)
             
             strToSet.appendAttributedString(styledStr)
             
             strToSet.appendAttributedString(NSMutableAttributedString(string:"\r"))
             counter++
-            if counter == 3 {break }
+            if counter == 4 {break }
         }
         
         cell.categoryLabel.attributedText = strToSet
         
-        var photoUrl = getPhotoFor(item.itemId)
+        var photoUrl = dataHelper!.getPhotoFor(item.itemId)
+        
         if photoUrl != nil {
-            let URL_SITE = "http://rezmis3k.bget.ru/test3/catalog2/"
-            let DIR_IMG_UPL = "img/upload/"
-            let DIR_IMG_CAMP = "item/"
-            let DENSITY = "1/"
-            let ext = "_1.jpg"
-            
-            photoUrl = URL_SITE + DIR_IMG_UPL + DIR_IMG_CAMP + DENSITY + photoUrl! + ext
-            
+            photoUrl = ImgUtils.getItemImgUrl(photoUrl!)
             if(photoUrl != nil) {
                 Alamofire.request(.GET, photoUrl!).response { (request, response, data, error) in
                     NSLog(photoUrl!)
@@ -205,22 +226,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         return cell
     }
     
-    func styleString(str:String, style:String, color:String) -> NSMutableAttributedString
-    {
-        var uiColor = UIColor.blackColor()
-        if(!color.isEmpty) {
-            uiColor = color.hexColor!
-        }
-        var strokeVal = 0
-        if(style == "bs") {
-            strokeVal = 1
-        }
-        let attributes: [String : AnyObject] = [NSStrikethroughStyleAttributeName : strokeVal, NSForegroundColorAttributeName : uiColor, NSStrikethroughColorAttributeName : UIColor.blackColor()]
-        
-        
-        return NSMutableAttributedString(string: str, attributes: attributes) //1
-        
-    }
+    
     
     var cellWidthToSet:CGFloat = 0
     var cellHeightToSet:CGFloat = 0
@@ -242,7 +248,12 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 1
     }
-    
+    internal override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        let item = fetchedResultsController!.objectAtIndexPath(indexPath) as! Item
+        
+        self.performSegueWithIdentifier("ToItemDetail", sender: item)
+    }
     
     /*
     // Uncomment this method to specify if the specified item should be selected
@@ -322,6 +333,9 @@ extension CollectionViewController: AlertPickerViewDelegate {
 }
 extension CollectionViewController: RightPanelViewControllerDelegate {
     func updateView() {
+        self.dataHelper!.resetfilter()
+        self.dataHelper!.filterItemsByParams(self.categoryId!)
+        fetchResults(self.categoryId!, entityName: "Item", column: "categoryId")
         self.performFetch()
     }
     func collapseFilterPanel() {

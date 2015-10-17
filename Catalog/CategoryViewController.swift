@@ -14,6 +14,7 @@ import Alamofire
 class CategoryViewController: UIViewController, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var menuBarButton: UIBarButtonItem!
     
+    
     @IBOutlet weak var viewNavigationItem: UINavigationItem!
     var menuItem: MenuItem = MenuItem (type: .ECategories)
     
@@ -26,10 +27,14 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
         
         if segue.identifier == "ToItemView" {
             
-            let viewController = segue.destinationViewController as! CollectionViewController
-            
-            /*let nav = segue.destinationViewController as! UINavigationController
-            let viewController = nav.topViewController as! CollectionViewController*/
+            var viewController:CollectionViewController
+           
+            if segue.destinationViewController is UINavigationController {
+                let nav = segue.destinationViewController as! UINavigationController
+                viewController = nav.topViewController as! CollectionViewController
+            } else {
+                viewController = segue.destinationViewController as! CollectionViewController
+            }
             
             viewController.context = self.context
             viewController.delegate = self.delegate
@@ -81,7 +86,7 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     
     var parentStack = Stack<Int>()
     
-   
+    
     
     func fetchResults(id:Int, entityName:String, column:String) {
         
@@ -107,7 +112,6 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.delegate!.setDrawerLeftPanel(true)
         
         fetchResults(0, entityName: "Category", column: "parent")
@@ -117,7 +121,7 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
 }
 
 extension CategoryViewController: LeftPanelViewControllerDelegate {
-
+    
     // MARK: Button actions
     func menuItemSelected(menuItem: MenuItem) {
         
@@ -220,7 +224,12 @@ extension CategoryViewController: UITableViewDelegate {
     }
     
 }
-
+extension CategoryViewController: CoreDataListener {
+    func dataUpdated() {
+        fetchResults(0, entityName: "Category", column: "parent")
+        performFetch()
+    }
+}
 class CategoryCell: UITableViewCell {
     
     let URL_SITE = "http://rezmis3k.bget.ru/test3/catalog2/"

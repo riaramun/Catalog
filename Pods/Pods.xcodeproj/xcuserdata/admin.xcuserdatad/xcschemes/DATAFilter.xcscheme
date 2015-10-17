@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "BCCCC536102E0017C977F72B"
+               BlueprintIdentifier = "81252976DA931229A51C84DB"
                BuildableName = "DATAFilter.framework"
                BlueprintName = "DATAFilter"
                ReferencedContainer = "container:Pods.xcodeproj">

@@ -23,15 +23,16 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     
     @IBAction func applyFilter(sender: AnyObject) {
         self.view.endEditing(true)
-        delegate?.updateView()
-        delegate?.collapseFilterPanel()
+        self.dismissViewControllerAnimated(true, completion: nil)      //  delegate?.updateView()
+       // delegate?.collapseFilterPanel()
     }
     @IBOutlet var tableView: UITableView!
     //var fetchedResultsController: NSFetchedResultsController? = nil
     var colorsFilter = [String]()
     var context: NSManagedObjectContext?
     var dataHelper: DataHelper?
-    var delegate: RightPanelViewControllerDelegate?
+    var categoryId:Int = 0
+    //var delegate: RightPanelViewControllerDelegate?
     
     
     struct TableView {
@@ -53,7 +54,7 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     
     func fetchResults() {
         
-        properties = dataHelper?.fetchPropertiesByCategory((delegate?.getCurrentCategoryId())!)
+        properties = dataHelper?.fetchPropertiesByCategory(categoryId)
         
         var reqStr = ""
         var counter = 0
@@ -127,7 +128,8 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     
     @IBAction func onBackTapped(sender: AnyObject) {
         self.view.endEditing(true)
-        delegate?.collapseFilterPanel()
+        self.dismissViewControllerAnimated(true, completion: nil)
+      //  delegate?.collapseFilterPanel()
     }
     
     override func viewDidLoad() {

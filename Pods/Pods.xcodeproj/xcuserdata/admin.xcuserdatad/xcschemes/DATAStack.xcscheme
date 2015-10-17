@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "DDE3B4F179B7B9CD21D53751"
+               BlueprintIdentifier = "181A780407E9E8643F48FDB7"
                BuildableName = "DATAStack.framework"
                BlueprintName = "DATAStack"
                ReferencedContainer = "container:Pods.xcodeproj">

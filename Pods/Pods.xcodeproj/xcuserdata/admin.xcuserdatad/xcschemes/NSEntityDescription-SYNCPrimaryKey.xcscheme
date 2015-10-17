@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "673B056E2C0D065484289F1D"
+               BlueprintIdentifier = "96643A93A9F800FD336DA1B0"
                BuildableName = "NSEntityDescription_SYNCPrimaryKey.framework"
                BlueprintName = "NSEntityDescription-SYNCPrimaryKey"
                ReferencedContainer = "container:Pods.xcodeproj">

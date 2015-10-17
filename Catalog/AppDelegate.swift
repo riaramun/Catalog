@@ -56,6 +56,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if let context = self.dataStack.mainContext {
             let dataHelper = DataHelper(context: context)
+            dataHelper.delegate = categoryViewController
             dataHelper.seedDataStore()
         }
         
@@ -94,9 +95,9 @@ private extension UIStoryboard {
         return mainStoryboard().instantiateViewControllerWithIdentifier("LeftViewController") as? LeftPanelViewController
     }
     
-    class func rightViewController() -> RightPanelViewController? {
+   /* class func rightViewController() -> RightPanelViewController? {
         return mainStoryboard().instantiateViewControllerWithIdentifier("RightPanelViewController") as? RightPanelViewController
-    }
+    }*/
     
     class func categoryViewController() -> CategoryViewController? {
         return mainStoryboard().instantiateViewControllerWithIdentifier("CategoryViewController") as? CategoryViewController
@@ -105,7 +106,7 @@ private extension UIStoryboard {
 
 extension AppDelegate: CenterViewControllerDelegate {
     
-    func setDrawerRightPanel(delegate:RightPanelViewControllerDelegate?) {
+   /* func setDrawerRightPanel(delegate:RightPanelViewControllerDelegate?) {
         
         if( delegate != nil) {
             
@@ -121,7 +122,7 @@ extension AppDelegate: CenterViewControllerDelegate {
             
             (window!.rootViewController as! MMDrawerController).rightDrawerViewController = nil
         }
-    }
+    }*/
     func setDrawerLeftPanel(enabled:Bool) {
         
         let leftSideNav = UINavigationController(rootViewController: UIStoryboard.leftViewController()!)

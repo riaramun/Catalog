@@ -11,8 +11,12 @@ import Alamofire
 import DATAStack
 import Sync
 
-
+protocol CoreDataListener {
+    func dataUpdated()
+}
 class DataHelper {
+    
+    var delegate : CoreDataListener?
     
     class GoodAtribute {
         init(name:String , value:String, dimen:String, style:String, color:String) {
@@ -194,6 +198,9 @@ class DataHelper {
                     } catch {
                         
                     }
+                    if self.delegate != nil {
+                        self.delegate!.dataUpdated()
+                    }
                 }
                 
                 func propertyItemListAdded(err:NSError!) {
@@ -336,15 +343,16 @@ class DataHelper {
         }
     }
     
-    func filterItemsByPrice(min:Int, max:Int, currentPrice:Bool)
+    func filterItemsByParams(categoryId:Int)
     {
-        let items = fetchAllItems();
+        let items = fetchItemsBy(categoryId);
         var counter:Int = 0
+        
         for item in items! {
             counter++
             let propertiesValues = fetchPropertyItemValuesBy(item.itemId)
             
-            var properVal: Int = 1
+            //var properVal: Int = 1
             
             for var i = 0 ; i < propertiesValues.count;  i++ {
                 
@@ -352,29 +360,50 @@ class DataHelper {
                 
                 let property = fetchPropertyBy(propertiesValue.propertyId)
                 
-                if(currentPrice) {
-                    if property?.name == "цена" || property?.name == "Цена"  {
-                        
-                        properVal = Int(propertiesValue.value)!
-                        
-                        break
+                
+                let filterItems = property?.filterItems.allObjects as! [FilterItem]
+                
+                
+                if filterItems.count > 0 && filterItems[0].param != "+" {
+                    
+                    item.position = -1
+                    
+                    if property?.name == "цена" || property?.name == "Цена" || property?.name == "Старая цена" || property?.name == "старая цена" {
+                        let price = Int(propertiesValue.value)
+                        var max = 0
+                        var min = 0
+                        if Int(filterItems[0].param)! > Int(filterItems[1].param)! {
+                            max = Int(filterItems[0].param)!
+                            min = Int(filterItems[1].param)!
+                        } else {
+                            max = Int(filterItems[0].param)!
+                            min = Int(filterItems[1].param)!
+                        }
+                        if(price >= min && price <= max) {
+                            item.position = counter
+                            break
+                        }
                     }
-                } else {
-                    if property?.name == "Старая цена" || property?.name == "старая цена"  {
-                        
-                        properVal = Int(propertiesValue.value)!
-                        
+                    else {
+                        for filterItem in filterItems {
+                            
+                            let propertyListValue = self.fetchPropertyListValueBy(Int(propertiesValue.value)!)
+                            
+                            if filterItem.param == propertyListValue!.value {
+                                
+                                item.position = counter
+                                
+                                break
+                            }
+                        }
+                    }
+                    if item.position == -1 {
                         break
                     }
                 }
-                
-            }
-            
-            if(!( properVal >= min && properVal <= max )) {
-                item.position = -1
-            }
-            else {
-                item.position = counter
+                if item.position == -1 {
+                    break
+                }
             }
         }
         
@@ -431,6 +460,8 @@ class DataHelper {
             if(key.position != -1) {
                 key.position = counter
                 counter++
+            } else {
+                
             }
             
         }
@@ -507,8 +538,6 @@ class DataHelper {
             
             entity.param = "+"
             entity.property = property
-            //entity.name = property.name
-            //entity.propertyId = property.propertyId
         }
     }
     func clearParams(property:Property){
@@ -531,15 +560,25 @@ class DataHelper {
             let entity = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
             entity.param = param
             entity.property = property
-           // entity.name = property.name
-           // entity.propertyId = property.propertyId
         }
     }
     func setEmptyFilterItem(property:Property) {
         let entity = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
         entity.param = "+"
         entity.property = property
-       // entity.name = property.name
-       // entity.propertyId = property.propertyId
+    }
+    
+    func getPhotoFor(itemId:Int) -> String? {
+        let fetchRequest = NSFetchRequest(entityName: "Item_Photo")
+        fetchRequest.predicate = NSPredicate(format: "%d == itemId", itemId)
+        var photo:String?
+        do {
+            var res:Item_Photo?
+            try res = self.context.executeFetchRequest(fetchRequest).first as? Item_Photo
+            photo = res?.photo
+        }
+        catch {
+        }
+        return photo
     }
 }

@@ -11,7 +11,7 @@ import DOCheckboxControl
 import CoreData
 
 
-class PropertyEditorViewController: UIViewController, NSFetchedResultsControllerDelegate  {
+class PropertyEditorViewController: UIViewController, NSFetchedResultsControllerDelegate, UINavigationControllerDelegate  {
     
     @IBOutlet var tableView: UITableView!
     var fetchedResultsController: NSFetchedResultsController? = nil
@@ -49,13 +49,40 @@ class PropertyEditorViewController: UIViewController, NSFetchedResultsController
         itemsDictanary[key] = (sender as! CheckboxControl).selected
         
     }
-    
+    func navigationController(navigationController: UINavigationController, willShowViewController viewController: UIViewController, animated: Bool) {
+        //MyViewController shoud be the name of your parent Class
+        if viewController as? RightPanelViewController != nil {
+            dataHelper!.clearParams(property!)
+            
+            var params = [String]()
+            
+            for key in itemsDictanary.keys {
+                
+                if itemsDictanary[key]?.boolValue == true {
+                    
+                    params.append(key)
+                }
+            }
+            
+            if params.count > 0 {
+                dataHelper!.updateFilterItem(params, property:property!)
+            } else {
+                dataHelper!.setEmptyFilterItem(property!)
+            }
+            do {
+                try self.context!.save()
+            } catch {
+                
+            }
+            delegate!.updateView()
+        }
+    }
     
     var propertyId: Int?
     var property: Property?
     
     func fetchResults() {
-        
+       let propListVal =  dataHelper!.fetchPropertyListValuesBy(propertyId!)
         let fetchRequest = NSFetchRequest(entityName: "Property_List_Value")
         fetchRequest.predicate = NSPredicate(format: "propertyId == %d", propertyId! )
         let primarySortDescriptor = NSSortDescriptor(key: "position", ascending: true)
@@ -72,7 +99,7 @@ class PropertyEditorViewController: UIViewController, NSFetchedResultsController
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationController?.delegate = self
         self.dataHelper = DataHelper(context: self.context!)
         property = dataHelper?.fetchPropertyBy(propertyId!)
         self.title = property?.name
@@ -123,36 +150,7 @@ extension PropertyEditorViewController: UITableViewDataSource {
         return cell
     }
     
-    override func viewWillDisappear(animated : Bool) {
-        super.viewWillDisappear(animated)
-        
-        if (self.isMovingFromParentViewController()){
-            
-            dataHelper!.clearParams(property!)
-            
-            var params = [String]()
-            
-            for key in itemsDictanary.keys {
-                
-                if itemsDictanary[key]?.boolValue == true {
-                    
-                    params.append(key)
-                }
-            }
-            
-            if params.count > 0 {
-                dataHelper!.updateFilterItem(params, property:property!)
-            } else {
-                dataHelper!.setEmptyFilterItem(property!)
-            }
-            do {
-                try self.context!.save()
-            } catch {
-                
-            }
-            delegate!.updateView()
-        }
-    }
+    
 }
 extension PropertyEditorViewController: UITableViewDelegate {
     

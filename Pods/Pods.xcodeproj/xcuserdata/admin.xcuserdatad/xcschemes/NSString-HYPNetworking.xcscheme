@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "5CF034383E06E76EA55BB07B"
+               BlueprintIdentifier = "35860B6B4CE135A94E707DBF"
                BuildableName = "NSString_HYPNetworking.framework"
                BlueprintName = "NSString-HYPNetworking"
                ReferencedContainer = "container:Pods.xcodeproj">

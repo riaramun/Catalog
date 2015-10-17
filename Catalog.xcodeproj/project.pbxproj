@@ -29,6 +29,9 @@
 		84DCBA8D1BA862AA009CA677 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DCBA8C1BA862AA009CA677 /* Category.swift */; };
 		84DCBA931BA9B3AA009CA677 /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DCBA921BA9B3AA009CA677 /* CategoryViewController.swift */; };
 		84DCBA951BA9B3D4009CA677 /* RightPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DCBA941BA9B3D4009CA677 /* RightPanelViewController.swift */; };
+		84DE38231BC7A8FA00EBE692 /* ItemDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DE38221BC7A8FA00EBE692 /* ItemDetailViewController.swift */; };
+		84DE38251BC7AB1C00EBE692 /* StrUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DE38241BC7AB1C00EBE692 /* StrUtils.swift */; };
+		84DE38271BC7ABF700EBE692 /* ImgUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DE38261BC7ABF700EBE692 /* ImgUtils.swift */; };
 		84DF675D1BBD352C000B77D5 /* Property_List_Value.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DF675C1BBD352C000B77D5 /* Property_List_Value.swift */; };
 		84DFC5C91BB804B500F39C73 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DFC5C81BB804B500F39C73 /* Stack.swift */; };
 		84DFC5CB1BB80E8700F39C73 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DFC5CA1BB80E8700F39C73 /* Item.swift */; };
@@ -76,6 +79,9 @@
 		84DCBA8C1BA862AA009CA677 /* Category.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		84DCBA921BA9B3AA009CA677 /* CategoryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		84DCBA941BA9B3D4009CA677 /* RightPanelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RightPanelViewController.swift; sourceTree = "<group>"; };
+		84DE38221BC7A8FA00EBE692 /* ItemDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemDetailViewController.swift; sourceTree = "<group>"; };
+		84DE38241BC7AB1C00EBE692 /* StrUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StrUtils.swift; sourceTree = "<group>"; };
+		84DE38261BC7ABF700EBE692 /* ImgUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImgUtils.swift; sourceTree = "<group>"; };
 		84DF675C1BBD352C000B77D5 /* Property_List_Value.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Property_List_Value.swift; sourceTree = "<group>"; };
 		84DFC5C81BB804B500F39C73 /* Stack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		84DFC5CA1BB80E8700F39C73 /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
@@ -149,6 +155,7 @@
 				84DCBA8B1BA86262009CA677 /* models */,
 				84CF19061BAE218900C93739 /* LeftPanelViewController.swift */,
 				8445A0681BC55C92002C9CF7 /* PriceEditorViewController.swift */,
+				84DE38221BC7A8FA00EBE692 /* ItemDetailViewController.swift */,
 				84DCBA941BA9B3D4009CA677 /* RightPanelViewController.swift */,
 				8445A0651BC336E2002C9CF7 /* PropertyEditorViewController.swift */,
 				84DBC26F1BB9462900620E18 /* CollectionViewController.swift */,
@@ -203,8 +210,10 @@
 		84DFC5C71BB8049900F39C73 /* helper */ = {
 			isa = PBXGroup;
 			children = (
+				84DE38261BC7ABF700EBE692 /* ImgUtils.swift */,
 				84DFC5C81BB804B500F39C73 /* Stack.swift */,
 				84E347111BABFF6B009CE455 /* DataHelper.swift */,
+				84DE38241BC7AB1C00EBE692 /* StrUtils.swift */,
 			);
 			name = helper;
 			sourceTree = "<group>";
@@ -403,10 +412,13 @@
 				845EAE671BBC377A000984A9 /* AlertPickerView.swift in Sources */,
 				84DCBA951BA9B3D4009CA677 /* RightPanelViewController.swift in Sources */,
 				84CF19091BAE23CC00C93739 /* MenuItem.swift in Sources */,
+				84DE38231BC7A8FA00EBE692 /* ItemDetailViewController.swift in Sources */,
 				843786441BA8512F00244DBE /* AppDelegate.swift in Sources */,
 				8437864C1BA8512F00244DBE /* Catalog.xcdatamodeld in Sources */,
 				84DFC5CF1BB8361400F39C73 /* Item_Photo.swift in Sources */,
+				84DE38271BC7ABF700EBE692 /* ImgUtils.swift in Sources */,
 				8445A0691BC55C92002C9CF7 /* PriceEditorViewController.swift in Sources */,
+				84DE38251BC7AB1C00EBE692 /* StrUtils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,7 +535,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Catalog/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.lebrom.Catalog;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -540,7 +552,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = Catalog/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = ru.lebrom.Catalog;
 				PRODUCT_NAME = "$(TARGET_NAME)";
