@@ -38,12 +38,15 @@ class DataHelper {
         self.context = context
     }
     
+    /*
+    @Returns attributes for particular item, used in collection view
+    */
     func fetchGoodAttributesBy(itemId: Int, categoryId: Int) -> [Int: GoodAtribute] {
         
         
         var goodAttributes = [Int: GoodAtribute]()
         
-        let propertiesValues = fetchPropertyItemValuesBy(itemId)
+        let propertiesValues = fetchPropertyItemValuesByItemId(itemId)
         
         for  var i = 0 ; i < propertiesValues.count;  i++ {
             
@@ -100,10 +103,24 @@ class DataHelper {
         return property
     }
     
-    func fetchPropertyItemValuesBy(itemId: Int) -> [Property_Item_Value]
+    func fetchPropertyItemValuesByItemId(itemId: Int) -> [Property_Item_Value]
     {
         let fReq = NSFetchRequest(entityName: "Property_Item_Value")
         fReq.predicate = NSPredicate(format: "itemId == %d", itemId)
+        
+        var fetchResults = [Property_Item_Value] ()
+        do {
+            try fetchResults = self.context.executeFetchRequest(fReq) as! [Property_Item_Value]
+        }
+        catch {
+        }
+        return fetchResults
+    }
+    
+    func fetchPropertyItemValuesByPropId(propId: Int) -> [Property_Item_Value]
+    {
+        let fReq = NSFetchRequest(entityName: "Property_Item_Value")
+        fReq.predicate = NSPredicate(format: "propertyId == %d", propId)
         
         var fetchResults = [Property_Item_Value] ()
         do {
@@ -351,7 +368,7 @@ class DataHelper {
         
         for item in items! {
             counter++
-            let propertiesValues = fetchPropertyItemValuesBy(item.itemId)
+            let propertiesValues = fetchPropertyItemValuesByItemId(item.itemId)
             
             //var properVal: Int = 1
             
@@ -369,7 +386,7 @@ class DataHelper {
                     
                     item.position = -1
                     
-                    if property?.name == "цена" || property?.name == "Цена" || property?.name == "Старая цена" || property?.name == "старая цена" {
+                    if property?.name.lowercaseString == "цена"  || property?.name.lowercaseString == "старая цена" {
                         let price = Int(propertiesValue.value)
                         var max = 0
                         var min = 0
@@ -414,6 +431,8 @@ class DataHelper {
             
         }
     }
+    
+    
     func sortItemsByCurrentPrice(categoryId: Int, increase:Bool, currentPrice:Bool)
     {
         let items = fetchItemsBy(categoryId);
@@ -422,7 +441,7 @@ class DataHelper {
         
         for item in items! {
             
-            let propertiesValues = fetchPropertyItemValuesBy(item.itemId)
+            let propertiesValues = fetchPropertyItemValuesByItemId(item.itemId)
             
             var properVal: Int = 1
             
@@ -538,7 +557,7 @@ class DataHelper {
             
             let propListValues = fetchPropertyListValuesBy(property.propertyId)
             
-            if propListValues != nil {
+            if propListValues?.count > 0 {
                 for propListValue in propListValues! {
                     let filterItem = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
                     filterItem.position = propListValue.position
@@ -549,7 +568,25 @@ class DataHelper {
                 }
             }
             else {
+                //if property doesn't have Property_List_Value array it means that it is a number
+                //so we need to find all nambers which we have in corresponding Property_Item_Value table
+                let hashSet = NSMutableSet()
                 
+                let propertyItemValues = fetchPropertyItemValuesByPropId(property.propertyId)
+                for propItemValue in propertyItemValues {
+                    if hashSet.containsObject(propItemValue.value) {
+                        continue
+                    }
+                    hashSet.addObject(propItemValue.value)
+                    let filterItem = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
+                    //filterItem.position = propListValue.position
+                    filterItem.property = property
+                    filterItem.paramInt = Int(propItemValue.value)!
+                    //we use position param as sort key, so we put there int value
+                    filterItem.position = Int(propItemValue.value)!
+                    //filterItem.listId = propListValue.listId!!
+                    filterItem.selected = false
+                }
             }
         }
     }

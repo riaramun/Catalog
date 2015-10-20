@@ -214,10 +214,16 @@ extension RightPanelViewController: UITableViewDataSource {
             let wheelCell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! WheelTableViewCell
             
             let filterItems = filterItems.allObjects as! [FilterItem]
+            
             let sorted = filterItems.sort({ (el1, el2) -> Bool in
                 return el1.position < el2.position
             })
+            
             wheelCell.filterItems = sorted
+            
+           // wheelCell.pickerView.selectRow(0, inComponent: 0, animated: false)
+            //wheelCell.pickerView.selectRow(sorted.count-1, inComponent: 1, animated: false)
+            
             cell = wheelCell
         }
         
@@ -316,6 +322,16 @@ extension RightPanelViewController: UITableViewDelegate {
 }
 class WheelTableViewCell: UITableViewCell {
     
+    @IBOutlet weak var pickerView: UIPickerView!
+    override
+    func layoutSubviews()
+    {
+        super.layoutSubviews()
+        pickerView.reloadAllComponents()
+        pickerView.selectRow(0, inComponent: 0, animated: false)
+        pickerView.selectRow(filterItems.count-1, inComponent: 1, animated: false)
+        
+    }
     var filterItems = [FilterItem]()
     
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
@@ -328,7 +344,15 @@ class WheelTableViewCell: UITableViewCell {
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
-        return filterItems[row].param
+        var ret: String
+        
+        if filterItems[row].property.typeId == Consts.NumTypeID {
+            ret = String(filterItems[row].paramInt)
+        } else {
+            ret = filterItems[row].param
+        }
+        
+        return ret
     }
 }
 

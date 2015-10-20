@@ -14,6 +14,7 @@ class FilterItem: NSManagedObject {
     @NSManaged var position: Int
     @NSManaged var listId: Int
     @NSManaged var param: String
+    @NSManaged var paramInt: Int
     @NSManaged var selected: Bool
    // @NSManaged var propertyId: Int
     @NSManaged var property: Property

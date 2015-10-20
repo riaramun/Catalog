@@ -379,6 +379,9 @@
                                                     </variation>
                                                 </tableViewCellContentView>
                                                 <animations/>
+                                                <connections>
+                                                    <outlet property="pickerView" destination="aZJ-FN-vlf" id="p0G-U3-c4U"/>
+                                                </connections>
                                             </tableViewCell>
                                         </prototypes>
                                         <variation key="default">
@@ -467,7 +470,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="285" height="292"/>
                                                     <animations/>
                                                 </imageView>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQc-Ue-Ejv">
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" scrollEnabled="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQc-Ue-Ejv">
                                                     <rect key="frame" x="0.0" y="292" width="285" height="100"/>
                                                     <animations/>
                                                     <constraints>
