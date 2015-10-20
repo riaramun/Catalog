@@ -82,7 +82,7 @@ class PropertyEditorViewController: UIViewController, NSFetchedResultsController
     var property: Property?
     
     func fetchResults() {
-       let propListVal =  dataHelper!.fetchPropertyListValuesBy(propertyId!)
+       //let propListVal =  dataHelper!.fetchPropertyListValuesBy(propertyId!)
         let fetchRequest = NSFetchRequest(entityName: "Property_List_Value")
         fetchRequest.predicate = NSPredicate(format: "propertyId == %d", propertyId! )
         let primarySortDescriptor = NSSortDescriptor(key: "position", ascending: true)

@@ -114,9 +114,9 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
         super.viewDidLoad()
         self.delegate!.setDrawerLeftPanel(true)
         
-        fetchResults(0, entityName: "Category", column: "parent")
+       // fetchResults(0, entityName: "Category", column: "parent")
         viewNavigationItem.title = menuItem.name
-        performFetch()
+        //performFetch()
     }
 }
 
@@ -146,8 +146,10 @@ extension CategoryViewController: UITableViewDataSource {
     }*/
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        if fetchedResultsController != nil {
         if let sections = fetchedResultsController!.sections {
             return sections.count
+        }
         }
         
         return 0

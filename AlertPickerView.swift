@@ -93,7 +93,7 @@ class AlertPickerView: UIView {
             self.frame = CGRectMake(0, screenSize.height - (self.heightOfToolbar + self.heightOfPickerView), screenSize.width, self.heightOfPickerView + self.heightOfToolbar)
 
             }) { (completed:Bool) -> Void in
-        delegate?.pickerViewDidSHow?(pickerView)
+        self.delegate?.pickerViewDidSHow?(self.pickerView)
         }
     }
 
@@ -117,7 +117,7 @@ class AlertPickerView: UIView {
              self.frame = CGRectMake(0, screenSize.height, screenSize.width, self.heightOfToolbar + self.heightOfPickerView)
 
             }) { (completed:Bool) -> Void in
-        delegate?.pickerViewDidHide?(pickerView)
+        self.delegate?.pickerViewDidHide?(self.pickerView)
         }
     }
     private func getSelectedRows() -> [Int] {

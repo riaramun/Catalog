@@ -24,7 +24,7 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     @IBAction func applyFilter(sender: AnyObject) {
         self.view.endEditing(true)
         self.dismissViewControllerAnimated(true, completion: nil)      //  delegate?.updateView()
-       // delegate?.collapseFilterPanel()
+        // delegate?.collapseFilterPanel()
     }
     @IBOutlet var tableView: UITableView!
     //var fetchedResultsController: NSFetchedResultsController? = nil
@@ -37,7 +37,8 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     
     struct TableView {
         struct CellIdentifiers {
-            static let FilterCell = "FilterCell"
+            static let SwitchCell = "SwitchCell" //type_id: 2
+            static let WheelCell = "WheelCell" //type_id: 3
         }
     }
     
@@ -129,7 +130,7 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     @IBAction func onBackTapped(sender: AnyObject) {
         self.view.endEditing(true)
         self.dismissViewControllerAnimated(true, completion: nil)
-      //  delegate?.collapseFilterPanel()
+        //  delegate?.collapseFilterPanel()
     }
     
     override func viewDidLoad() {
@@ -158,25 +159,78 @@ extension RightPanelViewController: UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return properties![section].filterItems.count
+        
+        if properties![section].filterItems.count == 0 {
+            return 0
+        }
+        
+        let filterItem = properties![section].filterItems.allObjects[0] as! FilterItem
+        
+        let cellTypeId = filterItem.property.typeId
+        
+        var count:Int
+        
+        switch cellTypeId {
+        case Consts.ListTypeID:
+            count = properties![section].filterItems.count
+            break
+        case Consts.OneChoiceListTypeID:
+            count = properties![section].filterItems.count
+            break
+        default:
+            count = 1
+            break
+        }
+        
+        return count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCellWithIdentifier(TableView.CellIdentifiers.FilterCell, forIndexPath: indexPath) as! FilterTableViewCell
-        
         let filterItem = getFilterItemBy(indexPath)
+        let filterItems = properties![indexPath.section].filterItems
         
-        if filterItem.param != "+" && (filterItem.property.name.containsString("цена") || filterItem.property.name.containsString("Цена")) {
-            if indexPath.row == 0  {
-                cell.titleLabel.text = "от " + filterItem.param
-            } else {
-                cell.titleLabel.text = "до " + filterItem.param
-            }
+        var identifier: String
+        
+        let cellTypeId = filterItem.property.typeId
+        switch cellTypeId {
+        case Consts.ListTypeID:
+            identifier = TableView.CellIdentifiers.SwitchCell
+            break
+        case Consts.OneChoiceListTypeID:
+            identifier = TableView.CellIdentifiers.SwitchCell
+            break
+        default:
+            identifier = TableView.CellIdentifiers.WheelCell
+            break
+        }
+        var cell:UITableViewCell
+        
+        if identifier == TableView.CellIdentifiers.SwitchCell {
+            let swithcCell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! SwitchTableViewCell
+            swithcCell.titleLabel.text = filterItem.param
+            cell = swithcCell
+        } else {
+            let wheelCell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! WheelTableViewCell
+            
+            let filterItems = filterItems.allObjects as! [FilterItem]
+            let sorted = filterItems.sort({ (el1, el2) -> Bool in
+                return el1.position < el2.position
+            })
+            wheelCell.filterItems = sorted
+            cell = wheelCell
+        }
+        
+        /*if filterItem.param != "+" && (filterItem.property.name.containsString("цена") || filterItem.property.name.containsString("Цена")) {
+        if indexPath.row == 0  {
+        cell.titleLabel.text = "от " + filterItem.param
+        } else {
+        cell.titleLabel.text = "до " + filterItem.param
+        }
         }
         else {
-            cell.titleLabel.text = filterItem.param
-        }
+        
+        }*/
         return cell
     }
     
@@ -205,7 +259,13 @@ extension RightPanelViewController: UITableViewDataSource {
                 return filterItem
             }
         } else {
+            
             let filterItem = property.filterItems.allObjects[indexPath.row] as! FilterItem
+            
+            // var propListValues = self.dataHelper?.fetchPropertyListValuesBy(filterItem.property.propertyId)
+            
+            // propListValues![indexPath.row] as String
+            
             return filterItem
         }
         
@@ -215,25 +275,64 @@ extension RightPanelViewController: UITableViewDataSource {
 }
 extension RightPanelViewController: UITableViewDelegate {
     
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        
+        let filterItem = getFilterItemBy(indexPath)
+        
+        var height: CGFloat
+        
+        let cellTypeId = filterItem.property.typeId
+        switch cellTypeId {
+        case Consts.ListTypeID:
+            height = 44
+            break
+        case Consts.OneChoiceListTypeID:
+            height = 44
+            break
+        default:
+            height = 144
+            break
+        }
+        return height
+        
+    }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         //let propertyListValue = fetchedResultsController!.objectAtIndexPath(indexPath) as! Property_Item_List
         //let property = dataHelper!.fetchPropertyBy(propertyListValue.propertyId)
-        let filterItem = getFilterItemBy(indexPath)
+        /* let filterItem = getFilterItemBy(indexPath)
         
         let name = filterItem.property.name
         if name.containsString("цена") || name.containsString("Цена")
         {
-            self.performSegueWithIdentifier("ToPriceEditor", sender: filterItem)
+        self.performSegueWithIdentifier("ToPriceEditor", sender: filterItem)
         }
         else {
-            self.performSegueWithIdentifier("ToPropertyEditor", sender: filterItem)
-        }
+        self.performSegueWithIdentifier("ToPropertyEditor", sender: filterItem)
+        }*/
         
     }
     
 }
-class FilterTableViewCell: UITableViewCell {
+class WheelTableViewCell: UITableViewCell {
+    
+    var filterItems = [FilterItem]()
+    
+    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+        return 2
+    }
+    
+    
+    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return filterItems.count
+    }
+    
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
+        return filterItems[row].param
+    }
+}
+
+class SwitchTableViewCell: UITableViewCell {
     
     
     @IBOutlet weak var titleLabel: UILabel!

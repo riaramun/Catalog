@@ -148,6 +148,8 @@ class DataHelper {
     {
         let fReq = NSFetchRequest(entityName: "Property_List_Value")
         fReq.predicate = NSPredicate(format: "propertyId == %d", propId )
+        let primarySortDescriptor = NSSortDescriptor(key: "position", ascending: true)
+        fReq.sortDescriptors = [primarySortDescriptor]
         
         var fetchResults : [Property_List_Value]?
         do {
@@ -175,7 +177,7 @@ class DataHelper {
     
     func seedDataStore() {
         
-        dataStack.drop()
+        //dataStack.drop()
         
         Alamofire.request(.GET, "http://rezmis3k.bget.ru/demo/sql2.php")
             .responseJSON { _, resp, result in
@@ -190,7 +192,7 @@ class DataHelper {
                 
                 
                 func propertyListValueAdded(err:NSError!) {
-                    
+                    //we need init filter items here for each property
                     self.seedFilterItems()
                     
                     do {
@@ -288,7 +290,6 @@ class DataHelper {
                     }
                 }
                 if(categories != nil ) {
-                    
                     Sync.changes(
                         categories as! [AnyObject],
                         inEntityNamed: "Category",
@@ -432,14 +433,14 @@ class DataHelper {
                 let property = fetchPropertyBy(propertiesValue.propertyId)
                 
                 if(currentPrice) {
-                    if property?.name == "цена" || property?.name == "Цена"  {
+                    if property?.name.lowercaseString == "цена"  {
                         
                         properVal = Int(propertiesValue.value)!
                         
                         break
                     }
                 } else {
-                    if property?.name == "Старая цена" || property?.name == "старая цена"  {
+                    if property?.name.lowercaseString == "старая цена"  {
                         
                         properVal = Int(propertiesValue.value)!
                         
@@ -532,12 +533,24 @@ class DataHelper {
     }
     func seedFilterItems() {
         let properties = fetchAllProperties();
+        
         for property in properties! {
             
-            let entity = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
+            let propListValues = fetchPropertyListValuesBy(property.propertyId)
             
-            entity.param = "+"
-            entity.property = property
+            if propListValues != nil {
+                for propListValue in propListValues! {
+                    let filterItem = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
+                    filterItem.position = propListValue.position
+                    filterItem.property = property
+                    filterItem.param = propListValue.value
+                    filterItem.listId = propListValue.listId
+                    filterItem.selected = false
+                }
+            }
+            else {
+                
+            }
         }
     }
     func clearParams(property:Property){
@@ -580,5 +593,20 @@ class DataHelper {
         catch {
         }
         return photo
+    }
+    func fetchPropListValBy(propertyId:Int) -> [Property_List_Value]?
+    {
+        let fetchRequest = NSFetchRequest(entityName: "Property_List_Value")
+        fetchRequest.predicate = NSPredicate(format: "propertyId == %d", propertyId )
+        let primarySortDescriptor = NSSortDescriptor(key: "position", ascending: true)
+        fetchRequest.sortDescriptors = [primarySortDescriptor]
+        var properties: [Property_List_Value]?
+        
+        do {
+            try properties = self.context.executeFetchRequest(fetchRequest) as? [Property_List_Value]
+        }
+        catch {
+        }
+        return properties
     }
 }

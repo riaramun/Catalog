@@ -11,8 +11,10 @@ import CoreData
 @objc(FilterItem)
 class FilterItem: NSManagedObject {
    // @NSManaged var name: String
+    @NSManaged var position: Int
     @NSManaged var listId: Int
     @NSManaged var param: String
+    @NSManaged var selected: Bool
    // @NSManaged var propertyId: Int
     @NSManaged var property: Property
 }

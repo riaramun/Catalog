@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3FA0F32CAD6FBAA7E530C4F8 /* Pods_Catalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5349F8E7BD949A6493B871C6 /* Pods_Catalog.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		3FA0F32CAD6FBAA7E530C4F8 /* Pods_Catalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5349F8E7BD949A6493B871C6 /* Pods_Catalog.framework */; };
 		843786441BA8512F00244DBE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843786431BA8512F00244DBE /* AppDelegate.swift */; };
 		843786461BA8512F00244DBE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843786451BA8512F00244DBE /* ViewController.swift */; };
 		843786491BA8512F00244DBE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 843786471BA8512F00244DBE /* Main.storyboard */; };
@@ -19,6 +19,7 @@
 		8445A06B1BC5C0E8002C9CF7 /* FilterItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8445A06A1BC5C0E8002C9CF7 /* FilterItem.swift */; };
 		845EAE671BBC377A000984A9 /* AlertPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845EAE661BBC377A000984A9 /* AlertPickerView.swift */; };
 		845EAE6A1BBC76C1000984A9 /* AlertFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 845EAE691BBC76C1000984A9 /* AlertFilterView.swift */; };
+		847CD1601BD6351C00FE5683 /* Consts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 847CD15F1BD6351C00FE5683 /* Consts.swift */; };
 		84CF19071BAE218900C93739 /* LeftPanelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CF19061BAE218900C93739 /* LeftPanelViewController.swift */; };
 		84CF19091BAE23CC00C93739 /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84CF19081BAE23CC00C93739 /* MenuItem.swift */; };
 		84CF190B1BAEC6C600C93739 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 84CF190A1BAEC6C600C93739 /* Localizable.strings */; };
@@ -68,6 +69,7 @@
 		8445A06A1BC5C0E8002C9CF7 /* FilterItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterItem.swift; sourceTree = "<group>"; };
 		845EAE661BBC377A000984A9 /* AlertPickerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertPickerView.swift; sourceTree = SOURCE_ROOT; };
 		845EAE691BBC76C1000984A9 /* AlertFilterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertFilterView.swift; sourceTree = SOURCE_ROOT; };
+		847CD15F1BD6351C00FE5683 /* Consts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Consts.swift; sourceTree = "<group>"; };
 		84CF19061BAE218900C93739 /* LeftPanelViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeftPanelViewController.swift; sourceTree = "<group>"; };
 		84CF19081BAE23CC00C93739 /* MenuItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
 		84CF190A1BAEC6C600C93739 /* Localizable.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
@@ -214,6 +216,7 @@
 				84DFC5C81BB804B500F39C73 /* Stack.swift */,
 				84E347111BABFF6B009CE455 /* DataHelper.swift */,
 				84DE38241BC7AB1C00EBE692 /* StrUtils.swift */,
+				847CD15F1BD6351C00FE5683 /* Consts.swift */,
 			);
 			name = helper;
 			sourceTree = "<group>";
@@ -403,6 +406,7 @@
 				84F8BE9A1BBB2F1900542EB6 /* Property_Item_List.swift in Sources */,
 				84DFC5C91BB804B500F39C73 /* Stack.swift in Sources */,
 				84DCBA8A1BA85A92009CA677 /* OptJSON.swift in Sources */,
+				847CD1601BD6351C00FE5683 /* Consts.swift in Sources */,
 				84DC95741BBA97640001465B /* Property_Item_Value.swift in Sources */,
 				84DFC5D11BB8383100F39C73 /* CenterViewControllerDelegate.swift in Sources */,
 				84DBC2701BB9462900620E18 /* CollectionViewController.swift in Sources */,

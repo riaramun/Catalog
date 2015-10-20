@@ -1,6 +1,0 @@
-#include "Sync.xcconfig"
-GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-HEADER_SEARCH_PATHS = "${PODS_ROOT}/Headers/Private" "${PODS_ROOT}/Headers/Private/Sync" "${PODS_ROOT}/Headers/Public"
-OTHER_LDFLAGS = ${SYNC_OTHER_LDFLAGS}
-PODS_ROOT = ${SRCROOT}
-SKIP_INSTALL = YES

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9048" systemVersion="14F27" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9056" systemVersion="15A284" minimumToolsVersion="Automatic">
     <entity name="Category" representedClassName="Category" syncable="YES">
         <attribute name="categoryId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
             <userInfo>
@@ -65,6 +65,8 @@
     <entity name="FilterItem" representedClassName="FilterItem" syncable="YES">
         <attribute name="listId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="param" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="position" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="selected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="property" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Property" inverseName="filterItems" inverseEntity="Property" syncable="YES"/>
         <userInfo>
             <entry key="hyper.isPrimaryKey" value="YES"/>
@@ -247,10 +249,10 @@
         <relationship name="propItemList" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Property_Item_List" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Category" positionX="-326" positionY="-81" width="128" height="225"/>
-        <element name="FilterItem" positionX="-45" positionY="45" width="128" height="90"/>
-        <element name="Item" positionX="-162" positionY="-81" width="128" height="195"/>
-        <element name="Item_Photo" positionX="36" positionY="-90" width="128" height="120"/>
+        <element name="Category" positionX="-326" positionY="-126" width="128" height="225"/>
+        <element name="FilterItem" positionX="-74" positionY="198" width="128" height="120"/>
+        <element name="Item" positionX="-164" positionY="-135" width="128" height="195"/>
+        <element name="Item_Photo" positionX="70" positionY="-153" width="128" height="120"/>
         <element name="Property" positionX="207" positionY="54" width="128" height="165"/>
         <element name="Property_Item_List" positionX="520" positionY="63" width="128" height="105"/>
         <element name="Property_Item_Value" positionX="36" positionY="54" width="128" height="120"/>
