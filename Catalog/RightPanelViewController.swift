@@ -23,7 +23,11 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     
     @IBAction func applyFilter(sender: AnyObject) {
         self.view.endEditing(true)
-        self.dismissViewControllerAnimated(true, completion: nil)      //  delegate?.updateView()
+        do {
+            try context?.save()
+        } catch _ {
+        }
+              self.dismissViewControllerAnimated(true, completion: nil)      //  delegate?.updateView()
         // delegate?.collapseFilterPanel()
     }
     @IBOutlet var tableView: UITableView!
@@ -44,11 +48,6 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     
     func performFetch() {
         tableView.reloadData()
-        /*do {
-        try fetchedResultsController!.performFetch()
-        tableView.reloadData()
-        } catch _ {
-        }*/
     }
     
     var properties:[Property]?
@@ -66,37 +65,6 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
             }
             
         }
-        
-        //  let fetchRequest = NSFetchRequest(entityName: "FilterItem")
-        // fetchRequest.predicate = NSPredicate(format: reqStr)
-        
-        
-        /*var filterItems: [FilterItem]?
-        
-        do {
-        try filterItems = self.context!.executeFetchRequest(fetchRequest) as? [FilterItem]
-        }
-        catch {
-        }
-        
-        for item in filterItems! {
-        print(item.property.name)
-        }*/
-        
-        /*
-        let primarySortDescriptor = NSSortDescriptor(key: "name", ascending: true)
-        
-        let secondarySortDescriptor = NSSortDescriptor(key: "param", ascending: true)
-        
-        fetchRequest.sortDescriptors = [primarySortDescriptor,secondarySortDescriptor]
-        
-        let frc = NSFetchedResultsController(
-        fetchRequest: fetchRequest,
-        managedObjectContext: self.context!,
-        sectionNameKeyPath: "property.propertyId",
-        cacheName: nil)
-        frc.delegate = self
-        fetchedResultsController = frc*/
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -209,6 +177,7 @@ extension RightPanelViewController: UITableViewDataSource {
         if identifier == TableView.CellIdentifiers.SwitchCell {
             let swithcCell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! SwitchTableViewCell
             swithcCell.titleLabel.text = filterItem.param
+            swithcCell.filterItem = filterItem
             cell = swithcCell
         } else {
             let wheelCell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! WheelTableViewCell
@@ -221,7 +190,7 @@ extension RightPanelViewController: UITableViewDataSource {
             
             wheelCell.filterItems = sorted
             
-           // wheelCell.pickerView.selectRow(0, inComponent: 0, animated: false)
+            // wheelCell.pickerView.selectRow(0, inComponent: 0, animated: false)
             //wheelCell.pickerView.selectRow(sorted.count-1, inComponent: 1, animated: false)
             
             cell = wheelCell
@@ -358,7 +327,22 @@ class WheelTableViewCell: UITableViewCell {
 
 class SwitchTableViewCell: UITableViewCell {
     
+    var filterItem: FilterItem?
     
+    @IBOutlet weak var uiSwitch: UISwitch!
+    
+    override func layoutSubviews()
+    {
+        super.layoutSubviews()
+        uiSwitch.reloadInputViews()
+        uiSwitch.setOn((filterItem?.selected)!, animated: false)
+        
+    }
+    @IBAction func switchTapped(sender: AnyObject) {
+        
+        filterItem?.selected =  (sender as! UISwitch).on
+        
+    }
     @IBOutlet weak var titleLabel: UILabel!
     
 }
