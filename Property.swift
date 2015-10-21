@@ -17,4 +17,11 @@ public class Property: NSManagedObject {
     @NSManaged var color: String
     @NSManaged var style: String
     @NSManaged var filterItems: NSSet
+    
+    //it is used in filter... If user set filter for price to range it from min to max value
+    //we save these values here, since it is the best place for them, I think..
+    @NSManaged var maxVal: String
+    @NSManaged var minVal: String
+    @NSManaged var minWheelPos: Int
+    @NSManaged var maxWheelPos: Int
 }

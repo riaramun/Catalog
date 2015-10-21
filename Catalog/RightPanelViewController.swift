@@ -27,7 +27,7 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
             try context?.save()
         } catch _ {
         }
-              self.dismissViewControllerAnimated(true, completion: nil)      //  delegate?.updateView()
+        self.dismissViewControllerAnimated(true, completion: nil)      //  delegate?.updateView()
         // delegate?.collapseFilterPanel()
     }
     @IBOutlet var tableView: UITableView!
@@ -156,7 +156,10 @@ extension RightPanelViewController: UITableViewDataSource {
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let filterItem = getFilterItemBy(indexPath)
-        let filterItems = properties![indexPath.section].filterItems
+        
+        let currProperty = properties![indexPath.section]
+        
+        let filterItems = currProperty.filterItems
         
         var identifier: String
         
@@ -187,12 +190,8 @@ extension RightPanelViewController: UITableViewDataSource {
             let sorted = filterItems.sort({ (el1, el2) -> Bool in
                 return el1.position < el2.position
             })
-            
+            wheelCell.property = currProperty
             wheelCell.filterItems = sorted
-            
-            // wheelCell.pickerView.selectRow(0, inComponent: 0, animated: false)
-            //wheelCell.pickerView.selectRow(sorted.count-1, inComponent: 1, animated: false)
-            
             cell = wheelCell
         }
         
@@ -289,18 +288,30 @@ extension RightPanelViewController: UITableViewDelegate {
     }
     
 }
-class WheelTableViewCell: UITableViewCell {
+class WheelTableViewCell: UITableViewCell, UIPickerViewDelegate {
     
     @IBOutlet weak var pickerView: UIPickerView!
     override
     func layoutSubviews()
     {
         super.layoutSubviews()
-        pickerView.reloadAllComponents()
-        pickerView.selectRow(0, inComponent: 0, animated: false)
-        pickerView.selectRow(filterItems.count-1, inComponent: 1, animated: false)
         
+        pickerView.reloadAllComponents()
+        
+        if (property?.minVal.isEmpty == true || property?.maxVal.isEmpty == true) {
+            
+            pickerView.selectRow(0, inComponent: 0, animated: false)
+            
+            pickerView.selectRow(filterItems.count - 1, inComponent: 1, animated: false)
+            
+        } else {
+            pickerView.selectRow((property?.minWheelPos)!, inComponent: 0, animated: false)
+            
+            pickerView.selectRow((property?.maxWheelPos)!, inComponent: 1, animated: false)
+
+        }
     }
+    var property: Property?
     var filterItems = [FilterItem]()
     
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
@@ -312,7 +323,7 @@ class WheelTableViewCell: UITableViewCell {
         return filterItems.count
     }
     
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String! {
+    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         var ret: String
         
         if filterItems[row].property.typeId == Consts.NumTypeID {
@@ -322,6 +333,32 @@ class WheelTableViewCell: UITableViewCell {
         }
         
         return ret
+    }
+    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        
+        var ret:String
+        if filterItems[row].property.typeId == Consts.NumTypeID {
+            ret = String(filterItems[row].paramInt)
+        } else {
+            ret = filterItems[row].param
+        }
+        
+        switch (component) {
+        case 0:
+            property?.minVal = ret
+            property?.minWheelPos = row
+            break
+        case 1:
+            property?.maxVal = ret
+            property?.maxWheelPos = row
+            break
+        default:
+            break
+        }
+        
+        
+        
     }
 }
 
