@@ -46,39 +46,46 @@ class DataHelper {
         
         var goodAttributes = [Int: GoodAtribute]()
         
-        let propertiesValues = fetchPropertyItemValuesByItemId(itemId)
+        let propertyItemValues = fetchPropertyItemValuesByItemId(itemId)
         
-        for  var i = 0 ; i < propertiesValues.count;  i++ {
+        for  var i = 0 ; i < propertyItemValues.count;  i++ {
             
-            let propertiesValue  = propertiesValues[i] as Property_Item_Value
+            let propertyItemValue  = propertyItemValues[i] as Property_Item_Value
             
-            let property = fetchPropertyBy(propertiesValue.propertyId)
+            let property = self.fetchPropertyBy(propertyItemValue.propertyId)
             
             var properVal: String = ""
             
-            if property?.typeId == 1 {
-                properVal = propertiesValue.value
-            } else if property?.typeId == 2 || property?.typeId == 3 {
-                let propList = fetchPropertyListValuesBy((property?.propertyId)!)
-                for prop in propList! {
-                    properVal += prop.value
-                    if propList?.last != prop {
-                        properVal += ", "
-                    }
-                }
-            } else if property?.typeId == 4 {
-                let properListVal = fetchPropertyListValueBy(Int(propertiesValue.value)!)
+            if property!.typeId == Consts.NumTypeID {
+                properVal = String(propertyItemValue.value)
+            } else if property!.typeId == Consts.ListTypeID || property!.typeId == Consts.OrderedListTypeID {
+                properVal = (fetchPropertyListValueBy(propertyItemValue.value)?.value)!
+            } else if property!.typeId == Consts.OneChoiceListTypeID {
+                let properListVal = fetchPropertyListValueBy(propertyItemValue.value)
                 properVal = (properListVal?.value)!
             }
-            let propertyItemList = fetchPropertyItemListBy(propertiesValue.propertyId, categoryId: categoryId)
             
-            if propertyItemList != nil {
-                let goodAtribute = GoodAtribute(name: (property?.name)!,
+            
+            let propertyId = propertyItemValue.propertyId
+            
+            let propertyItemList = fetchPropertyItemListBy(propertyId, categoryId: categoryId)
+            
+            let pos = propertyItemList == nil ? 1 : propertyItemList!.position
+            
+            if goodAttributes[pos] == nil {
+                
+                let goodAtribute = GoodAtribute(name: property!.name,
                     value: properVal,
-                    dimen: (property?.dimension)!,
-                    style: (property?.style)!,
-                    color: (property?.color)!)
-                goodAttributes[propertyItemList!.position] = goodAtribute
+                    dimen: property!.dimension,
+                    style: property!.style,
+                    color: property!.color)
+                
+                goodAttributes[pos] = goodAtribute
+                
+            } else {
+                let goodAtribute = goodAttributes[pos]
+                goodAtribute?.value += ","
+                goodAtribute?.value += properVal
             }
             
         }
@@ -101,6 +108,51 @@ class DataHelper {
         catch {
         }
         return property
+    }
+    
+    func fetchPropertyItemValueById(id: Int) -> Property_Item_Value?
+    {
+        let fReq = NSFetchRequest(entityName: "Property_Item_Value")
+        fReq.predicate = NSPredicate(format: "id == %d", id )
+        
+        var fetchRes:Property_Item_Value?
+        do {
+            let fetchResults = try self.context.executeFetchRequest(fReq) as! [Property_Item_Value]
+            if fetchResults.count > 0 {
+                fetchRes = fetchResults[0]
+            }
+        }
+        catch {
+        }
+        return fetchRes
+    }
+    
+    func fetchPropertyItemValuesBySelectedVal(propertyId: Int, selectedVal: String) -> [Property_Item_Value]
+    {
+        let fReq = NSFetchRequest(entityName: "Property_Item_Value")
+        fReq.predicate = NSPredicate(format: "propertyId == %d and value == '" + selectedVal + "'")
+        
+        var fetchResults = [Property_Item_Value] ()
+        do {
+            try fetchResults = self.context.executeFetchRequest(fReq) as! [Property_Item_Value]
+        }
+        catch {
+        }
+        return fetchResults
+    }
+    
+    func fetchPropertyItemValuesByMinMax(propertyId: Int, min: Int, max: Int) -> [Property_Item_Value]
+    {
+        let fReq = NSFetchRequest(entityName: "Property_Item_Value")
+        fReq.predicate = NSPredicate(format: "propertyId == %d and value > %d and value < %d", propertyId, min, max)
+        
+        var fetchResults = [Property_Item_Value] ()
+        do {
+            try fetchResults = self.context.executeFetchRequest(fReq) as! [Property_Item_Value]
+        }
+        catch {
+        }
+        return fetchResults
     }
     
     func fetchPropertyItemValuesByItemId(itemId: Int) -> [Property_Item_Value]
@@ -161,6 +213,21 @@ class DataHelper {
         }
         return property?.propertyId
     }
+    /*func fetchPropertyListValuesBy(propId: Int, listId: Int) -> [Property_List_Value]?
+    {
+    let fReq = NSFetchRequest(entityName: "Property_List_Value")
+    fReq.predicate = NSPredicate(format: "propertyId == %d and listId == %d", propId, listId )
+    let primarySortDescriptor = NSSortDescriptor(key: "position", ascending: true)
+    fReq.sortDescriptors = [primarySortDescriptor]
+    
+    var fetchResults : [Property_List_Value]?
+    do {
+    try fetchResults = self.context.executeFetchRequest(fReq) as? [Property_List_Value]
+    }
+    catch {
+    }
+    return fetchResults!
+    }*/
     func fetchPropertyListValuesBy(propId: Int) -> [Property_List_Value]?
     {
         let fReq = NSFetchRequest(entityName: "Property_List_Value")
@@ -208,7 +275,10 @@ class DataHelper {
                 let propertyListValue = JSON(result.value)?[key:"Property_List_Value"] as? NSArray
                 
                 
-                func propertyListValueAdded(err:NSError!) {
+                
+                
+                func itemPhotosAdded(err:NSError!) {
+                    
                     //we need init filter items here for each property
                     self.seedFilterItems()
                     
@@ -219,6 +289,69 @@ class DataHelper {
                     }
                     if self.delegate != nil {
                         self.delegate!.dataUpdated()
+                    }
+                    
+                }
+                
+                func propertyItemValuesAdded(err:NSError!) {
+                    if(item_photos != nil ) {
+                        Sync.changes(
+                            item_photos as! [AnyObject],
+                            inEntityNamed: "Item_Photo",
+                            dataStack: dataStack,
+                            completion: itemPhotosAdded)
+                    }
+                }
+                
+                func propertyListValueAdded(err:NSError!) {
+                    do {
+                        try self.context.save()
+                    } catch {
+                        
+                    }
+                    if(property_item_values != nil ) {
+                        var counter = 0
+                        for val in property_item_values! {
+                            
+                            let obj = JSON(val);
+                            
+                            let itemId = obj?[key:"item_id"] as! Int
+                            let propertyId = obj?[key:"property_id"] as! Int
+                            
+                            let value = obj?[key:"value"] is String ? Int (obj?[key:"value"] as! String ) : obj?[key:"value"] as? Int
+                            
+                            let id = counter
+                            
+                            let propertyItemValue = self.fetchPropertyItemValueById(counter)
+                            if propertyItemValue != nil {
+                                propertyItemValue?.id = counter
+                                propertyItemValue?.itemId = itemId
+                                propertyItemValue?.propertyId = propertyId
+                                propertyItemValue?.value = value!
+                            } else
+                            {
+                                let entity = NSEntityDescription.entityForName("Property_Item_Value", inManagedObjectContext: self.context)
+                                
+                                let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
+                                
+                                
+                                
+                                item.setValue(id, forKey: "id")
+                                item.setValue(itemId, forKey: "ItemId")
+                                item.setValue(propertyId, forKey: "propertyId")
+                                item.setValue(value, forKey: "value")
+                            }
+                            ++counter
+                            //let itemGood = self.fetchItemById(itemId)
+                            //item.setValue(itemGood, forKey: "item")
+                            
+                            
+                            //  let itemProp = self.fetchPropertyBy(propertyId)
+                            //  item.setValue(itemProp, forKey: "property")
+                            
+                        }
+                        
+                        propertyItemValuesAdded(nil)
                     }
                 }
                 
@@ -234,6 +367,7 @@ class DataHelper {
                 }
                 
                 func propertiesAdded(err:NSError!) {
+                    
                     if(propertyItemList != nil ) {
                         var counter = 0
                         for val in propertyItemList! {
@@ -251,7 +385,7 @@ class DataHelper {
                     }
                 }
                 
-                func propertyItemValuesAdded(err:NSError!) {
+                func itemsAdded(err:NSError!) {
                     if(properties != nil ) {
                         Sync.changes(
                             properties as! [AnyObject],
@@ -261,32 +395,6 @@ class DataHelper {
                     }
                 }
                 
-                func itemPhotosAdded(err:NSError!) {
-                    if(property_item_values != nil ) {
-                        var counter = 0
-                        for val in property_item_values! {
-                            
-                            let entity = NSEntityDescription.entityForName("Property_Item_Value", inManagedObjectContext: self.context)
-                            
-                            let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
-                            
-                            let obj = JSON(val);
-                            
-                            let itemId = obj?[key:"item_id"] as! Int
-                            let propertyId = obj?[key:"property_id"] as! Int
-                            let value =
-                            obj?[key:"value"] is String ? obj?[key:"value"] as! String : String (obj?[key:"value"] as! Int)
-                            
-                            let id = ++counter
-                            item.setValue(id, forKey: "id")
-                            item.setValue(itemId, forKey: "ItemId")
-                            item.setValue(propertyId, forKey: "propertyId")
-                            item.setValue(value, forKey: "value")
-                        }
-                        
-                        propertyItemValuesAdded(nil)
-                    }
-                }
                 
                 func categoriesAdded(err:NSError!) {
                     if(items != nil ) {
@@ -297,15 +405,7 @@ class DataHelper {
                             completion: itemsAdded)
                     }
                 }
-                func itemsAdded(err:NSError!) {
-                    if(item_photos != nil ) {
-                        Sync.changes(
-                            item_photos as! [AnyObject],
-                            inEntityNamed: "Item_Photo",
-                            dataStack: dataStack,
-                            completion: itemPhotosAdded)
-                    }
-                }
+                
                 if(categories != nil ) {
                     Sync.changes(
                         categories as! [AnyObject],
@@ -328,6 +428,20 @@ class DataHelper {
         catch {
         }
         return fetchResults
+    }
+    func fetchItemById(itemId:Int) -> Item
+    {
+        let fReq = NSFetchRequest(entityName: "Item")
+        fReq.predicate = NSPredicate(format: "itemId == %d", itemId)
+        
+        
+        var fetchResults : [Item]?
+        do {
+            try fetchResults = self.context.executeFetchRequest(fReq) as? [Item]
+        }
+        catch {
+        }
+        return fetchResults![0]
     }
     func fetchItemsBy(categoryId: Int) -> [Item]?
     {
@@ -361,7 +475,72 @@ class DataHelper {
         }
     }
     
-    func filterItemsByParams(categoryId:Int)
+    func filterItemsByParams(categoryId:Int)  {
+        
+        let items = fetchItemsBy(categoryId);
+        
+        for item in items! {
+            var skip = false
+            //the next step is to check the item for filters conditions
+            let propertyItemValues = fetchPropertyItemValuesByItemId(item.itemId)
+            for propertyItemValue in propertyItemValues {
+                
+                let property = fetchPropertyBy(propertyItemValue.propertyId)
+                
+                if property!.typeId == Consts.NumTypeID {
+                    
+                    let currPrice = propertyItemValue.value
+                    let min = Int(property!.minVal)
+                    let max = Int(property!.maxVal)
+                    if min != nil && max != nil {
+                        if currPrice >= min && currPrice <= max {
+                            //nothing to do
+                        } else {
+                            skip = true
+                            break
+                            
+                        }
+                    }
+                    
+                } else {
+                    
+                    let propertyListValue = self.fetchPropertyListValueBy(propertyItemValue.value)
+                    
+                    print(propertyListValue?.value)
+                    
+                    for filterItem in property!.filterItems.allObjects as! [FilterItem] {
+                        
+                        if filterItem.selected == true {
+                            
+                            // let propertyListValue = self.fetchPropertyListValueBy(propertyItemValue.value)?.value
+                            
+                            if filterItem.param == propertyListValue {
+                                
+                                //break
+                            }
+                            /*let propertyListValue = self.fetchPropertyListValueBy(propertyListValue!.value)
+                            
+                            if filterItem.param == propertyListValue!.value {
+                            
+                            break
+                            }*/
+                        }
+                    }
+                }
+                
+                
+            }
+            item.visible = !skip
+        }
+        do {
+            try self.context.save()
+        } catch {
+            
+        }
+        
+    }
+    
+    func filterItemsByParams2(categoryId:Int)
     {
         let items = fetchItemsBy(categoryId);
         var counter:Int = 0
@@ -405,7 +584,7 @@ class DataHelper {
                     else {
                         for filterItem in filterItems {
                             
-                            let propertyListValue = self.fetchPropertyListValueBy(Int(propertiesValue.value)!)
+                            let propertyListValue = self.fetchPropertyListValueBy(propertiesValue.value)
                             
                             if filterItem.param == propertyListValue!.value {
                                 
@@ -454,14 +633,14 @@ class DataHelper {
                 if(currentPrice) {
                     if property?.name.lowercaseString == "цена"  {
                         
-                        properVal = Int(propertiesValue.value)!
+                        properVal = propertiesValue.value
                         
                         break
                     }
                 } else {
                     if property?.name.lowercaseString == "старая цена"  {
                         
-                        properVal = Int(propertiesValue.value)!
+                        properVal = propertiesValue.value
                         
                         break
                     }
@@ -581,9 +760,9 @@ class DataHelper {
                     let filterItem = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
                     //filterItem.position = propListValue.position
                     filterItem.property = property
-                    filterItem.paramInt = Int(propItemValue.value)!
+                    filterItem.paramInt = propItemValue.value
                     //we use position param as sort key, so we put there int value
-                    filterItem.position = Int(propItemValue.value)!
+                    filterItem.position = propItemValue.value
                     //filterItem.listId = propListValue.listId!!
                     filterItem.selected = false
                 }
@@ -595,15 +774,15 @@ class DataHelper {
             self.context.deleteObject(entity as! NSManagedObject)
         }
     }
-    func clearPropertiesParams(){
-        let properties = fetchAllProperties()
-        for property in properties! {
-            for entity in (property.filterItems) {
-                self.context.deleteObject(entity as! NSManagedObject)
-            }
-            setEmptyFilterItem(property)
-        }
+    /*func clearPropertiesParams(){
+    let properties = fetchAllProperties()
+    for property in properties! {
+    for entity in (property.filterItems) {
+    self.context.deleteObject(entity as! NSManagedObject)
     }
+    setEmptyFilterItem(property)
+    }
+    }*/
     func updateFilterItem(params:[String], property:Property)
     {
         for param in params {
@@ -612,11 +791,11 @@ class DataHelper {
             entity.property = property
         }
     }
-    func setEmptyFilterItem(property:Property) {
-        let entity = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
-        entity.param = "+"
-        entity.property = property
-    }
+    /*func setEmptyFilterItem(property:Property) {
+    let entity = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
+    entity.param = "+"
+    entity.property = property
+    }*/
     
     func getPhotoFor(itemId:Int) -> String? {
         let fetchRequest = NSFetchRequest(entityName: "Item_Photo")

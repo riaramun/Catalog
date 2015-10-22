@@ -27,6 +27,8 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
             try context?.save()
         } catch _ {
         }
+        self.dataHelper?.filterItemsByParams(categoryId)
+        self.delegate?.updateView()
         self.dismissViewControllerAnimated(true, completion: nil)      //  delegate?.updateView()
         // delegate?.collapseFilterPanel()
     }
@@ -36,7 +38,7 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     var context: NSManagedObjectContext?
     var dataHelper: DataHelper?
     var categoryId:Int = 0
-    //var delegate: RightPanelViewControllerDelegate?
+    var delegate: RightPanelViewControllerDelegate?
     
     
     struct TableView {
@@ -89,7 +91,7 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     
     @IBAction func resetFilter(sender: AnyObject) {
         self.view.endEditing(true)
-        self.dataHelper?.clearPropertiesParams()
+       // self.dataHelper?.clearPropertiesParams()
         fetchResults()
         performFetch()
     }
@@ -298,17 +300,41 @@ class WheelTableViewCell: UITableViewCell, UIPickerViewDelegate {
         
         pickerView.reloadAllComponents()
         
-        if (property?.minVal.isEmpty == true || property?.maxVal.isEmpty == true) {
+        if (property?.minVal.isEmpty == true ) {
             
             pickerView.selectRow(0, inComponent: 0, animated: false)
             
-            pickerView.selectRow(filterItems.count - 1, inComponent: 1, animated: false)
+            var ret:String
+            if filterItems[0].property.typeId == Consts.NumTypeID {
+                ret = String(filterItems[0].paramInt)
+            } else {
+                ret = filterItems[0].param
+            }
+            
+            property?.minVal = ret
+            property?.minWheelPos = 0
             
         } else {
             pickerView.selectRow((property?.minWheelPos)!, inComponent: 0, animated: false)
             
+        }
+        
+        if (property?.maxVal.isEmpty == true) {
+            let ind = filterItems.count - 1
+            pickerView.selectRow(ind, inComponent: 1, animated: false)
+            var ret:String
+            if filterItems[ind].property.typeId == Consts.NumTypeID {
+                ret = String(filterItems[ind].paramInt)
+            } else {
+                ret = filterItems[ind].param
+            }
+            
+            property?.maxVal = ret
+            property?.maxWheelPos = ind
+            
+        } else {
             pickerView.selectRow((property?.maxWheelPos)!, inComponent: 1, animated: false)
-
+            
         }
     }
     var property: Property?
@@ -378,6 +404,9 @@ class SwitchTableViewCell: UITableViewCell {
     @IBAction func switchTapped(sender: AnyObject) {
         
         filterItem?.selected =  (sender as! UISwitch).on
+        if filterItem?.selected == true {
+            filterItem?.property.selectedVal = titleLabel.text!
+        }
         
     }
     @IBOutlet weak var titleLabel: UILabel!

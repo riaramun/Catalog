@@ -15,6 +15,8 @@ class Property_Item_Value: NSManagedObject {
     @NSManaged var id: Int
     @NSManaged var itemId: Int
     @NSManaged var propertyId: Int
-    @NSManaged var value: String
+    @NSManaged var value: Int
+    //@NSManaged var item: Item
+   // @NSManaged var property: Property
     
 }

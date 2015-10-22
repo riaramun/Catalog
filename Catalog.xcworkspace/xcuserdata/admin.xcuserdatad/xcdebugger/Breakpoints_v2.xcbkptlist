@@ -9,29 +9,13 @@
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Catalog/RightPanelViewController.swift"
-            timestampString = "467113545.205454"
+            filePath = "Catalog/DataHelper.swift"
+            timestampString = "467239529.602875"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "301"
-            endingLineNumber = "301"
-            landmarkName = "layoutSubviews()"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Catalog/RightPanelViewController.swift"
-            timestampString = "467114695.312873"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "335"
-            endingLineNumber = "335"
-            landmarkName = "pickerView(_:titleForRow:forComponent:)"
+            startingLineNumber = "53"
+            endingLineNumber = "53"
+            landmarkName = "fetchGoodAttributesBy(_:categoryId:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

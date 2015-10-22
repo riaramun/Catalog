@@ -115,8 +115,8 @@
                 <entry key="hyper.remoteKey" value="short_name"/>
             </userInfo>
         </attribute>
+        <attribute name="visible" optional="YES" attributeType="Boolean" defaultValueString="YES" syncable="YES"/>
         <relationship name="itemPhoto" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Item_Photo" syncable="YES"/>
-        <relationship name="propertyItemValues" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Property_Item_Value" syncable="YES"/>
     </entity>
     <entity name="Item_Photo" representedClassName="Item_Photo" syncable="YES">
         <attribute name="itemId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
@@ -172,6 +172,7 @@
                 <entry key="hyper.remoteKey" value="property_id"/>
             </userInfo>
         </attribute>
+        <attribute name="selectedVal" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="style" optional="YES" attributeType="String" syncable="YES">
             <userInfo>
                 <entry key="hyper.remoteKey" value="style"/>
@@ -191,7 +192,7 @@
                 <entry key="hyper.remoteKey" value="category_id"/>
             </userInfo>
         </attribute>
-        <attribute name="id" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+        <attribute name="id" attributeType="Integer 32" defaultValueString="0" syncable="YES">
             <userInfo>
                 <entry key="hyper.isPrimaryKey" value="YES"/>
             </userInfo>
@@ -207,7 +208,7 @@
         </userInfo>
     </entity>
     <entity name="Property_Item_Value" representedClassName="Property_Item_Value" syncable="YES">
-        <attribute name="id" optional="YES" attributeType="Integer 32" minValueString="0" defaultValueString="0" syncable="YES">
+        <attribute name="id" attributeType="Integer 32" minValueString="0" defaultValueString="0" indexed="YES" syncable="YES">
             <userInfo>
                 <entry key="hyper.isPrimaryKey" value="YES"/>
             </userInfo>
@@ -222,12 +223,11 @@
                 <entry key="hyper.remoteKey" value="property_id"/>
             </userInfo>
         </attribute>
-        <attribute name="value" optional="YES" attributeType="String" syncable="YES">
+        <attribute name="value" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
             <userInfo>
                 <entry key="hyper.remoteKey" value="value"/>
             </userInfo>
         </attribute>
-        <relationship name="property" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Property" syncable="YES"/>
     </entity>
     <entity name="Property_List_Value" representedClassName="Property_List_Value" syncable="YES">
         <attribute name="listId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
@@ -254,13 +254,13 @@
         <relationship name="propItemList" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Property_Item_List" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Category" positionX="-326" positionY="-126" width="128" height="225"/>
-        <element name="FilterItem" positionX="-74" positionY="198" width="128" height="135"/>
-        <element name="Item" positionX="-164" positionY="-135" width="128" height="195"/>
-        <element name="Item_Photo" positionX="70" positionY="-153" width="128" height="120"/>
-        <element name="Property" positionX="207" positionY="54" width="128" height="225"/>
-        <element name="Property_Item_List" positionX="520" positionY="63" width="128" height="105"/>
-        <element name="Property_Item_Value" positionX="36" positionY="54" width="128" height="120"/>
-        <element name="Property_List_Value" positionX="367" positionY="63" width="128" height="120"/>
+        <element name="Category" positionX="-326" positionY="-135" width="128" height="225"/>
+        <element name="FilterItem" positionX="-18" positionY="162" width="128" height="135"/>
+        <element name="Item" positionX="-155" positionY="-135" width="128" height="193"/>
+        <element name="Item_Photo" positionX="45" positionY="-135" width="128" height="120"/>
+        <element name="Property" positionX="214" positionY="54" width="128" height="238"/>
+        <element name="Property_Item_List" positionX="558" positionY="75" width="128" height="103"/>
+        <element name="Property_Item_Value" positionX="43" positionY="9" width="128" height="103"/>
+        <element name="Property_List_Value" positionX="385" positionY="63" width="128" height="120"/>
     </elements>
 </model>

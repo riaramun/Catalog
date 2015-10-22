@@ -20,5 +20,5 @@ class Item: NSManagedObject {
     @NSManaged var code: String
     @NSManaged var shortDescr: String
     @NSManaged var longDescr: String
-
-    }
+    @NSManaged var visible: Bool
+}

@@ -20,6 +20,7 @@ public class Property: NSManagedObject {
     
     //it is used in filter... If user set filter for price to range it from min to max value
     //we save these values here, since it is the best place for them, I think..
+    @NSManaged var selectedVal: String
     @NSManaged var maxVal: String
     @NSManaged var minVal: String
     @NSManaged var minWheelPos: Int

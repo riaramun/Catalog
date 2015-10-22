@@ -67,7 +67,7 @@ class PropertyEditorViewController: UIViewController, NSFetchedResultsController
             if params.count > 0 {
                 dataHelper!.updateFilterItem(params, property:property!)
             } else {
-                dataHelper!.setEmptyFilterItem(property!)
+               // dataHelper!.setEmptyFilterItem(property!)
             }
             do {
                 try self.context!.save()

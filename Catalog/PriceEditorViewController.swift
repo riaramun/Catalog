@@ -62,7 +62,7 @@ class PriceEditorViewController: UIViewController {
             dataHelper!.clearParams(property!)
             
             if(params[0] == "0" && params[1] == "0") {
-                dataHelper?.setEmptyFilterItem(property!)
+               // dataHelper?.setEmptyFilterItem(property!)
             }
             else {
                 dataHelper?.updateFilterItem(params, property:property!);

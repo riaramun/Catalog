@@ -66,6 +66,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
             viewController.context = self.context
            //let item = sender as! Item
             viewController.categoryId = categoryId!
+            viewController.delegate = self
         }
         //viewController.viewNavigationItem.title = category.name
     }
@@ -118,7 +119,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
     func fetchResults(id:Int, entityName:String, column:String) {
         
         let fetchRequest = NSFetchRequest(entityName: entityName)
-        fetchRequest.predicate = NSPredicate(format: "%d == " + column + " and position >= 0", id)
+        fetchRequest.predicate = NSPredicate(format: "%d == " + column + " and visible == 1", id)
         let primarySortDescriptor = NSSortDescriptor(key: "position", ascending: true)
         fetchRequest.sortDescriptors = [primarySortDescriptor]
         
@@ -206,7 +207,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
             
             strToSet.appendAttributedString(NSMutableAttributedString(string:"\r"))
             counter++
-            if counter == 4 {break }
+            if counter == 6 {break }
         }
         
         cell.categoryLabel.attributedText = strToSet
@@ -333,8 +334,8 @@ extension CollectionViewController: AlertPickerViewDelegate {
 }
 extension CollectionViewController: RightPanelViewControllerDelegate {
     func updateView() {
-        self.dataHelper!.resetfilter()
-        self.dataHelper!.filterItemsByParams(self.categoryId!)
+        //self.dataHelper!.resetfilter()
+        //self.dataHelper!.filterItemsByParams(self.categoryId!)
         fetchResults(self.categoryId!, entityName: "Item", column: "categoryId")
         self.performFetch()
     }
