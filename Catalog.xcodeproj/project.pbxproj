@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		3FA0F32CAD6FBAA7E530C4F8 /* Pods_Catalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5349F8E7BD949A6493B871C6 /* Pods_Catalog.framework */; };
+		841ECDBC1BDCECDD0002403B /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841ECDBB1BDCECDD0002403B /* LoadingViewController.swift */; };
 		843786441BA8512F00244DBE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843786431BA8512F00244DBE /* AppDelegate.swift */; };
-		843786461BA8512F00244DBE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843786451BA8512F00244DBE /* ViewController.swift */; };
 		843786491BA8512F00244DBE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 843786471BA8512F00244DBE /* Main.storyboard */; };
 		8437864C1BA8512F00244DBE /* Catalog.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 8437864A1BA8512F00244DBE /* Catalog.xcdatamodeld */; };
 		8437864E1BA8512F00244DBE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8437864D1BA8512F00244DBE /* Assets.xcassets */; };
@@ -56,9 +56,9 @@
 
 /* Begin PBXFileReference section */
 		5349F8E7BD949A6493B871C6 /* Pods_Catalog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Catalog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		841ECDBB1BDCECDD0002403B /* LoadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		843786401BA8512F00244DBE /* Catalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Catalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		843786431BA8512F00244DBE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		843786451BA8512F00244DBE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		843786481BA8512F00244DBE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		8437864B1BA8512F00244DBE /* Catalog.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Catalog.xcdatamodel; sourceTree = "<group>"; };
 		8437864D1BA8512F00244DBE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -160,10 +160,10 @@
 				84DE38221BC7A8FA00EBE692 /* ItemDetailViewController.swift */,
 				84DCBA941BA9B3D4009CA677 /* RightPanelViewController.swift */,
 				8445A0651BC336E2002C9CF7 /* PropertyEditorViewController.swift */,
+				841ECDBB1BDCECDD0002403B /* LoadingViewController.swift */,
 				84DBC26F1BB9462900620E18 /* CollectionViewController.swift */,
 				84DCBA921BA9B3AA009CA677 /* CategoryViewController.swift */,
 				843786431BA8512F00244DBE /* AppDelegate.swift */,
-				843786451BA8512F00244DBE /* ViewController.swift */,
 				843786471BA8512F00244DBE /* Main.storyboard */,
 				8437864F1BA8512F00244DBE /* LaunchScreen.storyboard */,
 				843786521BA8512F00244DBE /* Info.plist */,
@@ -399,10 +399,10 @@
 				84DC95721BBA973C0001465B /* Property.swift in Sources */,
 				84CF19071BAE218900C93739 /* LeftPanelViewController.swift in Sources */,
 				84E347121BABFF6B009CE455 /* DataHelper.swift in Sources */,
-				843786461BA8512F00244DBE /* ViewController.swift in Sources */,
 				8445A0671BC336E2002C9CF7 /* PropertyEditorViewController.swift in Sources */,
 				845EAE6A1BBC76C1000984A9 /* AlertFilterView.swift in Sources */,
 				84DCBA8D1BA862AA009CA677 /* Category.swift in Sources */,
+				841ECDBC1BDCECDD0002403B /* LoadingViewController.swift in Sources */,
 				84F8BE9A1BBB2F1900542EB6 /* Property_Item_List.swift in Sources */,
 				84DFC5C91BB804B500F39C73 /* Stack.swift in Sources */,
 				84DCBA8A1BA85A92009CA677 /* OptJSON.swift in Sources */,

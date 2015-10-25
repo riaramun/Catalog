@@ -58,15 +58,17 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
         
         properties = dataHelper?.fetchPropertiesByCategory(categoryId)
         
-        var reqStr = ""
+       /* var reqStr = ""
         var counter = 0
+        reqStr += "propertyId == 1"
+        reqStr += " or "
         for property in properties! {
             reqStr += "propertyId == " + String(property.propertyId)
             if ++counter < properties?.count {
                 reqStr += " or "
             }
             
-        }
+        }*/
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -350,12 +352,15 @@ class WheelTableViewCell: UITableViewCell, UIPickerViewDelegate {
     }
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        var ret: String
-        
+        var ret: String = ""
+        do {
         if filterItems[row].property.typeId == Consts.NumTypeID {
-            ret = String(filterItems[row].paramInt)
+            ret = try String(filterItems[row].paramInt)
         } else {
-            ret = filterItems[row].param
+            ret = try filterItems[row].param
+        }
+        } catch _ {
+            
         }
         
         return ret

@@ -14,5 +14,6 @@ public class Consts {
     static let ListTypeID = 2 //name: "список"
     static let OrderedListTypeID = 3 //name: "упорядоченный список"
     static let OneChoiceListTypeID = 4 //name: "Единичный выбор"
-
+    static let URL_SITE = "http://rezmis3k.bget.ru/demo/";
+    static let URL_REQ_PARAM = "sql2.php"
 }

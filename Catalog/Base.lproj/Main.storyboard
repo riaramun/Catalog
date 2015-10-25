@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9058" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="rXi-S3-MXl">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9058" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9048"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
@@ -105,7 +105,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lwL-5n-tEM" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="309" y="382"/>
+            <point key="canvasLocation" x="1121" y="382"/>
         </scene>
         <!--Item detail-->
         <scene sceneID="bEA-Ef-enf">
@@ -122,7 +122,7 @@
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="fPM-7k-f83">
                                 <rect key="frame" x="0.0" y="64" width="580" height="536"/>
                                 <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="forceLeftToRight" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="вид 1" translatesAutoresizingMaskIntoConstraints="NO" id="fpN-LP-zUl" userLabel="Main Image">
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="forceLeftToRight" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fpN-LP-zUl" userLabel="Main Image">
                                         <rect key="frame" x="0.0" y="0.0" width="580" height="376"/>
                                         <animations/>
                                     </imageView>
@@ -170,7 +170,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="hWr-wl-iGd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1147" y="1190"/>
+            <point key="canvasLocation" x="1983" y="1190"/>
         </scene>
         <!--Меню-->
         <scene sceneID="tih-3d-0jf">
@@ -251,7 +251,93 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="si5-n2-Wa0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-449" y="382"/>
+            <point key="canvasLocation" x="-105" y="390"/>
+        </scene>
+        <!--Каталог товаров-->
+        <scene sceneID="Yli-Lc-T0l">
+            <objects>
+                <viewController storyboardIdentifier="LoadingViewController" id="4sF-M3-zpl" customClass="LoadingViewController" customModule="Catalog" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="zjF-tk-EGj"/>
+                        <viewControllerLayoutGuide type="bottom" id="0cw-Ym-Qek"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="tda-ub-Kfj">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="k0N-eo-aew">
+                                <rect key="frame" x="290" y="291" width="20" height="20"/>
+                                <animations/>
+                            </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Обновление базы" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CqG-fe-dAz">
+                                <rect key="frame" x="229" y="248" width="143" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p2I-YK-3DG">
+                                <rect key="frame" x="199" y="285" width="202" height="30"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="202" id="MhP-Xh-6Ag"/>
+                                </constraints>
+                                <color key="tintColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                <size key="titleShadowOffset" width="2" height="2"/>
+                                <state key="normal" title="Попробовать еще раз..">
+                                    <color key="titleColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                </state>
+                                <connections>
+                                    <action selector="tryAgainAction:" destination="4sF-M3-zpl" eventType="touchUpInside" id="UZ4-eT-m3g"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8F7-aq-OBP">
+                                <rect key="frame" x="238" y="340" width="124" height="30"/>
+                                <animations/>
+                                <color key="backgroundColor" white="0.75" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="124" id="UCc-Ku-OEg"/>
+                                </constraints>
+                                <state key="normal" title="Удалить базу">
+                                    <color key="titleColor" red="0.018017833769633507" green="0.0010242087432870525" blue="0.0030668569304055184" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="deleteBaseAction:" destination="4sF-M3-zpl" eventType="touchUpInside" id="V0C-M6-Fhg"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="k0N-eo-aew" firstAttribute="top" secondItem="CqG-fe-dAz" secondAttribute="bottom" constant="22" id="3yz-en-R7W"/>
+                            <constraint firstItem="8F7-aq-OBP" firstAttribute="top" secondItem="p2I-YK-3DG" secondAttribute="bottom" constant="25" id="8ah-rR-jIK"/>
+                            <constraint firstItem="p2I-YK-3DG" firstAttribute="centerY" secondItem="tda-ub-Kfj" secondAttribute="centerY" id="EU6-26-yQG"/>
+                            <constraint firstItem="k0N-eo-aew" firstAttribute="centerX" secondItem="8F7-aq-OBP" secondAttribute="centerX" id="TyY-Jn-Ybj"/>
+                            <constraint firstItem="p2I-YK-3DG" firstAttribute="centerX" secondItem="k0N-eo-aew" secondAttribute="centerX" id="XAq-IT-loF"/>
+                            <constraint firstItem="8F7-aq-OBP" firstAttribute="top" secondItem="k0N-eo-aew" secondAttribute="bottom" constant="29" id="eM9-Ld-XSZ"/>
+                            <constraint firstItem="p2I-YK-3DG" firstAttribute="top" secondItem="CqG-fe-dAz" secondAttribute="bottom" constant="16" id="hCd-gr-jwh"/>
+                            <constraint firstItem="CqG-fe-dAz" firstAttribute="top" secondItem="zjF-tk-EGj" secondAttribute="bottom" constant="228" id="ikC-u8-tlS"/>
+                            <constraint firstItem="CqG-fe-dAz" firstAttribute="centerX" secondItem="tda-ub-Kfj" secondAttribute="centerX" id="lPe-3i-pWx"/>
+                            <constraint firstItem="CqG-fe-dAz" firstAttribute="centerX" secondItem="k0N-eo-aew" secondAttribute="centerX" id="s9E-6Y-EyC"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" title="Каталог товаров" id="ckz-6E-GiY">
+                        <userDefinedRuntimeAttributes>
+                            <userDefinedRuntimeAttribute type="boolean" keyPath="hidesBackButton" value="NO"/>
+                        </userDefinedRuntimeAttributes>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="activityIndicator" destination="k0N-eo-aew" id="Xoc-cZ-e7L"/>
+                        <outlet property="backNavigationItem" destination="ckz-6E-GiY" id="L5r-PM-4kl"/>
+                        <outlet property="deleteData" destination="8F7-aq-OBP" id="eOJ-B7-7Yg"/>
+                        <outlet property="processState" destination="CqG-fe-dAz" id="FYq-zp-Khn"/>
+                        <outlet property="tryAgain" destination="p2I-YK-3DG" id="Bi6-sJ-SPO"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vJn-9A-nq1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1127" y="1190"/>
         </scene>
         <!--Фильтр-->
         <scene sceneID="vs5-ef-NRf">
@@ -442,7 +528,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="e9b-4j-epf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2096" y="412"/>
+            <point key="canvasLocation" x="2908" y="412"/>
         </scene>
         <!--Collection View Controller-->
         <scene sceneID="QgN-3N-WWg">
@@ -470,18 +556,18 @@
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Iy8-ZR-pDq">
                                             <rect key="frame" x="8" y="8" width="285" height="392"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="forceLeftToRight" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="вид 1" translatesAutoresizingMaskIntoConstraints="NO" id="zny-Hb-MNB">
-                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="292"/>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="forceLeftToRight" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zny-Hb-MNB">
+                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="282"/>
                                                     <animations/>
                                                 </imageView>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQc-Ue-Ejv">
-                                                    <rect key="frame" x="0.0" y="292" width="285" height="100"/>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" scrollEnabled="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQc-Ue-Ejv">
+                                                    <rect key="frame" x="0.0" y="282" width="285" height="110"/>
                                                     <animations/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="100" id="TXU-B9-sZc"/>
+                                                        <constraint firstAttribute="height" constant="110" id="TXU-B9-sZc"/>
                                                     </constraints>
                                                     <attributedString key="attributedText">
-                                                        <fragment content="sdfsdfsdf">
+                                                        <fragment content="description">
                                                             <attributes>
                                                                 <font key="NSFont" size="14" name="HelveticaNeue"/>
                                                                 <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
@@ -495,7 +581,6 @@
                                             <constraints>
                                                 <constraint firstItem="DQc-Ue-Ejv" firstAttribute="centerX" secondItem="Iy8-ZR-pDq" secondAttribute="centerX" constant="1" id="5uI-ZH-UjU"/>
                                                 <constraint firstItem="DQc-Ue-Ejv" firstAttribute="bottom" secondItem="Iy8-ZR-pDq" secondAttribute="bottomMargin" id="Pz9-JM-uhm"/>
-                                                <constraint firstItem="DQc-Ue-Ejv" firstAttribute="top" secondItem="zny-Hb-MNB" secondAttribute="bottom" id="tIa-c6-2TI"/>
                                             </constraints>
                                             <variation key="default">
                                                 <mask key="constraints">
@@ -566,7 +651,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LQA-v4-ukO" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1139" y="382"/>
+            <point key="canvasLocation" x="1951" y="382"/>
         </scene>
         <!--Property edtior-->
         <scene sceneID="BVA-26-Xm0">
@@ -663,7 +748,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zU8-Ui-U0x" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3645" y="394"/>
+            <point key="canvasLocation" x="4377" y="400"/>
         </scene>
         <!--Price editor-->
         <scene sceneID="2fI-Os-qO5">
@@ -741,7 +826,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9s3-FX-LSf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2849" y="1182"/>
+            <point key="canvasLocation" x="3661" y="1182"/>
         </scene>
     </scenes>
     <resources>

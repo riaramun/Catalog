@@ -230,7 +230,7 @@
         </attribute>
     </entity>
     <entity name="Property_List_Value" representedClassName="Property_List_Value" syncable="YES">
-        <attribute name="listId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
+        <attribute name="listId" attributeType="Integer 32" defaultValueString="0" indexed="YES" syncable="YES">
             <userInfo>
                 <entry key="hyper.isPrimaryKey" value="YES"/>
                 <entry key="hyper.remoteKey" value="list_id"/>
@@ -261,6 +261,6 @@
         <element name="Property" positionX="214" positionY="54" width="128" height="238"/>
         <element name="Property_Item_List" positionX="558" positionY="75" width="128" height="103"/>
         <element name="Property_Item_Value" positionX="43" positionY="9" width="128" height="103"/>
-        <element name="Property_List_Value" positionX="385" positionY="63" width="128" height="120"/>
+        <element name="Property_List_Value" positionX="385" positionY="63" width="128" height="118"/>
     </elements>
 </model>

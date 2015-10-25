@@ -12,20 +12,23 @@ import DATAStack
 import Sync
 
 protocol CoreDataListener {
-    func dataUpdated()
+    func dataUpdated(result:Bool)
 }
 class DataHelper {
     
     var delegate : CoreDataListener?
+    let dataStack = DATAStack(modelName: "Catalog")
     
     class GoodAtribute {
-        init(name:String , value:String, dimen:String, style:String, color:String) {
+        init(property:Property, name:String , value:String, dimen:String, style:String, color:String) {
+            self.property = property
             self.name = name
             self.dimen = dimen
             self.value = value
             self.style = style
             self.color = color
         }
+        var property:Property
         var name:String
         var value:String
         var dimen:String
@@ -59,10 +62,14 @@ class DataHelper {
             if property!.typeId == Consts.NumTypeID {
                 properVal = String(propertyItemValue.value)
             } else if property!.typeId == Consts.ListTypeID || property!.typeId == Consts.OrderedListTypeID {
-                properVal = (fetchPropertyListValueBy(propertyItemValue.value)?.value)!
+                if fetchPropertyListValueBy(propertyItemValue.value) != nil {
+                    properVal = (fetchPropertyListValueBy(propertyItemValue.value)?.value)!
+                }
             } else if property!.typeId == Consts.OneChoiceListTypeID {
                 let properListVal = fetchPropertyListValueBy(propertyItemValue.value)
-                properVal = (properListVal?.value)!
+                if properListVal != nil {
+                    properVal = (properListVal?.value)!
+                }
             }
             
             
@@ -74,7 +81,9 @@ class DataHelper {
             
             if goodAttributes[pos] == nil {
                 
-                let goodAtribute = GoodAtribute(name: property!.name,
+                let goodAtribute = GoodAtribute(
+                    property:property!,
+                    name: property!.name,
                     value: properVal,
                     dimen: property!.dimension,
                     style: property!.style,
@@ -109,7 +118,22 @@ class DataHelper {
         }
         return property
     }
-    
+    func fetchPropertyItemListById(id: Int) -> Property_Item_List?
+    {
+        let fReq = NSFetchRequest(entityName: "Property_Item_List")
+        fReq.predicate = NSPredicate(format: "id == %d", id )
+        
+        var fetchRes:Property_Item_List?
+        do {
+            let fetchResults = try self.context.executeFetchRequest(fReq) as! [Property_Item_List]
+            if fetchResults.count > 0 {
+                fetchRes = fetchResults[0]
+            }
+        }
+        catch {
+        }
+        return fetchRes
+    }
     func fetchPropertyItemValueById(id: Int) -> Property_Item_Value?
     {
         let fReq = NSFetchRequest(entityName: "Property_Item_Value")
@@ -256,15 +280,21 @@ class DataHelper {
         }
         catch {
         }
-        return res!
+        return res
     }
     
     func seedDataStore() {
         
         //dataStack.drop()
         
-        Alamofire.request(.GET, "http://rezmis3k.bget.ru/demo/sql2.php")
+        Alamofire.request(.GET, Consts.URL_SITE + Consts.URL_REQ_PARAM )
             .responseJSON { _, resp, result in
+              
+                if result.isFailure == true {
+                    self.delegate!.dataUpdated(false)
+                    return
+                }
+                
                 
                 let categories = JSON(result.value)?[key:"Category"] as? NSArray
                 let items = JSON(result.value)?[key:"Item"] as? NSArray
@@ -288,7 +318,7 @@ class DataHelper {
                         
                     }
                     if self.delegate != nil {
-                        self.delegate!.dataUpdated()
+                        self.delegate!.dataUpdated(true)
                     }
                     
                 }
@@ -298,17 +328,13 @@ class DataHelper {
                         Sync.changes(
                             item_photos as! [AnyObject],
                             inEntityNamed: "Item_Photo",
-                            dataStack: dataStack,
+                            dataStack: self.dataStack,
                             completion: itemPhotosAdded)
                     }
                 }
                 
                 func propertyListValueAdded(err:NSError!) {
-                    do {
-                        try self.context.save()
-                    } catch {
-                        
-                    }
+                    
                     if(property_item_values != nil ) {
                         var counter = 0
                         for val in property_item_values! {
@@ -333,8 +359,6 @@ class DataHelper {
                                 let entity = NSEntityDescription.entityForName("Property_Item_Value", inManagedObjectContext: self.context)
                                 
                                 let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
-                                
-                                
                                 
                                 item.setValue(id, forKey: "id")
                                 item.setValue(itemId, forKey: "ItemId")
@@ -361,7 +385,7 @@ class DataHelper {
                         Sync.changes(
                             propertyListValue as! [AnyObject],
                             inEntityNamed: "Property_List_Value",
-                            dataStack: dataStack,
+                            dataStack: self.dataStack,
                             completion: propertyListValueAdded)
                     }
                 }
@@ -371,14 +395,31 @@ class DataHelper {
                     if(propertyItemList != nil ) {
                         var counter = 0
                         for val in propertyItemList! {
-                            let entity = NSEntityDescription.entityForName("Property_Item_List", inManagedObjectContext: self.context)
-                            let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
+                            
                             let obj = JSON(val);
-                            let id = ++counter
-                            item.setValue(id, forKey: "id")
-                            item.setValue(obj?[key:"category_id"] as! Int, forKey: "categoryId")
-                            item.setValue(obj?[key:"property_id"] as! Int, forKey: "propertyId")
-                            item.setValue(obj?[key:"position"] as! Int, forKey: "position")
+                            
+                            let propertyItemList = self.fetchPropertyItemListById(counter)
+                            
+                            if propertyItemList != nil {
+                                
+                                propertyItemList?.id = counter
+                                propertyItemList?.categoryId = obj?[key:"category_id"] as! Int
+                                propertyItemList?.propertyId = obj?[key:"property_id"] as! Int
+                                propertyItemList?.position = obj?[key:"position"] as! Int
+                                
+                            } else {
+                                
+                                let entity = NSEntityDescription.entityForName("Property_Item_List", inManagedObjectContext: self.context)
+                                let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
+                                
+                                let id = counter
+                                
+                                item.setValue(id, forKey: "id")
+                                item.setValue(obj?[key:"category_id"] as! Int, forKey: "categoryId")
+                                item.setValue(obj?[key:"property_id"] as! Int, forKey: "propertyId")
+                                item.setValue(obj?[key:"position"] as! Int, forKey: "position")
+                            }
+                            ++counter
                         }
                         
                         propertyItemListAdded(nil)
@@ -390,7 +431,7 @@ class DataHelper {
                         Sync.changes(
                             properties as! [AnyObject],
                             inEntityNamed: "Property",
-                            dataStack: dataStack,
+                            dataStack: self.dataStack,
                             completion: propertiesAdded)
                     }
                 }
@@ -401,7 +442,7 @@ class DataHelper {
                         Sync.changes(
                             items as! [AnyObject],
                             inEntityNamed: "Item",
-                            dataStack: dataStack,
+                            dataStack: self.dataStack,
                             completion: itemsAdded)
                     }
                 }
@@ -410,7 +451,7 @@ class DataHelper {
                     Sync.changes(
                         categories as! [AnyObject],
                         inEntityNamed: "Category",
-                        dataStack: dataStack,
+                        dataStack: self.dataStack,
                         completion: categoriesAdded)
                 }
                 
@@ -480,136 +521,185 @@ class DataHelper {
         let items = fetchItemsBy(categoryId);
         
         for item in items! {
+            
+            let goodAttributes = fetchGoodAttributesBy(item.itemId,categoryId: categoryId)
+            
             var skip = false
-            //the next step is to check the item for filters conditions
-            let propertyItemValues = fetchPropertyItemValuesByItemId(item.itemId)
-            for propertyItemValue in propertyItemValues {
+            
+            for goodAttribute in goodAttributes.values {
                 
-                let property = fetchPropertyBy(propertyItemValue.propertyId)
+                let property = goodAttribute.property
                 
-                if property!.typeId == Consts.NumTypeID {
+                if property.typeId == Consts.NumTypeID {
                     
-                    let currPrice = propertyItemValue.value
-                    let min = Int(property!.minVal)
-                    let max = Int(property!.maxVal)
+                    let currPrice = Int(goodAttribute.value)
+                    
+                    let min = Int(property.minVal)
+                    
+                    let max = Int(property.maxVal)
+                    
                     if min != nil && max != nil {
+                        
                         if currPrice >= min && currPrice <= max {
                             //nothing to do
                         } else {
+                            //we don't need to check other property values
+                            //since the item price is out of selected bounds
                             skip = true
                             break
-                            
                         }
                     }
-                    
                 } else {
-                    
-                    let propertyListValue = self.fetchPropertyListValueBy(propertyItemValue.value)
-                    
-                    print(propertyListValue?.value)
-                    
-                    for filterItem in property!.filterItems.allObjects as! [FilterItem] {
+                    for filterItem in property.filterItems.allObjects as! [FilterItem] {
                         
-                        if filterItem.selected == true {
-                            
-                            // let propertyListValue = self.fetchPropertyListValueBy(propertyItemValue.value)?.value
-                            
-                            if filterItem.param == propertyListValue {
-                                
-                                //break
+                        if filterItem.selected {
+                            if goodAttribute.value.containsString(filterItem.param) {
+                                //this filter item is confirmed
                             }
-                            /*let propertyListValue = self.fetchPropertyListValueBy(propertyListValue!.value)
-                            
-                            if filterItem.param == propertyListValue!.value {
-                            
-                            break
-                            }*/
+                            else {
+                                //we don't need to check other property values
+                                //since this filter items in not satisfied
+                                skip = true
+                                break
+                                
+                            }
                         }
                     }
                 }
-                
-                
+                item.visible = !skip
             }
-            item.visible = !skip
         }
-        do {
-            try self.context.save()
-        } catch {
-            
-        }
-        
+    }
+    
+    /*    func filterItemsByParams(categoryId:Int)  {
+    
+    let items = fetchItemsBy(categoryId);
+    
+    for item in items! {
+    
+    var skip = false
+    
+    //the next step is to check the item for filters conditions
+    let propertyItemValues = fetchPropertyItemValuesByItemId(item.itemId)
+    
+    for propertyItemValue in propertyItemValues {
+    
+    let property = fetchPropertyBy(propertyItemValue.propertyId)
+    
+    if property!.typeId == Consts.NumTypeID {
+    
+    let currPrice = propertyItemValue.value
+    let min = Int(property!.minVal)
+    let max = Int(property!.maxVal)
+    if min != nil && max != nil {
+    if currPrice >= min && currPrice <= max {
+    //nothing to do
+    } else {
+    //we don't need to check other property values
+    //since the item price is out of selected bounds
+    skip = true
+    break
+    
+    }
+    }
+    
+    } else {
+    
+    let propertyListValue = self.fetchPropertyListValueBy(propertyItemValue.value)
+    print(propertyListValue?.value)
+    
+    var foundCoincidence = false
+    for filterItem in property!.filterItems.allObjects as! [FilterItem] {
+    if filterItem.selected == true {
+    if filterItem.param == propertyListValue {
+    foundCoincidence = true
+    //we found that the property is in selected filter
+    break
+    }
+    }
+    }
+    }
+    }
+    item.visible = !skip
+    }
+    do {
+    try self.context.save()
+    } catch {
+    
+    }
+    
     }
     
     func filterItemsByParams2(categoryId:Int)
     {
-        let items = fetchItemsBy(categoryId);
-        var counter:Int = 0
-        
-        for item in items! {
-            counter++
-            let propertiesValues = fetchPropertyItemValuesByItemId(item.itemId)
-            
-            //var properVal: Int = 1
-            
-            for var i = 0 ; i < propertiesValues.count;  i++ {
-                
-                let propertiesValue  = propertiesValues[i] as Property_Item_Value
-                
-                let property = fetchPropertyBy(propertiesValue.propertyId)
-                
-                
-                let filterItems = property?.filterItems.allObjects as! [FilterItem]
-                
-                
-                if filterItems.count > 0 && filterItems[0].param != "+" {
-                    
-                    item.position = -1
-                    
-                    if property?.name.lowercaseString == "цена"  || property?.name.lowercaseString == "старая цена" {
-                        let price = Int(propertiesValue.value)
-                        var max = 0
-                        var min = 0
-                        if Int(filterItems[0].param)! > Int(filterItems[1].param)! {
-                            max = Int(filterItems[0].param)!
-                            min = Int(filterItems[1].param)!
-                        } else {
-                            max = Int(filterItems[0].param)!
-                            min = Int(filterItems[1].param)!
-                        }
-                        if(price >= min && price <= max) {
-                            item.position = counter
-                            break
-                        }
-                    }
-                    else {
-                        for filterItem in filterItems {
-                            
-                            let propertyListValue = self.fetchPropertyListValueBy(propertiesValue.value)
-                            
-                            if filterItem.param == propertyListValue!.value {
-                                
-                                item.position = counter
-                                
-                                break
-                            }
-                        }
-                    }
-                    if item.position == -1 {
-                        break
-                    }
-                }
-                if item.position == -1 {
-                    break
-                }
-            }
-        }
-        
-        do {
-            try self.context.save()
-        } catch {
-            
-        }
+    let items = fetchItemsBy(categoryId);
+    var counter:Int = 0
+    
+    for item in items! {
+    counter++
+    let propertiesValues = fetchPropertyItemValuesByItemId(item.itemId)
+    
+    //var properVal: Int = 1
+    
+    for var i = 0 ; i < propertiesValues.count;  i++ {
+    
+    let propertiesValue  = propertiesValues[i] as Property_Item_Value
+    
+    let property = fetchPropertyBy(propertiesValue.propertyId)
+    
+    
+    let filterItems = property?.filterItems.allObjects as! [FilterItem]
+    
+    
+    if filterItems.count > 0 && filterItems[0].param != "+" {
+    
+    item.position = -1
+    
+    if property?.name.lowercaseString == "цена"  || property?.name.lowercaseString == "старая цена" {
+    let price = Int(propertiesValue.value)
+    var max = 0
+    var min = 0
+    if Int(filterItems[0].param)! > Int(filterItems[1].param)! {
+    max = Int(filterItems[0].param)!
+    min = Int(filterItems[1].param)!
+    } else {
+    max = Int(filterItems[0].param)!
+    min = Int(filterItems[1].param)!
     }
+    if(price >= min && price <= max) {
+    item.position = counter
+    break
+    }
+    }
+    else {
+    for filterItem in filterItems {
+    
+    let propertyListValue = self.fetchPropertyListValueBy(propertiesValue.value)
+    
+    if filterItem.param == propertyListValue!.value {
+    
+    item.position = counter
+    
+    break
+    }
+    }
+    }
+    if item.position == -1 {
+    break
+    }
+    }
+    if item.position == -1 {
+    break
+    }
+    }
+    }
+    
+    do {
+    try self.context.save()
+    } catch {
+    
+    }
+    }*/
     
     
     func sortItemsByCurrentPrice(categoryId: Int, increase:Bool, currentPrice:Bool)
@@ -698,7 +788,7 @@ class DataHelper {
     func fetchPropertiesByCategory(id:Int) -> [Property] {
         
         let fReq = NSFetchRequest(entityName: "Property_Item_List")
-        fReq.predicate = NSPredicate(format: "categoryId == %d", id)
+        fReq.predicate = NSPredicate(format: "categoryId == %d ", id)
         let primarySortDescriptor = NSSortDescriptor(key: "position", ascending: true)
         fReq.sortDescriptors = [primarySortDescriptor]
         

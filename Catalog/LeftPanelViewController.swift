@@ -16,7 +16,7 @@ extension String {
         return NSLocalizedString(self, tableName: nil, bundle: NSBundle.mainBundle(), value: "", comment: "")
     }
 }
-class LeftPanelViewController: UIViewController {
+public class LeftPanelViewController: UIViewController {
     
     
     @IBOutlet weak var tableView: UITableView!
@@ -40,7 +40,7 @@ class LeftPanelViewController: UIViewController {
         }
     }
     
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         
         tableView.reloadData()
@@ -52,15 +52,15 @@ class LeftPanelViewController: UIViewController {
 
 extension LeftPanelViewController: UITableViewDataSource {
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
-    
+  public   
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return menuItems().count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    public func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(TableView.CellIdentifiers.MenuItemCell, forIndexPath: indexPath) as! MenuItemCell
         cell.configureForMenuItem(menuItems()[indexPath.row])
         return cell
@@ -70,7 +70,7 @@ extension LeftPanelViewController: UITableViewDataSource {
 // Mark: Table View Delegate
 
 extension LeftPanelViewController: UITableViewDelegate {
-    
+  public   
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let selectedMenuItem = menuItems()[indexPath.row]
         delegate?.menuItemSelected(selectedMenuItem)

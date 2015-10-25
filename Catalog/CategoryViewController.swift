@@ -11,7 +11,7 @@ import CoreData
 import Alamofire
 
 
-class CategoryViewController: UIViewController, NSFetchedResultsControllerDelegate {
+public class CategoryViewController: UIViewController, NSFetchedResultsControllerDelegate {
     @IBOutlet weak var menuBarButton: UIBarButtonItem!
     
     
@@ -23,12 +23,14 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
     
     var context: NSManagedObjectContext!
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    var dataHelper: DataHelper?
+    
+    override public func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "ToItemView" {
             
             var viewController:CollectionViewController
-           
+            
             if segue.destinationViewController is UINavigationController {
                 let nav = segue.destinationViewController as! UINavigationController
                 viewController = nav.topViewController as! CollectionViewController
@@ -110,13 +112,30 @@ class CategoryViewController: UIViewController, NSFetchedResultsControllerDelega
         }
     }
     
-    override func viewDidLoad() {
+    var loadingViewController: LoadingViewController?
+    
+    public override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.dataHelper = DataHelper(context: self.context!)
+        self.dataHelper!.delegate = self
+        
+        
+        loadingViewController = UIStoryboard.loadingViewController()
+        loadingViewController!.dataHelper = self.dataHelper
+        
+        self.navigationController?.pushViewController(loadingViewController!, animated: false)
+        
+        self.fetchResults(0, entityName: "Category", column: "parent")
+        performFetch()
+        
+        self.dataHelper!.seedDataStore()
+        
+        
         self.delegate!.setDrawerLeftPanel(true)
         
-       // fetchResults(0, entityName: "Category", column: "parent")
         viewNavigationItem.title = menuItem.name
-        //performFetch()
+
     }
 }
 
@@ -145,16 +164,16 @@ extension CategoryViewController: UITableViewDataSource {
     return self.menuItem.name
     }*/
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    public func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         if fetchedResultsController != nil {
-        if let sections = fetchedResultsController!.sections {
-            return sections.count
-        }
+            if let sections = fetchedResultsController!.sections {
+                return sections.count
+            }
         }
         
         return 0
     }
-    
+    public
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let sections = fetchedResultsController!.sections {
             let currentSection = sections[section]
@@ -163,7 +182,7 @@ extension CategoryViewController: UITableViewDataSource {
         
         return 0
     }
-    
+    public
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCellWithIdentifier(TableView.CellIdentifiers.CategoryCell, forIndexPath: indexPath) as! CategoryCell
@@ -181,7 +200,7 @@ extension CategoryViewController: UITableViewDataSource {
 
 extension CategoryViewController: UITableViewDelegate {
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    public func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
         let category = fetchedResultsController!.objectAtIndexPath(indexPath) as! Category
         
@@ -227,21 +246,29 @@ extension CategoryViewController: UITableViewDelegate {
     
 }
 extension CategoryViewController: CoreDataListener {
-    func dataUpdated() {
-        fetchResults(0, entityName: "Category", column: "parent")
-        performFetch()
+    
+    func dataUpdated(result:Bool) {
+        
+       loadingViewController?.showResult(result)
+        
+        if result == true {
+            self.fetchResults(0, entityName: "Category", column: "parent")
+            self.performFetch()
+        } else {
+            self.fetchResults(0, entityName: "Category", column: "parent")
+            self.performFetch()
+        }
     }
 }
 class CategoryCell: UITableViewCell {
     
-    let URL_SITE = "http://rezmis3k.bget.ru/test3/catalog2/"
     let DIR_IMG_UPL = "img/upload/"
     let DIR_IMG_CAMP = "category/"
     let DENSITY = "1/"
     let ext = ".jpg"
     
     func getUrl(category: Category)->String {
-        return URL_SITE + DIR_IMG_UPL + DIR_IMG_CAMP + DENSITY + category.photo + ext
+        return Consts.URL_SITE + DIR_IMG_UPL + DIR_IMG_CAMP + DENSITY + category.photo + ext
     }
     
     @IBOutlet weak var categoryImgSmall: UIImageView!

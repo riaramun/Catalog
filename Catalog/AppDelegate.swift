@@ -34,16 +34,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         categoryViewController!.delegate = self
         
-        
-        // let rigthViewController = UIStoryboard.rightViewController()
-        //rigthViewController!.context = self.dataStack.mainContext
-        
         let leftSideNav = UINavigationController(rootViewController: UIStoryboard.leftViewController()!)
         let centerNav = UINavigationController(rootViewController: categoryViewController!)
-        // let rightNav = UINavigationController(rootViewController: rigthViewController!)
         
         centerContainer = MyDrawerController(centerViewController: centerNav, leftDrawerViewController: leftSideNav,rightDrawerViewController:nil)
-        
         
         centerContainer!.openDrawerGestureModeMask = MMOpenDrawerGestureMode.PanningCenterView;
         
@@ -56,8 +50,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if let context = self.dataStack.mainContext {
             let dataHelper = DataHelper(context: context)
-            dataHelper.delegate = categoryViewController
-            dataHelper.seedDataStore()
+           // dataHelper.seedDataStore()
         }
         
         return true
@@ -78,20 +71,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     
-    func applicationDidEnterBackground(application: UIApplication) {
+   /* func applicationDidEnterBackground(application: UIApplication) {
         self.dataStack.persistWithCompletion(nil)
     }
     
     func applicationWillTerminate(application: UIApplication) {
         self.dataStack.persistWithCompletion(nil)
-    }
+    }*/
     
 }
-private extension UIStoryboard {
+public extension UIStoryboard {
     class func mainStoryboard() -> UIStoryboard { return UIStoryboard(name: "Main", bundle: NSBundle.mainBundle()) }
     
-    class func leftViewController() -> LeftPanelViewController? {
+    public class func leftViewController() -> LeftPanelViewController? {
         return mainStoryboard().instantiateViewControllerWithIdentifier("LeftViewController") as? LeftPanelViewController
+    }
+    
+    public class func loadingViewController() -> LoadingViewController? {
+        return mainStoryboard().instantiateViewControllerWithIdentifier("LoadingViewController") as? LoadingViewController
     }
     
    /* class func rightViewController() -> RightPanelViewController? {
