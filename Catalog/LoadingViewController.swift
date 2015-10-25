@@ -9,11 +9,13 @@
 import UIKit
 import CoreData
 import DOCheckboxControl
+import Alamofire
 
 public class LoadingViewController: UIViewController , UINavigationControllerDelegate{
     
     var dataHelper:DataHelper?
     
+    @IBOutlet weak var logoImg: UIImageView!
     @IBOutlet weak var deleteData: UIButton!
     @IBOutlet weak var tryAgain: UIButton!
     @IBOutlet weak var processState: UILabel!
@@ -23,10 +25,12 @@ public class LoadingViewController: UIViewController , UINavigationControllerDel
     
     @IBAction func deleteBaseAction(sender: AnyObject) {
         
-        //
-        //dataHelper?.context.delete(<#T##sender: AnyObject?##AnyObject?#>)
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        userDefaults.setValue("", forKey: "date_update")
+        userDefaults.synchronize()
+
         
-       dataHelper?.dataStack.drop()
+        dataHelper?.dataStack.drop()
         dataHelper?.delegate?.dataUpdated(false)
         tryAgain.hidden = true
         self.activityIndicator.hidden = false
@@ -53,7 +57,7 @@ public class LoadingViewController: UIViewController , UINavigationControllerDel
     
     @IBAction func tryAgainAction(sender: AnyObject) {
         
-        dataHelper?.seedDataStore()
+        dataHelper?.getSettings()
         
         tryAgain.hidden = true
         deleteData.hidden = true
@@ -84,6 +88,25 @@ public class LoadingViewController: UIViewController , UINavigationControllerDel
         
         self.navigationItem.setHidesBackButton(true, animated:true);
         
+        
+        let userDefaults = NSUserDefaults.standardUserDefaults()
+        
+        if let title_image = userDefaults.valueForKey("logo")  {
+            
+            let imgUrl = ImgUtils.getLogoImgUrl(title_image as! String)
+            
+            Alamofire.request(.GET, imgUrl).response { (request, response, data, error) in
+                self.logoImg.image = UIImage(data: data!, scale:1)
+            }
+        }
+    }
+    func skipUpdate (date:String) {
+        processState.text = "Обновлено от " + date
+        processState.updateConstraints()
+        deleteData.hidden = false
+        self.navigationItem.setHidesBackButton(false, animated:true)
+        tryAgain.hidden = false
+        self.activityIndicator.hidden = true
     }
     func showResult(success:Bool) {
         
@@ -108,7 +131,7 @@ public class LoadingViewController: UIViewController , UINavigationControllerDel
             self.navigationItem.setHidesBackButton(true, animated:true)
         }
         
-
+        
     }
     
 }

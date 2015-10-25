@@ -47,12 +47,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window!.makeKeyAndVisible()
         
-        
-        if let context = self.dataStack.mainContext {
-            let dataHelper = DataHelper(context: context)
-           // dataHelper.seedDataStore()
-        }
-        
         return true
     }
     

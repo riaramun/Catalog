@@ -13,6 +13,7 @@ import Sync
 
 protocol CoreDataListener {
     func dataUpdated(result:Bool)
+    func skipUpdated(date:String)
 }
 class DataHelper {
     
@@ -44,8 +45,16 @@ class DataHelper {
     /*
     @Returns attributes for particular item, used in collection view
     */
+    
+    var goodAttributesHash = [String: [Int: GoodAtribute]]()
+    
     func fetchGoodAttributesBy(itemId: Int, categoryId: Int) -> [Int: GoodAtribute] {
         
+        let hashKey = String(categoryId) + String(itemId)
+        
+        if goodAttributesHash[hashKey] != nil {
+            return goodAttributesHash[hashKey]!
+        }
         
         var goodAttributes = [Int: GoodAtribute]()
         
@@ -98,6 +107,7 @@ class DataHelper {
             }
             
         }
+        goodAttributesHash[hashKey] = goodAttributes
         return goodAttributes
     }
     
@@ -283,13 +293,65 @@ class DataHelper {
         return res
     }
     
+    func getSettings() {
+        
+        Alamofire.request(.GET, Consts.URL_SITE + Consts.CHECK_VER_PARAM )
+            .responseJSON { _, resp, result in
+                
+                if result.isFailure == true {
+                    self.delegate!.dataUpdated(false)
+                    return
+                } else {
+                    
+                    let obj = JSON(result.value);
+                    
+                    let date_update = obj?[key:"date_update"] as! String
+                    let title_image = obj?[key:"title_image"] as! String
+                    let logo = obj?[key:"logo"] as! String
+                    let codew = obj?[key:"codew"] as! String
+                    let name = obj?[key:"name"] as! String
+                    
+                    let userDefaults = NSUserDefaults.standardUserDefaults()
+                    
+                    var toUpdate = false
+                    if let old_date_update = userDefaults.valueForKey("date_update")  {
+                        if date_update != old_date_update as! String {
+                            toUpdate = true
+                        } else {
+                            toUpdate = false
+                        }
+                    }
+                    else {
+                        
+                        toUpdate = true
+                    }
+                 
+                    userDefaults.setValue(date_update, forKey: "date_update")
+                    userDefaults.setValue(title_image, forKey: "title_image")
+                    userDefaults.setValue(logo, forKey: "logo")
+                    userDefaults.setValue(codew, forKey: "codew")
+                    userDefaults.setValue(name, forKey: "name")
+                    userDefaults.synchronize()
+                    
+                    if toUpdate {
+                        self.seedDataStore()
+                    } else {
+                        self.delegate!.skipUpdated(date_update)
+                    }
+                    
+                    
+                   
+                }
+        }
+        
+    }
     func seedDataStore() {
         
         //dataStack.drop()
         
         Alamofire.request(.GET, Consts.URL_SITE + Consts.URL_REQ_PARAM )
             .responseJSON { _, resp, result in
-              
+                
                 if result.isFailure == true {
                     self.delegate!.dataUpdated(false)
                     return

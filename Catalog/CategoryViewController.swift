@@ -129,7 +129,7 @@ public class CategoryViewController: UIViewController, NSFetchedResultsControlle
         self.fetchResults(0, entityName: "Category", column: "parent")
         performFetch()
         
-        self.dataHelper!.seedDataStore()
+        self.dataHelper!.getSettings()
         
         
         self.delegate!.setDrawerLeftPanel(true)
@@ -246,6 +246,10 @@ extension CategoryViewController: UITableViewDelegate {
     
 }
 extension CategoryViewController: CoreDataListener {
+    
+    func skipUpdated(date:String) {
+        loadingViewController?.skipUpdate(date)
+    }
     
     func dataUpdated(result:Bool) {
         

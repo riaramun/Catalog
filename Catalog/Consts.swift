@@ -16,4 +16,6 @@ public class Consts {
     static let OneChoiceListTypeID = 4 //name: "Единичный выбор"
     static let URL_SITE = "http://rezmis3k.bget.ru/demo/";
     static let URL_REQ_PARAM = "sql2.php"
+    static let CHECK_VER_PARAM =  "get_general.php?par=all"
+    static let TITLE_LOGO_PARAM = "img/upload/general/";
 }

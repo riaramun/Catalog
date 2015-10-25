@@ -266,22 +266,27 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="k0N-eo-aew">
-                                <rect key="frame" x="290" y="291" width="20" height="20"/>
+                                <rect key="frame" x="290" y="388" width="20" height="20"/>
                                 <animations/>
                             </activityIndicatorView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="X9Q-nK-xXS">
+                                <rect key="frame" x="110" y="20" width="381" height="359"/>
+                                <animations/>
+                            </imageView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Обновление базы" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CqG-fe-dAz">
-                                <rect key="frame" x="229" y="248" width="143" height="21"/>
+                                <rect key="frame" x="229" y="416" width="143" height="21"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="p2I-YK-3DG">
-                                <rect key="frame" x="199" y="285" width="202" height="30"/>
+                                <rect key="frame" x="199" y="453" width="202" height="30"/>
                                 <animations/>
                                 <color key="backgroundColor" red="0.83137254900000002" green="0.83137254900000002" blue="0.83137254900000002" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="202" id="MhP-Xh-6Ag"/>
+                                    <constraint firstAttribute="height" constant="30" id="498-DT-5az"/>
+                                    <constraint firstAttribute="width" constant="202" id="R4S-AZ-aEs"/>
                                 </constraints>
                                 <color key="tintColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                 <size key="titleShadowOffset" width="2" height="2"/>
@@ -293,11 +298,11 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8F7-aq-OBP">
-                                <rect key="frame" x="238" y="340" width="124" height="30"/>
+                                <rect key="frame" x="238" y="508" width="124" height="30"/>
                                 <animations/>
                                 <color key="backgroundColor" white="0.75" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="124" id="UCc-Ku-OEg"/>
+                                    <constraint firstAttribute="width" constant="124" id="0mR-j3-9HI"/>
                                 </constraints>
                                 <state key="normal" title="Удалить базу">
                                     <color key="titleColor" red="0.018017833769633507" green="0.0010242087432870525" blue="0.0030668569304055184" alpha="1" colorSpace="calibratedRGB"/>
@@ -310,16 +315,18 @@
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="k0N-eo-aew" firstAttribute="top" secondItem="CqG-fe-dAz" secondAttribute="bottom" constant="22" id="3yz-en-R7W"/>
-                            <constraint firstItem="8F7-aq-OBP" firstAttribute="top" secondItem="p2I-YK-3DG" secondAttribute="bottom" constant="25" id="8ah-rR-jIK"/>
-                            <constraint firstItem="p2I-YK-3DG" firstAttribute="centerY" secondItem="tda-ub-Kfj" secondAttribute="centerY" id="EU6-26-yQG"/>
-                            <constraint firstItem="k0N-eo-aew" firstAttribute="centerX" secondItem="8F7-aq-OBP" secondAttribute="centerX" id="TyY-Jn-Ybj"/>
-                            <constraint firstItem="p2I-YK-3DG" firstAttribute="centerX" secondItem="k0N-eo-aew" secondAttribute="centerX" id="XAq-IT-loF"/>
-                            <constraint firstItem="8F7-aq-OBP" firstAttribute="top" secondItem="k0N-eo-aew" secondAttribute="bottom" constant="29" id="eM9-Ld-XSZ"/>
-                            <constraint firstItem="p2I-YK-3DG" firstAttribute="top" secondItem="CqG-fe-dAz" secondAttribute="bottom" constant="16" id="hCd-gr-jwh"/>
-                            <constraint firstItem="CqG-fe-dAz" firstAttribute="top" secondItem="zjF-tk-EGj" secondAttribute="bottom" constant="228" id="ikC-u8-tlS"/>
-                            <constraint firstItem="CqG-fe-dAz" firstAttribute="centerX" secondItem="tda-ub-Kfj" secondAttribute="centerX" id="lPe-3i-pWx"/>
-                            <constraint firstItem="CqG-fe-dAz" firstAttribute="centerX" secondItem="k0N-eo-aew" secondAttribute="centerX" id="s9E-6Y-EyC"/>
+                            <constraint firstItem="CqG-fe-dAz" firstAttribute="centerX" secondItem="k0N-eo-aew" secondAttribute="centerX" id="2v2-D4-Nmh"/>
+                            <constraint firstItem="p2I-YK-3DG" firstAttribute="centerX" secondItem="CqG-fe-dAz" secondAttribute="centerX" id="AC9-89-FzN"/>
+                            <constraint firstItem="X9Q-nK-xXS" firstAttribute="leading" secondItem="tda-ub-Kfj" secondAttribute="leadingMargin" constant="90" id="E5l-cQ-PTQ"/>
+                            <constraint firstItem="p2I-YK-3DG" firstAttribute="top" secondItem="CqG-fe-dAz" secondAttribute="bottom" constant="16" id="ETs-fX-sGJ"/>
+                            <constraint firstItem="8F7-aq-OBP" firstAttribute="top" secondItem="p2I-YK-3DG" secondAttribute="bottom" constant="25" id="Eqj-ij-D3d"/>
+                            <constraint firstItem="8F7-aq-OBP" firstAttribute="centerX" secondItem="tda-ub-Kfj" secondAttribute="centerX" id="GqY-iS-wTI"/>
+                            <constraint firstItem="8F7-aq-OBP" firstAttribute="centerX" secondItem="p2I-YK-3DG" secondAttribute="centerX" id="Jae-w4-snK"/>
+                            <constraint firstItem="0cw-Ym-Qek" firstAttribute="top" secondItem="8F7-aq-OBP" secondAttribute="bottom" constant="62" id="L9Z-OE-Eyr"/>
+                            <constraint firstItem="k0N-eo-aew" firstAttribute="top" secondItem="X9Q-nK-xXS" secondAttribute="bottom" constant="9" id="QNm-fI-3cc"/>
+                            <constraint firstItem="X9Q-nK-xXS" firstAttribute="centerX" secondItem="k0N-eo-aew" secondAttribute="centerX" id="Y0i-Kc-v0X"/>
+                            <constraint firstItem="CqG-fe-dAz" firstAttribute="top" secondItem="k0N-eo-aew" secondAttribute="bottom" constant="8" symbolic="YES" id="bNa-w9-byb"/>
+                            <constraint firstItem="X9Q-nK-xXS" firstAttribute="top" secondItem="zjF-tk-EGj" secondAttribute="bottom" id="pdJ-MB-o9P"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Каталог товаров" id="ckz-6E-GiY">
@@ -331,13 +338,14 @@
                         <outlet property="activityIndicator" destination="k0N-eo-aew" id="Xoc-cZ-e7L"/>
                         <outlet property="backNavigationItem" destination="ckz-6E-GiY" id="L5r-PM-4kl"/>
                         <outlet property="deleteData" destination="8F7-aq-OBP" id="eOJ-B7-7Yg"/>
+                        <outlet property="logoImg" destination="X9Q-nK-xXS" id="fsX-X2-mZL"/>
                         <outlet property="processState" destination="CqG-fe-dAz" id="FYq-zp-Khn"/>
                         <outlet property="tryAgain" destination="p2I-YK-3DG" id="Bi6-sJ-SPO"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vJn-9A-nq1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1127" y="1190"/>
+            <point key="canvasLocation" x="1155" y="1164"/>
         </scene>
         <!--Фильтр-->
         <scene sceneID="vs5-ef-NRf">
