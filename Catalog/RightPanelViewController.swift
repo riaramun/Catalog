@@ -154,7 +154,19 @@ extension RightPanelViewController: UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if properties![section].filterItems.count == 0 {
-            return 0
+            
+            var filterItems = properties![section].filterItems.allObjects as! [FilterItem]
+            if filterItems.count == 0 {
+                let currProperty = properties![section]
+                filterItems = dataHelper!.fetchFilterItemsBy(currProperty.propertyId)!
+                if  filterItems.count == 0 {
+                    dataHelper!.ceedFilterItemsForProperty(currProperty)
+                    filterItems = (dataHelper?.fetchFilterItemsBy(currProperty.propertyId))!
+                }
+            }
+
+            
+            return filterItems.count
         }
         
         let filterItem = properties![section].filterItems.allObjects[0] as! FilterItem
@@ -184,7 +196,6 @@ extension RightPanelViewController: UITableViewDataSource {
         
         let currProperty = properties![indexPath.section]
         
-        let filterItems = currProperty.filterItems
         
         var identifier: String
         
@@ -209,8 +220,8 @@ extension RightPanelViewController: UITableViewDataSource {
             cell = swithcCell
         } else {
             let wheelCell = tableView.dequeueReusableCellWithIdentifier(identifier, forIndexPath: indexPath) as! WheelTableViewCell
-            
-            let filterItems = filterItems.allObjects as! [FilterItem]
+        
+            let filterItems = currProperty.filterItems.allObjects as! [FilterItem]
             
             let sorted = filterItems.sort({ (el1, el2) -> Bool in
                 return el1.position < el2.position

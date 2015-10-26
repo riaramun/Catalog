@@ -73,6 +73,7 @@ public class CategoryViewController: UIViewController, NSFetchedResultsControlle
                 performFetch()
                 let parentId = getFirstCategoryParent();
                 if parentId == 0 {
+                    viewNavigationItem.title = "Категории"
                     menuBarButton.image = UIImage(named: "menu.png")
                 }
             }

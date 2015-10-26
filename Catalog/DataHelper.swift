@@ -387,7 +387,7 @@ class DataHelper {
                     }
                     
                     //we need init filter items here for each property
-                    self.seedFilterItems()
+                    self.ceedFilterItems()
                     
                     do {
                         try self.context.save()
@@ -947,64 +947,63 @@ class DataHelper {
         }
         return properties
     }
-    func seedFilterItems() {
+    func ceedFilterItemsForProperty(property:Property) {
+        
+        let propListValues = fetchPropertyListValuesBy(property.propertyId)
+        
+        if propListValues?.count > 0 {
+            
+            for propListValue in propListValues! {
+                
+                let entity = NSEntityDescription.entityForName("FilterItem", inManagedObjectContext: self.context)
+                let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
+                item.setValue(propListValue.position, forKey: "position")
+                item.setValue(property.propertyId, forKey: "propertyId")
+                item.setValue(property, forKey: "property")
+                item.setValue(propListValue.value, forKey: "param")
+                item.setValue(propListValue.listId, forKey: "listId")
+                item.setValue(false, forKey: "selected")
+                
+            }
+        }
+        else {
+            //if property doesn't have Property_List_Value array it means that it is a number
+            //so we need to find all nambers which we have in corresponding Property_Item_Value table
+            let hashSet = NSMutableSet()
+            
+            let propertyItemValues = fetchPropertyItemValuesByPropId(property.propertyId)
+            
+            for propItemValue in propertyItemValues {
+                
+                if hashSet.containsObject(propItemValue.value) {
+                    continue
+                }
+                
+                hashSet.addObject(propItemValue.value)
+                
+                let entity = NSEntityDescription.entityForName("FilterItem", inManagedObjectContext: self.context)
+                
+                let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
+                item.setValue(property.propertyId, forKey: "propertyId")
+                item.setValue(propItemValue.value, forKey: "position")
+                item.setValue(property, forKey: "property")
+                item.setValue(propItemValue.value, forKey: "paramInt")
+                // item.setValue(propListValue.listId, forKey: "listId")
+                item.setValue(false, forKey: "selected")
+            }
+        }
+        do {
+            try self.context.save()
+        } catch {
+            
+        }
+
+    }
+    func ceedFilterItems() {
         let properties = fetchAllProperties();
         
         for property in properties! {
-            
-            let propListValues = fetchPropertyListValuesBy(property.propertyId)
-            
-            if propListValues?.count > 0 {
-                for propListValue in propListValues! {
-                    
-                    let entity = NSEntityDescription.entityForName("FilterItem", inManagedObjectContext: self.context)
-                    let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
-                    item.setValue(propListValue.position, forKey: "position")
-                    item.setValue(property, forKey: "property")
-                    item.setValue(propListValue.value, forKey: "param")
-                    item.setValue(propListValue.listId, forKey: "listId")
-                    item.setValue(false, forKey: "selected")
-                    
-                    /* let filterItem = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
-                    filterItem.position = propListValue.position
-                    filterItem.property = property
-                    filterItem.param = propListValue.value
-                    filterItem.listId = propListValue.listId
-                    filterItem.selected = false*/
-                }
-            }
-            else {
-                //if property doesn't have Property_List_Value array it means that it is a number
-                //so we need to find all nambers which we have in corresponding Property_Item_Value table
-                let hashSet = NSMutableSet()
-                
-                let propertyItemValues = fetchPropertyItemValuesByPropId(property.propertyId)
-                for propItemValue in propertyItemValues {
-                    if hashSet.containsObject(propItemValue.value) {
-                        continue
-                    }
-                    hashSet.addObject(propItemValue.value)
-                    
-                    let entity = NSEntityDescription.entityForName("FilterItem", inManagedObjectContext: self.context)
-                    let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
-                    
-                    item.setValue(propItemValue.value, forKey: "position")
-                    item.setValue(property, forKey: "property")
-                    item.setValue(propItemValue.value, forKey: "paramInt")
-                    // item.setValue(propListValue.listId, forKey: "listId")
-                    item.setValue(false, forKey: "selected")
-                    
-                    
-                    /* let filterItem = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
-                    //filterItem.position = propListValue.position
-                    filterItem.property = property
-                    filterItem.paramInt = propItemValue.value
-                    //we use position param as sort key, so we put there int value
-                    filterItem.position = propItemValue.value
-                    //filterItem.listId = propListValue.listId!!
-                    filterItem.selected = false*/
-                }
-            }
+            ceedFilterItemsForProperty(property)
         }
     }
     func clearParams(property:Property){
@@ -1058,6 +1057,21 @@ class DataHelper {
         
         do {
             try properties = self.context.executeFetchRequest(fetchRequest) as? [Property_List_Value]
+        }
+        catch {
+        }
+        return properties
+    }
+    func fetchFilterItemsBy(propertyId:Int) -> [FilterItem]?
+    {
+        let fetchRequest = NSFetchRequest(entityName: "FilterItem")
+        fetchRequest.predicate = NSPredicate(format: "propertyId == %d", propertyId )
+        let primarySortDescriptor = NSSortDescriptor(key: "position", ascending: true)
+        fetchRequest.sortDescriptors = [primarySortDescriptor]
+        var properties: [FilterItem]?
+        
+        do {
+            try properties = self.context.executeFetchRequest(fetchRequest) as? [FilterItem]
         }
         catch {
         }

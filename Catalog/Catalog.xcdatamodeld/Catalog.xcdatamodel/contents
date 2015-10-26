@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9056" systemVersion="15A284" minimumToolsVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9056" systemVersion="15B42" minimumToolsVersion="Automatic">
     <entity name="Category" representedClassName="Category" syncable="YES">
         <attribute name="categoryId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES">
             <userInfo>
@@ -67,6 +67,7 @@
         <attribute name="param" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="paramInt" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="position" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
+        <attribute name="propertyId" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="selected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="property" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Property" inverseName="filterItems" inverseEntity="Property" syncable="YES"/>
         <userInfo>
@@ -255,7 +256,7 @@
     </entity>
     <elements>
         <element name="Category" positionX="-326" positionY="-135" width="128" height="225"/>
-        <element name="FilterItem" positionX="-18" positionY="162" width="128" height="135"/>
+        <element name="FilterItem" positionX="-18" positionY="162" width="128" height="150"/>
         <element name="Item" positionX="-155" positionY="-135" width="128" height="193"/>
         <element name="Item_Photo" positionX="45" positionY="-135" width="128" height="120"/>
         <element name="Property" positionX="214" positionY="54" width="128" height="238"/>

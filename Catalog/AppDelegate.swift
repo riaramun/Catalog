@@ -14,7 +14,7 @@ import MMDrawerController
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
    
-    
+    var leftViewController: LeftPanelViewController?
     var centerContainer: MMDrawerController?
     
     var window: UIWindow?
@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
-        let leftViewController = UIStoryboard.leftViewController()
+        leftViewController = UIStoryboard.leftViewController()
         
         leftViewController!.delegate = self
         
@@ -34,8 +34,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         categoryViewController!.delegate = self
         
-        let leftSideNav = UINavigationController(rootViewController: UIStoryboard.leftViewController()!)
+        let leftSideNav = UINavigationController(rootViewController: leftViewController!)
         let centerNav = UINavigationController(rootViewController: categoryViewController!)
+        
         
         centerContainer = MyDrawerController(centerViewController: centerNav, leftDrawerViewController: leftSideNav,rightDrawerViewController:nil)
         
@@ -131,7 +132,7 @@ extension AppDelegate: CenterViewControllerDelegate {
     }*/
     func setDrawerLeftPanel(enabled:Bool) {
         
-        let leftSideNav = UINavigationController(rootViewController: UIStoryboard.leftViewController()!)
+        let leftSideNav = UINavigationController(rootViewController: leftViewController!)
         
         (window!.rootViewController as! MMDrawerController).leftDrawerViewController = enabled ? leftSideNav : nil
     }
@@ -146,6 +147,22 @@ extension AppDelegate: CenterViewControllerDelegate {
 
 extension AppDelegate: LeftPanelViewControllerDelegate {
     func menuItemSelected(menuItem: MenuItem) {
+        let type = menuItem.type
+        
+        switch (type) {
+        case .ECategories:
+            break
+        case .EFavorites:
+            break
+        case .ESearch:
+            break
+        case .EHistory:
+            break
+        case .ESettings:
+            break
+        case .EContacts:
+            break
+        }
         
     }
 }
