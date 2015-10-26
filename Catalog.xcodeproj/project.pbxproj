@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3FA0F32CAD6FBAA7E530C4F8 /* Pods_Catalog.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5349F8E7BD949A6493B871C6 /* Pods_Catalog.framework */; };
+		8411409C1BDECC3A002F822C /* FavoritesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8411409B1BDECC3A002F822C /* FavoritesViewController.swift */; };
 		841ECDBC1BDCECDD0002403B /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 841ECDBB1BDCECDD0002403B /* LoadingViewController.swift */; };
 		843786441BA8512F00244DBE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 843786431BA8512F00244DBE /* AppDelegate.swift */; };
 		843786491BA8512F00244DBE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 843786471BA8512F00244DBE /* Main.storyboard */; };
@@ -56,6 +57,7 @@
 
 /* Begin PBXFileReference section */
 		5349F8E7BD949A6493B871C6 /* Pods_Catalog.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Catalog.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8411409B1BDECC3A002F822C /* FavoritesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesViewController.swift; sourceTree = "<group>"; };
 		841ECDBB1BDCECDD0002403B /* LoadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		843786401BA8512F00244DBE /* Catalog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Catalog.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		843786431BA8512F00244DBE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 				8445A0651BC336E2002C9CF7 /* PropertyEditorViewController.swift */,
 				841ECDBB1BDCECDD0002403B /* LoadingViewController.swift */,
 				84DBC26F1BB9462900620E18 /* CollectionViewController.swift */,
+				8411409B1BDECC3A002F822C /* FavoritesViewController.swift */,
 				84DCBA921BA9B3AA009CA677 /* CategoryViewController.swift */,
 				843786431BA8512F00244DBE /* AppDelegate.swift */,
 				843786471BA8512F00244DBE /* Main.storyboard */,
@@ -418,6 +421,7 @@
 				84CF19091BAE23CC00C93739 /* MenuItem.swift in Sources */,
 				84DE38231BC7A8FA00EBE692 /* ItemDetailViewController.swift in Sources */,
 				843786441BA8512F00244DBE /* AppDelegate.swift in Sources */,
+				8411409C1BDECC3A002F822C /* FavoritesViewController.swift in Sources */,
 				8437864C1BA8512F00244DBE /* Catalog.xcdatamodeld in Sources */,
 				84DFC5CF1BB8361400F39C73 /* Item_Photo.swift in Sources */,
 				84DE38271BC7ABF700EBE692 /* ImgUtils.swift in Sources */,

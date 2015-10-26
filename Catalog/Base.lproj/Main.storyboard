@@ -627,14 +627,9 @@
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="qIx-fe-WpN">
                         <rightBarButtonItems>
-                            <barButtonItem title="Вид 2" id="gNZ-mc-LuA">
+                            <barButtonItem title="Вид" id="gNZ-mc-LuA">
                                 <connections>
                                     <action selector="setView2:" destination="Ml8-Yw-1hJ" id="VIF-FH-4cU"/>
-                                </connections>
-                            </barButtonItem>
-                            <barButtonItem title="Вид 1" id="RtC-xx-gNd">
-                                <connections>
-                                    <action selector="setView1:" destination="Ml8-Yw-1hJ" id="1HS-5D-2Ag"/>
                                 </connections>
                             </barButtonItem>
                             <barButtonItem title="Фильтр" width="76" id="ZfG-ZO-09c">
@@ -665,6 +660,113 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="LQA-v4-ukO" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1951" y="382"/>
+        </scene>
+        <!--Collection View Controller-->
+        <scene sceneID="gTF-Er-6aO">
+            <objects>
+                <viewController storyboardIdentifier="FavoritesViewController" title="Избранное" id="RtG-vV-5YT" userLabel="Collection View Controller" customClass="FavoritesViewController" customModule="Catalog" customModuleProvider="target" sceneMemberID="viewController">
+                    <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="KHO-6J-BGh">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" red="0.87450980389999999" green="0.87450980389999999" blue="0.87450980389999999" alpha="1" colorSpace="calibratedRGB"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="3oG-ta-osy">
+                            <size key="itemSize" width="301" height="408"/>
+                            <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                            <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                        </collectionViewFlowLayout>
+                        <cells>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="ItemCell" id="bHM-rA-vKp" customClass="GridCell" customModule="Catalog" customModuleProvider="target">
+                                <rect key="frame" x="150" y="64" width="301" height="408"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                    <rect key="frame" x="0.0" y="0.0" width="301" height="408"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="SPs-wr-aIW">
+                                            <rect key="frame" x="8" y="8" width="285" height="392"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" semanticContentAttribute="forceLeftToRight" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="DR5-5v-J7K">
+                                                    <rect key="frame" x="0.0" y="0.0" width="285" height="282"/>
+                                                    <animations/>
+                                                </imageView>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Wp-Re-jmU">
+                                                    <rect key="frame" x="0.0" y="282" width="285" height="110"/>
+                                                    <animations/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="110" id="TMb-BC-LjV"/>
+                                                    </constraints>
+                                                    <attributedString key="attributedText">
+                                                        <fragment content="description">
+                                                            <attributes>
+                                                                <font key="NSFont" size="14" name="HelveticaNeue"/>
+                                                                <paragraphStyle key="NSParagraphStyle" alignment="natural" lineBreakMode="wordWrapping" baseWritingDirection="natural"/>
+                                                            </attributes>
+                                                        </fragment>
+                                                    </attributedString>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                                </textView>
+                                            </subviews>
+                                            <animations/>
+                                            <constraints>
+                                                <constraint firstItem="8Wp-Re-jmU" firstAttribute="centerX" secondItem="SPs-wr-aIW" secondAttribute="centerX" constant="1" id="YQ8-4H-e0S"/>
+                                                <constraint firstItem="8Wp-Re-jmU" firstAttribute="bottom" secondItem="SPs-wr-aIW" secondAttribute="bottomMargin" id="xnn-mF-tYr"/>
+                                            </constraints>
+                                            <variation key="default">
+                                                <mask key="constraints">
+                                                    <exclude reference="YQ8-4H-e0S"/>
+                                                </mask>
+                                            </variation>
+                                        </stackView>
+                                    </subviews>
+                                    <animations/>
+                                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                </view>
+                                <animations/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailingMargin" secondItem="SPs-wr-aIW" secondAttribute="trailing" id="DGp-ob-4NL"/>
+                                    <constraint firstAttribute="bottomMargin" secondItem="SPs-wr-aIW" secondAttribute="bottom" id="QeC-mU-0BO"/>
+                                    <constraint firstItem="SPs-wr-aIW" firstAttribute="leading" secondItem="bHM-rA-vKp" secondAttribute="leadingMargin" id="Tcr-OS-giS"/>
+                                    <constraint firstItem="SPs-wr-aIW" firstAttribute="top" secondItem="bHM-rA-vKp" secondAttribute="topMargin" id="UtO-j5-m9M"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="categoryImgSmall" destination="DR5-5v-J7K" id="xFs-SH-LvW"/>
+                                    <outlet property="categoryLabel" destination="8Wp-Re-jmU" id="OGF-pP-In4"/>
+                                </connections>
+                            </collectionViewCell>
+                        </cells>
+                        <connections>
+                            <outlet property="dataSource" destination="RtG-vV-5YT" id="knt-oB-hZR"/>
+                            <outlet property="delegate" destination="RtG-vV-5YT" id="nHg-PL-era"/>
+                        </connections>
+                    </collectionView>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="Избранное" id="ZN6-nm-IqY">
+                        <barButtonItem key="leftBarButtonItem" image="menu.png" id="QQX-9g-Fzy">
+                            <color key="tintColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <connections>
+                                <action selector="mainMenuBtnTapped:" destination="RtG-vV-5YT" id="6Kv-xL-7af"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Вид" id="28e-pF-NB2">
+                            <connections>
+                                <action selector="setView2:" destination="RtG-vV-5YT" id="aNe-cE-AcA"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedStatusBarMetrics key="simulatedStatusBarMetrics"/>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <connections>
+                        <outlet property="collectionView" destination="KHO-6J-BGh" id="D7a-Ty-O8G"/>
+                        <outlet property="menuBarButton" destination="QQX-9g-Fzy" id="l5X-XS-Y8E"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="wk8-G0-9yx" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-24" y="1265"/>
         </scene>
     </scenes>
     <resources>

@@ -1,6 +1,6 @@
 //
-//  CollectionViewController.swift
-//  iOS8SwiftCollectionViewControllerTutorial
+//  FavoritesViewController.swift
+//  iOS8SwiftFavoritesViewControllerTutorial
 //
 //  Created by Arthur Knopper on 03/11/14.
 //  Copyright (c) 2014 Arthur Knopper. All rights reserved.
@@ -11,27 +11,11 @@ import CoreData
 import Alamofire
 
 
-let reuseIdentifier = "Cell"
-
-class CollectionViewController: UICollectionViewController, NSFetchedResultsControllerDelegate {
+public class FavoritesViewController: UICollectionViewController, NSFetchedResultsControllerDelegate {
     
-    var pickerView: AlertPickerView!
-    let sort_menu_array = [
-        "Цена (по возрастанию)",
-        "Цена (по убыванию)",
-        "Старая цена (по возрастанию)",
-        "Старая цена (по убыванию)"]
+    @IBOutlet weak var menuBarButton: UIBarButtonItem!
     
-    @IBAction func FilterTapped(sender: AnyObject) {
-        //self.delegate!.toggleRightPanel()
-    }
-    
-    
-    @IBAction func showSortDialog(sender: AnyObject) {
-        self.pickerView.showPicker()
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    public override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "ToItemDetail" {
             
@@ -64,14 +48,14 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
             }
             
             viewController.context = self.context
-           //let item = sender as! Item
+            //let item = sender as! Item
             viewController.categoryId = categoryId!
             viewController.delegate = self
         }
         //viewController.viewNavigationItem.title = category.name
     }
     
-    override func didMoveToParentViewController(parent: UIViewController?) {
+    public override func didMoveToParentViewController(parent: UIViewController?) {
         if (parent == nil) {
             
             // self.delegate!.setDrawerRightPanel(nil)
@@ -96,6 +80,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
     }
     
     @IBAction func setView2(sender: AnyObject) {
+        
         // let item = ( sender as! UIBarButtonItem )
         
         if cellHeightToSet == 300 {
@@ -119,10 +104,10 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         }
     }
     
-    func fetchResults(id:Int, entityName:String, column:String) {
+    func fetchResults( entityName:String, column:String) {
         
         let fetchRequest = NSFetchRequest(entityName: entityName)
-        fetchRequest.predicate = NSPredicate(format: "%d == " + column + " and visible == 1", id)
+        // fetchRequest.predicate = NSPredicate(format: "%d == " + column + " and visible == 1", id)
         let primarySortDescriptor = NSSortDescriptor(key: "position", ascending: true)
         fetchRequest.sortDescriptors = [primarySortDescriptor]
         
@@ -135,23 +120,22 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         fetchedResultsController = frc
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.pickerView = AlertPickerView()
-        self.pickerView.items = sort_menu_array
-        self.pickerView.delegate = self
         
         //self.delegate!.setDrawerRightPanel(self)
-        self.delegate!.setDrawerLeftPanel(false)
+        // self.delegate!.setDrawerLeftPanel(false)
         
-        self.view.addSubview(pickerView)
+        menuBarButton.image = UIImage(named: "menu.png")
+        
+        self.delegate!.setDrawerLeftPanel(true)
         
         self.dataHelper = DataHelper(context: self.context!)
         
         self.collectionView!.registerClass(UICollectionViewCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
-        fetchResults(self.categoryId!, entityName: "Item", column: "categoryId")
+        fetchResults("Item", column: "categoryId")
         
         performFetch()
         
@@ -162,7 +146,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         // Do any additional setup after loading the view.
     }
     
-    override func didReceiveMemoryWarning() {
+    public override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
@@ -171,12 +155,12 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
     
     // MARK: UICollectionViewDataSource
     
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    public override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }
     
     
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    public override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         
         var retVal = 0;
         
@@ -188,7 +172,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         return retVal
     }
     
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    public override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(GridView.CellIdentifiers.ItemCell, forIndexPath: indexPath) as! GridCell
         
@@ -220,16 +204,16 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
         var counter = 0
         
         for key in sortedKeys {
-            
-            strToSet.appendAttributedString(NSMutableAttributedString(string: (attributes[key]?.name)! + String (": ")))
-            
-            let styledStr = StrUtils.styleString( (attributes[key]?.value)! + (attributes[key]?.dimen)!, style: (attributes[key]?.style)!,color: (attributes[key]?.color)!)
-            
-            strToSet.appendAttributedString(styledStr)
-            
-            strToSet.appendAttributedString(NSMutableAttributedString(string:"\r"))
-            counter++
-            if counter == 6 {break }
+        
+        strToSet.appendAttributedString(NSMutableAttributedString(string: (attributes[key]?.name)! + String (": ")))
+        
+        let styledStr = StrUtils.styleString( (attributes[key]?.value)! + (attributes[key]?.dimen)!, style: (attributes[key]?.style)!,color: (attributes[key]?.color)!)
+        
+        strToSet.appendAttributedString(styledStr)
+        
+        strToSet.appendAttributedString(NSMutableAttributedString(string:"\r"))
+        counter++
+        if counter == 6 {break }
         }*/
         
         cell.categoryLabel.attributedText = strToSet
@@ -263,7 +247,7 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
     
     
     // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
+    public override func collectionView(collectionView: UICollectionView, shouldHighlightItemAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
     
@@ -271,95 +255,27 @@ class CollectionViewController: UICollectionViewController, NSFetchedResultsCont
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 1
     }
-    internal override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+    public override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         
-        let item = fetchedResultsController!.objectAtIndexPath(indexPath) as! Item
+        //   let item = fetchedResultsController!.objectAtIndexPath(indexPath) as! Item
         
-        self.performSegueWithIdentifier("ToItemDetail", sender: item)
+        //   self.performSegueWithIdentifier("ToItemDetail", sender: item)
     }
     
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(collectionView: UICollectionView, shouldSelectItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-    return true
+    @IBAction func mainMenuBtnTapped(sender: AnyObject) {
+        
+        delegate?.toggleLeftPanel()
+        
     }
-    */
-    
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(collectionView: UICollectionView, shouldShowMenuForItemAtIndexPath indexPath: NSIndexPath) -> Bool {
-    return false
-    }
-    
-    override func collectionView(collectionView: UICollectionView, canPerformAction action: Selector, forItemAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject?) -> Bool {
-    return false
-    }
-    
-    override func collectionView(collectionView: UICollectionView, performAction action: Selector, forItemAtIndexPath indexPath: NSIndexPath, withSender sender: AnyObject?) {
-    
-    }
-    */
     
 }
 
-class GridCell: UICollectionViewCell {
-    
-    @IBOutlet weak var categoryImgSmall: UIImageView!
-    
-    @IBOutlet weak var categoryLabel: UITextView!
-    
-    /* @IBOutlet weak var priceTextView: UITextView!
-    
-    @IBOutlet weak var oldPriceTextView: UITextView!
-    
-    @IBOutlet weak var sizeTextView: UITextView!*/
-    
-}
-extension CollectionViewController: AlertPickerViewDelegate {
-    
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return self.pickerView.items.count
-    }
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return self.pickerView.items[row]
-    }
-    func pickerView(pickerView: UIPickerView, didSelect numbers: [Int]) {
-        
-        let selected = numbers[0]
-        switch(selected) {
-        case 0:
-            self.dataHelper?.sortItemsByCurrentPrice(self.categoryId!, increase: true, currentPrice:true)
-            performFetch()
-            break
-        case 1:
-            self.dataHelper?.sortItemsByCurrentPrice(self.categoryId!, increase: false, currentPrice:true)
-            performFetch()
-            break
-        case 2:
-            self.dataHelper?.sortItemsByCurrentPrice(self.categoryId!, increase: true, currentPrice:false)
-            performFetch()
-            break
-        case 3:
-            self.dataHelper?.sortItemsByCurrentPrice(self.categoryId!, increase: false, currentPrice:false)
-            performFetch()
-            break
-        default:
-            break
-        }
-        print("selected \(numbers)")
-        
-    }
-    
-    func pickerViewDidHide(pickerView: UIPickerView) {
-        print("hided pickerview")
-    }
-}
-extension CollectionViewController: RightPanelViewControllerDelegate {
+extension FavoritesViewController: RightPanelViewControllerDelegate {
     func filterItemsByParams() {
         
         self.dataHelper!.filterItemsByParams(self.categoryId!)
-
-        fetchResults(self.categoryId!, entityName: "Item", column: "categoryId")
+        
+        fetchResults("Item", column: "categoryId")
         
         self.performFetch()
         
@@ -369,27 +285,5 @@ extension CollectionViewController: RightPanelViewControllerDelegate {
     }
     func getCurrentCategoryId() -> Int {
         return self.categoryId!
-    }
-}
-
-extension String {
-    var hexColor: UIColor? {
-        let hex = self.stringByTrimmingCharactersInSet(NSCharacterSet.alphanumericCharacterSet().invertedSet)
-        var int = UInt32()
-        guard NSScanner(string: hex).scanHexInt(&int) else {
-            return nil
-        }
-        let a, r, g, b: UInt32
-        switch hex.characters.count {
-        case 3: // RGB (12-bit)
-            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
-        case 6: // RGB (24-bit)
-            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
-        case 8: // ARGB (32-bit)
-            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
-        default:
-            return nil
-        }
-        return UIColor(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
     }
 }

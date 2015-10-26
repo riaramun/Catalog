@@ -394,8 +394,22 @@ class DataHelper {
                     } catch {
                         
                     }
+                    let items = self.fetchAllItems()
                     
+                    for item in items! {
+                        var photoUrl = self.getPhotoFor(item.itemId)
+                        
+                        if photoUrl != nil {
+                            photoUrl = ImgUtils.getItemImgUrl(photoUrl!)
+                            if(photoUrl != nil) {
+                                Alamofire.request(.GET, photoUrl!).response { (request, response, data, error) in
+                                }
+                            }
+                        }
+
+                    }
                     
+                   
                     if self.delegate != nil {
                         self.delegate!.dataUpdated(true)
                     }
