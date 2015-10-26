@@ -499,7 +499,7 @@
                                         <rect key="frame" x="0.0" y="536" width="600" height="0.0"/>
                                         <animations/>
                                     </activityIndicatorView>
-                                    <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jUm-K4-UWo">
+                                    <navigationBar contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jUm-K4-UWo">
                                         <rect key="frame" x="0.0" y="536" width="600" height="64"/>
                                         <animations/>
                                         <items>
@@ -573,7 +573,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="285" height="282"/>
                                                     <animations/>
                                                 </imageView>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" scrollEnabled="NO" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQc-Ue-Ejv">
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="bottom" editable="NO" usesAttributedText="YES" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DQc-Ue-Ejv">
                                                     <rect key="frame" x="0.0" y="282" width="285" height="110"/>
                                                     <animations/>
                                                     <constraints>

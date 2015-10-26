@@ -21,20 +21,25 @@ class DataHelper {
     static let dataStack = DATAStack(modelName: "Catalog")
     
     class GoodAtribute {
-        init(property:Property, name:String , value:String, dimen:String, style:String, color:String) {
+        init(position:Int, property:Property, name:String , value:String, dimen:String, style:String, color:String) {
+            self.position = position
             self.property = property
             self.name = name
             self.dimen = dimen
             self.value = value
             self.style = style
             self.color = color
+            values = [String]()
         }
+        var position:Int
         var property:Property
         var name:String
         var value:String
         var dimen:String
         var style:String
         var color:String
+        //this field is used as array of values, it contains the same data as value, but as array, used in filter
+        var values:[String]
     }
     let context: NSManagedObjectContext
     
@@ -46,9 +51,9 @@ class DataHelper {
     @Returns attributes for particular item, used in collection view
     */
     
-    var goodAttributesHash = [String: [Int: GoodAtribute]]()
+    var goodAttributesHash = [String: [String: GoodAtribute]]()
     
-    func fetchGoodAttributesBy(itemId: Int, categoryId: Int) -> [Int: GoodAtribute] {
+    func fetchGoodAttributesBy(itemId: Int, categoryId: Int) -> [String: GoodAtribute] {
         
         let hashKey = String(categoryId) + String(itemId)
         
@@ -56,7 +61,7 @@ class DataHelper {
             return goodAttributesHash[hashKey]!
         }
         
-        var goodAttributes = [Int: GoodAtribute]()
+        var goodAttributes = [String: GoodAtribute]()
         
         let propertyItemValues = fetchPropertyItemValuesByItemId(itemId)
         
@@ -88,30 +93,28 @@ class DataHelper {
             
             let pos = propertyItemList == nil ? 1 : propertyItemList!.position
             
-            if goodAttributes[pos] == nil {
+            if goodAttributes[property!.name] == nil {
                 
                 let goodAtribute = GoodAtribute(
+                    position: pos,
                     property:property!,
                     name: property!.name,
                     value: properVal,
                     dimen: property!.dimension,
                     style: property!.style,
                     color: property!.color)
+                goodAttributes[property!.name] = goodAtribute
                 
-                goodAttributes[pos] = goodAtribute
+                goodAtribute.values.append(properVal)
                 
             } else {
-                let goodAtribute = goodAttributes[pos]
+                let goodAtribute = goodAttributes[property!.name]
                 goodAtribute?.value += ","
                 goodAtribute?.value += properVal
+                goodAtribute?.values.append(properVal)
             }
-            
-            if i == propertyItemValues.count-1 {
-                let goodAtribute = goodAttributes[pos]
-                goodAtribute?.value
-            }
-            
         }
+        
         goodAttributesHash[hashKey] = goodAttributes
         return goodAttributes
     }
@@ -121,7 +124,7 @@ class DataHelper {
     func fetchPropertyItemListBy(propertyId: Int, categoryId: Int) -> Property_Item_List?
     {
         let fReq = NSFetchRequest(entityName: "Property_Item_List")
-        fReq.predicate = NSPredicate(format: "propertyId == %d and  categoryId == %d", propertyId, categoryId)
+        fReq.predicate = NSPredicate(format: "propertyId == %d and categoryId == %d", propertyId, categoryId)
         
         var fetchResults : [Property_Item_List]
         var property: Property_Item_List?
@@ -640,24 +643,26 @@ class DataHelper {
                     }
                     
                 } else {
-                    var coincidenceFound = false
-                    var isSelectedFilter = false
                     
                     let min = Int(property.minVal)
                     let max = Int(property.maxVal)
                     
                     if min != nil && max != nil {
-                        //this means that it is height or somthing like this
-                        for var i = min!; i < max; i++  {
-                            if goodAttribute.value.containsString(","+String(i)+",") || goodAttribute.value.containsString(","+String(i)+";") {
+                        skip = true
+                        for value in goodAttribute.values {
+                            //this means that it is height or somthing like this
+                            let intVal = Int(value)
+                            if  min <= intVal && intVal <= max {
                                 skip = false
                                 break
-                            } else {
-                               
                             }
                         }
                         
                     } else {
+                        
+                        var coincidenceFound = false
+                        var isSelectedFilter = false
+                        
                         for filterItem in property.filterItems.allObjects as! [FilterItem] {
                             
                             if filterItem.selected {
@@ -982,7 +987,8 @@ class DataHelper {
                     
                     let entity = NSEntityDescription.entityForName("FilterItem", inManagedObjectContext: self.context)
                     let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
-                    //item.setValue(propListValue.position, forKey: "position")
+                    
+                    item.setValue(propItemValue.value, forKey: "position")
                     item.setValue(property, forKey: "property")
                     item.setValue(propItemValue.value, forKey: "paramInt")
                     // item.setValue(propListValue.listId, forKey: "listId")

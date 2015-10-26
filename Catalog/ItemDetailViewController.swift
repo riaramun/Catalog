@@ -53,13 +53,26 @@ class ItemDetailViewController: UIViewController {
     
     func setDescription(item:Item) {
         
-        var attributes = self.dataHelper!.fetchGoodAttributesBy(item.itemId, categoryId:item.categoryId)
+        let attributes = self.dataHelper!.fetchGoodAttributesBy(item.itemId, categoryId:item.categoryId)
         
         let strToSet = NSMutableAttributedString(string: item.shortName)
         strToSet.appendAttributedString(NSMutableAttributedString(string:"\r"))
-        let sortedKeys = Array(attributes.keys).sort(<)
+        //let sortedKeys = Array(attributes.keys).sort(<)
+        let sortedValues = attributes.values.sort({ (el1, el2) -> Bool in
+            return el1.position < el2.position
+        })
+        for attribute in sortedValues {
+            
+            strToSet.appendAttributedString(NSMutableAttributedString(string: attribute.name + String (": ")))
+            
+            let styledStr = StrUtils.styleString( attribute.value + attribute.dimen, style: attribute.style, color: attribute.color)
+            
+            strToSet.appendAttributedString(styledStr)
+            
+            strToSet.appendAttributedString(NSMutableAttributedString(string:"\r"))
+        }
         
-        for key in sortedKeys {
+        /*for key in sortedKeys {
             
             strToSet.appendAttributedString(NSMutableAttributedString(string: (attributes[key]?.name)! + String (": ")))
             
@@ -68,7 +81,7 @@ class ItemDetailViewController: UIViewController {
             strToSet.appendAttributedString(styledStr)
             
             strToSet.appendAttributedString(NSMutableAttributedString(string:"\r"))
-        }
+        }*/
         descrTextView.attributedText = strToSet
     }
 }
