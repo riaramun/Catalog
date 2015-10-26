@@ -363,14 +363,17 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <subviews>
                                     <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Iqu-9o-gSe">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="24"/>
                                         <animations/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="24" id="u5Z-Vy-1tT"/>
+                                        </constraints>
                                         <items>
                                             <navigationItem id="QGq-21-0Aw"/>
                                         </items>
                                     </navigationBar>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="144" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="M9H-AG-mTN">
-                                        <rect key="frame" x="0.0" y="44" width="600" height="512"/>
+                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="144" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="M9H-AG-mTN">
+                                        <rect key="frame" x="0.0" y="24" width="600" height="512"/>
                                         <animations/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
@@ -492,8 +495,12 @@
                                             <outlet property="delegate" destination="A6B-0N-wpz" id="alx-cQ-3GO"/>
                                         </connections>
                                     </tableView>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" hidesWhenStopped="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="ixC-57-CJE">
+                                        <rect key="frame" x="0.0" y="536" width="600" height="0.0"/>
+                                        <animations/>
+                                    </activityIndicatorView>
                                     <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jUm-K4-UWo">
-                                        <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                        <rect key="frame" x="0.0" y="536" width="600" height="64"/>
                                         <animations/>
                                         <items>
                                             <navigationItem id="Ygv-zu-drX">
@@ -514,21 +521,19 @@
                                     </navigationBar>
                                 </subviews>
                                 <animations/>
-                                <constraints>
-                                    <constraint firstItem="Iqu-9o-gSe" firstAttribute="centerX" secondItem="B03-Md-LwN" secondAttribute="centerX" id="NTF-gx-zyW"/>
-                                </constraints>
                             </stackView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="B03-Md-LwN" secondAttribute="trailing" id="IqP-m4-uRk"/>
-                            <constraint firstItem="B03-Md-LwN" firstAttribute="top" secondItem="AR3-Pg-2VR" secondAttribute="top" id="RQ0-uW-eXS"/>
-                            <constraint firstItem="B03-Md-LwN" firstAttribute="bottom" secondItem="v4b-Ab-tvo" secondAttribute="top" id="eIB-AY-zdC"/>
-                            <constraint firstItem="B03-Md-LwN" firstAttribute="leading" secondItem="AR3-Pg-2VR" secondAttribute="leading" id="mkq-po-SNe"/>
+                            <constraint firstItem="B03-Md-LwN" firstAttribute="bottom" secondItem="v4b-Ab-tvo" secondAttribute="top" id="R0p-8v-sBx"/>
+                            <constraint firstItem="B03-Md-LwN" firstAttribute="top" secondItem="AR3-Pg-2VR" secondAttribute="top" id="lSs-Sv-ckl"/>
+                            <constraint firstAttribute="trailing" secondItem="B03-Md-LwN" secondAttribute="trailing" id="lco-Pa-ozE"/>
+                            <constraint firstItem="B03-Md-LwN" firstAttribute="leading" secondItem="AR3-Pg-2VR" secondAttribute="leading" id="xG2-oY-uWu"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="ixC-57-CJE" id="HeF-HN-tdL"/>
                         <outlet property="tableView" destination="M9H-AG-mTN" id="nR0-q1-Wct"/>
                         <segue destination="bI7-7q-HxS" kind="show" identifier="ToPropertyEditor" id="Vwq-eD-UUd"/>
                         <segue destination="6tk-mg-WSz" kind="show" identifier="ToPriceEditor" id="HNk-jX-61j"/>

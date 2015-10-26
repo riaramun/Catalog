@@ -13,7 +13,7 @@ import MMDrawerController
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
-    let dataStack = DATAStack(modelName: "Catalog")
+   
     
     var centerContainer: MMDrawerController?
     
@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let categoryViewController = UIStoryboard.categoryViewController()
         
-        categoryViewController!.context = self.dataStack.mainContext
+        categoryViewController!.context = DataHelper.dataStack.mainContext
         
         categoryViewController!.delegate = self
         
@@ -65,14 +65,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     
-   /* func applicationDidEnterBackground(application: UIApplication) {
-        self.dataStack.persistWithCompletion(nil)
+    func applicationDidEnterBackground(application: UIApplication) {
+        DataHelper.dataStack.persistWithCompletion(nil)
     }
     
     func applicationWillTerminate(application: UIApplication) {
-        self.dataStack.persistWithCompletion(nil)
-    }*/
-    
+        DataHelper.dataStack.persistWithCompletion(nil)
+    }
+    func saveContext () {
+        if let moc = DataHelper.dataStack.mainContext {
+          
+            if moc.hasChanges  {
+                do {
+                 try moc.save()
+                }
+                catch _ {
+                    
+                }
+                // Replace this implementation with code to handle the error appropriately.
+                // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+               // NSLog("Unresolved error \(error), \(error!.userInfo)")
+                //abort()
+            }
+        }
+    }
 }
 public extension UIStoryboard {
     class func mainStoryboard() -> UIStoryboard { return UIStoryboard(name: "Main", bundle: NSBundle.mainBundle()) }

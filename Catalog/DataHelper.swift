@@ -18,7 +18,7 @@ protocol CoreDataListener {
 class DataHelper {
     
     var delegate : CoreDataListener?
-    let dataStack = DATAStack(modelName: "Catalog")
+    static let dataStack = DATAStack(modelName: "Catalog")
     
     class GoodAtribute {
         init(property:Property, name:String , value:String, dimen:String, style:String, color:String) {
@@ -104,6 +104,11 @@ class DataHelper {
                 let goodAtribute = goodAttributes[pos]
                 goodAtribute?.value += ","
                 goodAtribute?.value += properVal
+            }
+            
+            if i == propertyItemValues.count-1 {
+                let goodAtribute = goodAttributes[pos]
+                goodAtribute?.value
             }
             
         }
@@ -325,7 +330,7 @@ class DataHelper {
                         
                         toUpdate = true
                     }
-                 
+                    
                     userDefaults.setValue(date_update, forKey: "date_update")
                     userDefaults.setValue(title_image, forKey: "title_image")
                     userDefaults.setValue(logo, forKey: "logo")
@@ -336,11 +341,12 @@ class DataHelper {
                     if toUpdate {
                         self.seedDataStore()
                     } else {
+                        //we need init filter items here for each property
                         self.delegate!.skipUpdated(date_update)
                     }
                     
                     
-                   
+                    
                 }
         }
         
@@ -371,6 +377,12 @@ class DataHelper {
                 
                 func itemPhotosAdded(err:NSError!) {
                     
+                    do {
+                        try self.context.save()
+                    } catch {
+                        
+                    }
+                    
                     //we need init filter items here for each property
                     self.seedFilterItems()
                     
@@ -379,6 +391,8 @@ class DataHelper {
                     } catch {
                         
                     }
+                    
+                    
                     if self.delegate != nil {
                         self.delegate!.dataUpdated(true)
                     }
@@ -390,7 +404,7 @@ class DataHelper {
                         Sync.changes(
                             item_photos as! [AnyObject],
                             inEntityNamed: "Item_Photo",
-                            dataStack: self.dataStack,
+                            dataStack: DataHelper.dataStack,
                             completion: itemPhotosAdded)
                     }
                 }
@@ -436,7 +450,11 @@ class DataHelper {
                             //  item.setValue(itemProp, forKey: "property")
                             
                         }
-                        
+                        do {
+                            try self.context.save()
+                            
+                        } catch {
+                        }
                         propertyItemValuesAdded(nil)
                     }
                 }
@@ -447,7 +465,7 @@ class DataHelper {
                         Sync.changes(
                             propertyListValue as! [AnyObject],
                             inEntityNamed: "Property_List_Value",
-                            dataStack: self.dataStack,
+                            dataStack: DataHelper.dataStack,
                             completion: propertyListValueAdded)
                     }
                 }
@@ -483,7 +501,11 @@ class DataHelper {
                             }
                             ++counter
                         }
-                        
+                        do {
+                            try self.context.save()
+                            
+                        } catch {
+                        }
                         propertyItemListAdded(nil)
                     }
                 }
@@ -493,7 +515,7 @@ class DataHelper {
                         Sync.changes(
                             properties as! [AnyObject],
                             inEntityNamed: "Property",
-                            dataStack: self.dataStack,
+                            dataStack: DataHelper.dataStack,
                             completion: propertiesAdded)
                     }
                 }
@@ -504,7 +526,7 @@ class DataHelper {
                         Sync.changes(
                             items as! [AnyObject],
                             inEntityNamed: "Item",
-                            dataStack: self.dataStack,
+                            dataStack: DataHelper.dataStack,
                             completion: itemsAdded)
                     }
                 }
@@ -513,7 +535,7 @@ class DataHelper {
                     Sync.changes(
                         categories as! [AnyObject],
                         inEntityNamed: "Category",
-                        dataStack: self.dataStack,
+                        dataStack: DataHelper.dataStack,
                         completion: categoriesAdded)
                 }
                 
@@ -584,7 +606,7 @@ class DataHelper {
         
         for item in items! {
             
-            let goodAttributes = fetchGoodAttributesBy(item.itemId,categoryId: categoryId)
+            let goodAttributes = fetchGoodAttributesBy(item.itemId, categoryId: categoryId)
             
             var skip = false
             
@@ -594,42 +616,81 @@ class DataHelper {
                 
                 if property.typeId == Consts.NumTypeID {
                     
-                    let currPrice = Int(goodAttribute.value)
+                    if property.propertyId == 1 || property.propertyId == 2 {
+                        
+                        let currPrice = Int(goodAttribute.value)
+                        
+                        let min = Int(property.minVal)
+                        
+                        let max = Int(property.maxVal)
+                        
+                        if min != nil && max != nil {
+                            
+                            if currPrice >= min && currPrice <= max {
+                                //nothing to do
+                            } else {
+                                //we don't need to check other property values
+                                //since the item price is out of selected bounds
+                                skip = true
+                                break
+                            }
+                        }
+                    } else {
+                        
+                    }
+                    
+                } else {
+                    var coincidenceFound = false
+                    var isSelectedFilter = false
                     
                     let min = Int(property.minVal)
-                    
                     let max = Int(property.maxVal)
                     
                     if min != nil && max != nil {
-                        
-                        if currPrice >= min && currPrice <= max {
-                            //nothing to do
-                        } else {
-                            //we don't need to check other property values
-                            //since the item price is out of selected bounds
-                            skip = true
-                            break
-                        }
-                    }
-                } else {
-                    for filterItem in property.filterItems.allObjects as! [FilterItem] {
-                        
-                        if filterItem.selected {
-                            if goodAttribute.value.containsString(filterItem.param) {
-                                //this filter item is confirmed
-                            }
-                            else {
-                                //we don't need to check other property values
-                                //since this filter items in not satisfied
-                                skip = true
+                        //this means that it is height or somthing like this
+                        for var i = min!; i < max; i++  {
+                            if goodAttribute.value.containsString(","+String(i)+",") || goodAttribute.value.containsString(","+String(i)+";") {
+                                skip = false
                                 break
-                                
+                            } else {
+                               
                             }
+                        }
+                        
+                    } else {
+                        for filterItem in property.filterItems.allObjects as! [FilterItem] {
+                            
+                            if filterItem.selected {
+                                isSelectedFilter = true
+                                if goodAttribute.value.containsString(filterItem.param) {
+                                    coincidenceFound = true
+                                    //this filter item is confirmed
+                                }
+                                else {
+                                    //we don't need to check other property values
+                                    //since this filter items in not satisfied
+                                    //break
+                                    
+                                }
+                            }
+                        }
+                        if isSelectedFilter {
+                            if coincidenceFound {
+                                skip = false
+                            } else {
+                                skip = true
+                            }
+                        }
+                        else {
+                            skip = false
                         }
                     }
                 }
-                item.visible = !skip
+                if skip {
+                    break
+                }
             }
+            item.visible = !skip
         }
     }
     
@@ -890,12 +951,21 @@ class DataHelper {
             
             if propListValues?.count > 0 {
                 for propListValue in propListValues! {
-                    let filterItem = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
+                    
+                    let entity = NSEntityDescription.entityForName("FilterItem", inManagedObjectContext: self.context)
+                    let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
+                    item.setValue(propListValue.position, forKey: "position")
+                    item.setValue(property, forKey: "property")
+                    item.setValue(propListValue.value, forKey: "param")
+                    item.setValue(propListValue.listId, forKey: "listId")
+                    item.setValue(false, forKey: "selected")
+                    
+                    /* let filterItem = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
                     filterItem.position = propListValue.position
                     filterItem.property = property
                     filterItem.param = propListValue.value
                     filterItem.listId = propListValue.listId
-                    filterItem.selected = false
+                    filterItem.selected = false*/
                 }
             }
             else {
@@ -909,14 +979,24 @@ class DataHelper {
                         continue
                     }
                     hashSet.addObject(propItemValue.value)
-                    let filterItem = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
+                    
+                    let entity = NSEntityDescription.entityForName("FilterItem", inManagedObjectContext: self.context)
+                    let item = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: self.context)
+                    //item.setValue(propListValue.position, forKey: "position")
+                    item.setValue(property, forKey: "property")
+                    item.setValue(propItemValue.value, forKey: "paramInt")
+                    // item.setValue(propListValue.listId, forKey: "listId")
+                    item.setValue(false, forKey: "selected")
+                    
+                    
+                    /* let filterItem = NSEntityDescription.insertNewObjectForEntityForName("FilterItem", inManagedObjectContext: self.context) as! FilterItem
                     //filterItem.position = propListValue.position
                     filterItem.property = property
                     filterItem.paramInt = propItemValue.value
                     //we use position param as sort key, so we put there int value
                     filterItem.position = propItemValue.value
                     //filterItem.listId = propListValue.listId!!
-                    filterItem.selected = false
+                    filterItem.selected = false*/
                 }
             }
         }

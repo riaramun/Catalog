@@ -12,9 +12,10 @@ import DOCheckboxControl
 
 
 protocol RightPanelViewControllerDelegate {
-    func updateView()
-    func collapseFilterPanel()
-    func getCurrentCategoryId() -> Int
+    func filterItemsByParams()
+    
+    //func collapseFilterPanel()
+    //func getCurrentCategoryId() -> Int
 }
 protocol PropertyFilterDelegate {
     func updateView()
@@ -22,16 +23,35 @@ protocol PropertyFilterDelegate {
 class RightPanelViewController: UIViewController, NSFetchedResultsControllerDelegate {
     
     @IBAction func applyFilter(sender: AnyObject) {
-        self.view.endEditing(true)
-        do {
-            try context?.save()
-        } catch _ {
+        
+        activityIndicator.startAnimating()
+        
+        let delay = 0 * Double(NSEC_PER_SEC)
+        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+        
+        dispatch_after(time, dispatch_get_main_queue()) {
+            self.view.endEditing(true)
+            do {
+                try self.context?.save()
+            } catch _ {
+            }
+            //activityIndicator.hidden = false
+            
+            
+            self.delegate?.filterItemsByParams()
+            
+            self.activityIndicator.stopAnimating()
+            
+            
+            self.dismissViewControllerAnimated(true, completion: nil)
+            
         }
-        self.dataHelper?.filterItemsByParams(categoryId)
-        self.delegate?.updateView()
-        self.dismissViewControllerAnimated(true, completion: nil)      //  delegate?.updateView()
-        // delegate?.collapseFilterPanel()
+
+        
+       
+        
     }
+    
     @IBOutlet var tableView: UITableView!
     //var fetchedResultsController: NSFetchedResultsController? = nil
     var colorsFilter = [String]()
@@ -39,7 +59,7 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     var dataHelper: DataHelper?
     var categoryId:Int = 0
     var delegate: RightPanelViewControllerDelegate?
-    
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     struct TableView {
         struct CellIdentifiers {
@@ -107,6 +127,7 @@ class RightPanelViewController: UIViewController, NSFetchedResultsControllerDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
+       // activityIndicator.hidden = true
         self.dataHelper = DataHelper(context: self.context!)
         fetchResults()
         performFetch()

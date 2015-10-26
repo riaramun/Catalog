@@ -333,11 +333,14 @@ extension CollectionViewController: AlertPickerViewDelegate {
     }
 }
 extension CollectionViewController: RightPanelViewControllerDelegate {
-    func updateView() {
-        //self.dataHelper!.resetfilter()
-        //self.dataHelper!.filterItemsByParams(self.categoryId!)
+    func filterItemsByParams() {
+        
+        self.dataHelper!.filterItemsByParams(self.categoryId!)
+
         fetchResults(self.categoryId!, entityName: "Item", column: "categoryId")
+        
         self.performFetch()
+        
     }
     func collapseFilterPanel() {
         self.delegate?.toggleRightPanel()

@@ -30,7 +30,7 @@ public class LoadingViewController: UIViewController , UINavigationControllerDel
         userDefaults.synchronize()
 
         
-        dataHelper?.dataStack.drop()
+        DataHelper.dataStack.drop()
         dataHelper?.delegate?.dataUpdated(false)
         tryAgain.hidden = true
         self.activityIndicator.hidden = false
